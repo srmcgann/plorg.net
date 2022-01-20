@@ -1,0 +1,11 @@
+{
+  "name": "puppeteer",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "process": "^0.11.10",
+    "puppeteer": "^13.0.1"
+  }
+}

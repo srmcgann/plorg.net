@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@taquito/taquito": "^11.1.0",
+    "@taquito/tezbridge-signer": "^11.1.0",
+    "bip39": "^3.0.4"
+  }
+}
