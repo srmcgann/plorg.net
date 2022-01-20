@@ -15,8 +15,8 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Editor directories and files
-db.php
-XTZ_to_USD.php
+/public/db.php
+/public/XTZ_to_USD.php
 .idea
 .vscode
 .htpasswd
