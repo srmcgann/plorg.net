@@ -1,0 +1,1754 @@
+<template :class="{'noOverflow': state.userSettingsVisible, 'monochromeApp': state.monochrome, 'normalApp':!state.monochrome}">
+  <div class="dropSurface" ref="dropSurface"></div>
+  <Controls :state="state"/>
+  <Header :state="state"/>
+  <DropModal :state="state" v-if="state.dragover"/>
+  <MintModal :state="state" v-if="state.showMintModal"/>
+  <ListingModal :state="state" :item="state.listItem" v-if="state.showListingModal"/>
+  <UserSettings :state="state" v-if="state.userSettingsVisible"/>
+  <SeedPhraseModal :state="state" v-if="state.showSeedPhraseModal"/>
+  <SiteWalletModal :state="state" v-if="state.showSiteWalletModal"/>
+  <TransactionModal :state="state" :prepop="state.prepop" v-if="state.showTransactionModal"/>
+  <TempleDownloadModal :state="state" v-if="state.showTempleDownloadModal"/>
+  <AssetModal :state="state" :item="state.displayItem" v-if="state.showAssetModal"/>
+  <PurchaseModal :state="state" :item="state.displayItem" v-if="state.showPurchaseModal"/>
+  <Main :state="state"/>
+  <Footer :state="state"/>
+</template>
+
+<script>
+import Main from './components/Main'
+import Header from './components/Header'
+import Footer from './components/Footer'
+import Controls from './components/Controls'
+import DropModal from './components/DropModal'
+import MintModal from './components/MintModal'
+import AssetModal from './components/AssetModal'
+import { TempleWallet } from "@temple-wallet/dapp"
+import ListingModal from './components/ListingModal'
+import UserSettings from './components/UserSettings'
+import PurchaseModal from './components/PurchaseModal'
+import SiteWalletModal from './components/SiteWalletModal'
+import SeedPhraseModal from './components/SeedPhraseModal'
+import TransactionModal from './components/TransactionModal'
+import TempleDownloadModal from './components/TempleDownloadModal'
+
+export default {
+
+  name: 'App',
+  components: {
+    Main,
+    Header,
+    Footer,
+    Controls,
+    MintModal,
+    DropModal,
+    AssetModal,
+    ListingModal,
+    UserSettings,
+    PurchaseModal,
+    SeedPhraseModal,
+    SiteWalletModal,
+    TransactionModal,
+    TempleDownloadModal
+  },
+  data(){
+    return {
+      state: {
+        rootDomain: 'plorg.net',
+        alphaToDec: null,
+        autolaunchTokens: false,
+        baseURL: 'https://plorg.net',
+        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
+        doListItem: null,
+        loggedinUserName: '',
+        uploadInProgress: false,
+        showAssetModal: false,
+        showControls: false,
+        showPurchaseModal: false,
+        showListingModal: false,
+        showMintModal: false,
+        maxResultsPerPage: 16,
+        userNameString: null,
+        loadUserPage: null,
+        uploadedFileSuffix: '',
+        resetPrepop: null,
+        dragover: false,
+        monochrome: true,
+        toggleFullScreen: null,
+        defaultPrepop: {doprepop: false},
+        prepop: {doprepop: false},
+        uploadFiles: null,
+        finalizePurchase: null,
+        tokenNotFound: false,
+        launchItem: null,
+        logout: null,
+        uploadedFileType: null,
+        uploadedFileSize: null,
+        purchaseToken: null,
+        toggleShowMintModal: null,
+        headerHeight: 80,
+        dropListenersLoaded: false,
+        totalPages: 0,
+        listItem: null,
+        maxFileSize: 104857600/2, //50MB
+        manualUpload: null,
+        maxPrice: 1000000000, //xtz
+        maxEditions: 10000, //xtz
+        displayItem: null,
+        uploadedFileThumbnail: null,
+        uploadedContentURL: '', 
+        closeControls: null,
+        curUserPage: 0,
+        fileUploadSucceeded: null,
+        globalT: 0,
+        toggleShowAssetModal: null,
+        advancePage: null,
+        totalUserPages: null,
+        regressPage: null,
+        finalizeListing: null,
+        updateUserName: null,
+        firstPage: null,
+        maxCommentsBeforeExpansion: 3,
+        lastPage: null,
+        confirmpassword: '',
+        loadToken: null,
+        firstPage: null,
+        loaded: false,
+        modalShowing: false,
+        decToAlpha: null,
+        regressPage: null,
+        beginSearch: null,
+        advancePage: null,
+        userAgent: navigator.userAgent,
+        loadUserData: null,
+        fetchUserData: null,
+        incrementViews: null,
+        loggedinUserAvatar: null,
+        extractEmbedURL: null,
+        checkSiteWallet: null,
+        getSiteWalletData: null,
+        minimized: true,
+        toggleShowControls: null,
+        templeSyncButtonClick: null,
+        siteWalletSyncButtonClick: null,
+        toggleShowTransactionModal: null,
+        viewAuthor: null,
+        seedPhrase: '',
+        tokenID: null,
+        invalidLoginAttempt: false,
+        showSiteWalletModal: false,
+        search: {
+          string: '',
+          items: [],
+          hits: 0,
+          inProgress: false,
+          timer: 0,
+          timerHandle: null,
+          exact: false,
+          allWords: true
+        },
+        showTransactionModal: false,
+        showSeedPhraseModal: false,
+        loggedinUserID: null,
+        passhash: '',
+        showRegister: false,
+        getCommentAvatar: null,
+        curPage: 0,
+        mode: 'default',
+        templeWalletPollTimerStarted: false,
+        siteWalletPollTimerStarted: false,
+        walletPollTimerInterval: 3000,
+        inception: (window.inception = (new Date).getTime()),
+        XTZ_to_USD: 0,
+        totalUserPages: 0,
+        refreshAvatar: false,
+        loggedinUserPkh: '',
+        userSettingsVisible: false,
+        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
+        closePrompts: null,
+        wallet: null,
+        getAvatar: null,
+        setCookie: null,
+        showTempleDownloadModal: false,
+        checkTemplePermissions: null,
+        templeSyncButtonClick: null,
+        templeWalletPerms: {},
+        defaultWalletData: {
+                      address:'', balance: '~'
+                    },
+        walletData: {
+                      address:'', balance: '~'
+                    },
+        templeWalletAvailable: false,
+        templeWalletConnected: false,
+        siteWalletConnected: false,
+        connectTempleWallet: null,
+        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; contact <a href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com</a>',
+        users: Array(5e5).fill().map(v=>{ return {avatar: ''} }),
+        landingPage:{
+          items: []
+        },
+        items: [],
+        showControlsToggleTimer: 0,
+        globalT: 0,
+        closeMenus: 0
+      }
+    }
+  },
+  methods:{
+    getCommentAvatar(id){
+      if(typeof this.state.users[id] == 'undefined' || !this.state.users[id].avatar){
+        return this.state.defaultAvatar
+      } else {
+        this.state.users[id].avatar = this.state.users[id].avatar.replace(' ','')
+        return this.state.users[id].avatar
+      }
+    },
+    getAvatar(id){
+      return this.state.loggedinUserAvatar ? this.state.loggedinUserAvatar : this.state.defaultAvatar
+    },
+    closePrompts(){
+      this.state.showMintModal = false
+      this.state.showAssetModal = false
+      this.state.showPurchaseModal = false
+      this.state.showListingModal = false
+      this.state.showSeedPhraseModal = false
+      this.state.userSettingsVisible = false
+      this.state.showSiteWalletModal = false
+      this.state.showTransactionModal = false
+      this.state.showTempleDownloadModal = false
+      document.getElementsByTagName('HTML')[0].style.overflowY = 'initial'
+      setTimeout(()=>{
+        this.state.modalShowing=false
+      },200)
+    },
+    logout(){
+      let cookies = document.cookie
+      cookies.split(';').map(v=>{
+        document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      })
+      this.state.isAdmin = false
+      this.state.loggedin = false
+      this.state.loggedinUserPkh = ''
+      this.state.loggedinUserName = ''
+      this.state.loggedinUserID = null
+      this.state.passhash = ''
+      this.state.loggedinUserAvatar = ''
+      this.state.siteWalletConnected = false
+      this.state.siteWalletPollTimerStarted = false
+      this.state.walletData = JSON.parse(JSON.stringify(this.state.defaultWalletData))
+      //window.location.reload()
+    },
+    toggleShowAssetModal(){
+      this.state.showAssetModal = !this.state.showAssetModal
+    },
+    getQueryVar(url, variable) {
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i=0;i<vars.length;i++) {
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){return pair[1];}
+       }
+       return false;
+    },
+    incrementViews(id){
+      let sendData = {tokenID: id}
+      fetch(this.state.baseURL + '/incrementViews.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res=>res.json()).then(data=>{
+        if(this.state.search.string){
+          if(this.state.items.filter(v=>v.id==id).length) this.state.search.items.filter(v=>v.id==id)[0].views++
+        }else{
+          switch(this.state.mode){
+            case 'user':
+              this.state.user.items.filter(v=>(+v.id)==id)[0].views++
+              break
+            case 'default': if(this.state.items.filter(v=>v.id==id).length) this.state.items.filter(v=>(+v.id)==id)[0].views++; break
+            case 'token': this.state.items.filter(v=>(+v.id)==id)[0].views++; break
+          }
+        }
+      })
+    },
+    firstPage(){
+      let search = this.state.search.string ? ('/1/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'user':
+          window.location.href = 'https://' + this.state.rootDomain + '/u/' + this.state.user.name + search
+        break
+        case 'default':
+          window.location.href = 'https://' + this.state.rootDomain + search
+        break
+        case 'token':
+          window.location.href = 'https://' + this.state.rootDomain + '/t/' + this.state.curPost + search
+        break
+      }
+    },
+    closeControls(){
+      if(this.state.modalShowing) return
+      let cookies = document.cookie
+      cookies.split(';').map(v=>{
+        if(v.indexOf('showControls')!=-1){
+          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/'
+        }
+      })
+      this.state.showControls = false
+      document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain      
+    },
+    toggleShowControls(){
+      if(this.state.modalShowing) return
+      let cookies = document.cookie
+      cookies.split(';').map(v=>{
+        if(v.indexOf('showControls')!=-1){
+          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/'
+        }
+      })
+      this.state.showControls = !this.state.showControls
+      this.state.minimized = !this.state.showControls
+      document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    },
+    loadHotKeys(){
+      window.addEventListener('click',e=>{
+        let close = true
+        let path = e.path || (e.composedPath && e.composedPath())
+        path.forEach(v=>{
+          if(v.className && (v.className.indexOf('revertMenu')!==-1 || v.className.indexOf('revertButton')!==-1)) close = false
+        })
+        if(close) this.state.closeMenus++
+      })
+      window.addEventListener('keydown',(e)=>{
+        if(e.keyCode == 27){
+          if(this.state.modalShowing){
+            this.closePrompts()
+            return
+          }
+          if(this.state.showControlsToggleTimer < (new Date()).getTime()){
+            this.state.showControlsToggleTimer = (new Date()).getTime()+100
+            e.preventDefault()
+            e.stopPropagation()
+            this.toggleShowControls()
+          }
+        }
+        if(e.keyCode == 13){
+        }
+      })
+    },
+    checkPrefs(){
+      let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='showControls')
+      if(l.length) this.state.showControls = l[0].split('=')[1]=='true'
+      l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='minimized')
+      if(l.length) this.state.minimized = l[0].split('=')[1]=='true'
+      l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='monochrome')
+      if(l.length) this.state.monochrome = l[0].split('=')[1]=='true'
+      if(this.state.monochrome){
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/jKSS2.jpg)'
+        document.body.style.background = 'linear-gradient(45deg, #111e, #000b, #111)'
+      } else {
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/1QxCBC.jpg)'
+        document.body.style.background = 'linear-gradient(45deg, #012e, #000b, #102)'
+      }
+    },
+    lastPage(){
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'u':
+          window.location.href = 'https://' + this.state.rootDomain + '/u/' + this.state.user.name + '/' + this.state.totalUserPages + search
+        break
+        case 'default':
+          window.location.href = 'https://' + this.state.rootDomain + '/' + this.state.totalPages + search
+        break
+        case 't':
+          window.location.href = 'https://' + this.state.rootDomain + '/post/' + this.decToAlpha(this.state.curPost) + '/' + this.state.totalPages + search
+        break
+      }
+    },
+    advancePage(){
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'user':
+          window.location.href = 'https://' + this.state.rootDomain + '/u/' + this.state.user.name + '/' + (this.state.curUserPage + 2) + search
+        break
+        case 'default':
+          window.location.href = 'https://' + this.state.rootDomain + '/' + (this.state.curPage + 2) + search
+        break
+        case 'token':
+          window.location.href = 'https://' + this.state.rootDomain + '/t/' + this.decToAlpha(this.state.curPost) + '/' +(this.state.curPage + 2) + search
+        break
+      }
+    },
+    regressPage(){
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'user':
+          window.location.href = 'https://' + this.state.rootDomain + '/u/' + this.state.user.name + '/' + this.state.curUserPage + search
+        break
+        case 'default':
+          window.location.href = 'https://' + this.state.rootDomain + '/' + this.state.curPage + search
+        break
+        case 'token':
+          window.location.href = 'https://' + this.state.rootDomain + '/t/' + this.decToAlpha(this.state.curPost) + '/' +(this.state.curPage + 2) + search
+        break
+      }
+    },
+    loadLanding(){
+      let sendData = {mode: this.state.mode, curPage: this.state.curPage, maxResultsPerPage: this.state.maxResultsPerPage}
+      fetch(this.state.baseURL + '/getItems.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data) {
+          this.state.items = data[1]
+          data[1].map(v=>{
+            v.userID = +v.userID
+            v.creatorID = +v.creatorID
+            this.incrementViews(v.id)
+            this.fetchUserData(v.userID)
+            this.fetchUserData(v.creatorID)
+              /*
+            if(typeof this.state.users[v.userID].id == 'undefined'){
+              let sendData = {userID: v.userID}
+              fetch(this.state.baseURL + '/getUserInfo.php',{
+                method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sendData),
+              })
+              .then(res => res.json())
+              .then(data => {
+                if(data[0]){
+                  this.state.users[v.userID] = data[1]
+                  if(!this.state.users[v.userID].avatar){
+                    this.state.users[v.userID].avatar = this.state.defaultAvatar
+                  }
+                }
+              })
+            }
+            */
+            v.comments = v.comments.map(q=>{
+              q.updated = false
+              q.editing = false
+              this.fetchUserData(q.userID)
+              return q
+            })
+          })
+          this.state.totalPages = data[2]
+          if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          this.state.loaded = true
+        }
+      })
+    },
+    loadUserData(name){
+      let sendData = {
+        name: decodeURIComponent(name),
+        loggedinUserName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
+				maxResultsPerPage: this.state.maxResultsPerPage,
+        page: this.state.curUserPage
+      }
+      fetch(this.state.baseURL + '/fetchUserDataByName.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        this.state.itemDataReceived = true
+        if(this.state.user != null && typeof this.state.user.items != 'undefined' && this.state.user.items.length){
+          this.state.user.items.map(v=>{
+            v.updated = {}
+            v.private = !!(v.private)
+            v.iteration = 0
+            for (const [key, value] of Object.entries(data[0])) {
+              v.updated[key]=0
+            }
+          })
+          data[0].items = this.state.user.items
+        }else{
+          if(data) {
+            this.state.user.items = data[0].items
+            this.state.user.items = this.state.user.items.map(v=>{
+              this.incrementViews(v.id)
+              if(typeof this.state.users[v.userID].id == 'undefined'){
+                let sendData = {userID: v.userID, creatorID: v.creatorID}
+                fetch(this.state.baseURL + '/getUserInfo.php',{
+                  method: 'POST',
+                  headers: {
+                   'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(sendData),
+                })
+                .then(res => res.json())
+                .then(data => {
+                  if(data[0]){
+                    this.state.users[v.userID] = data[1]
+                    this.state.users[v.creatorID] = data[2]
+                    if(!this.state.users[v.userID].avatar){
+                      this.state.users[v.userID].avatar = this.state.defaultAvatar
+                    }
+                    if(!this.state.users[v.creatorID].avatar){
+                      this.state.users[v.creatorID].avatar = this.state.defaultAvatar
+                    }
+                  }
+                })
+              }
+              v.private = !!(+v.private)
+              v.comments = v.comments.map(q=>{
+                q.updated = false
+                q.editing = false
+                this.fetchUserData(q.userID)
+                return q
+              })
+              return v
+            })
+          }
+          this.state.totalUserPages = data[1]
+          if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+          this.state.user = data[0]
+          this.state.maxResultsPerPage = this.state.user.itemPostsPerPage
+          this.state.refreshAvatar = true
+          this.state.loaded = true
+        }
+      })
+    },
+		fetchUserData(id){
+      id=+id
+      if(typeof this.state.users[id].id !== 'undefined') return
+      let sendData = {userID: id}
+      fetch(this.state.baseURL + '/getUserInfo.php',{
+        method: 'POST',
+        headers: {
+         'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data[0]){
+          this.state.users[id] = data[1]
+          if(!this.state.users[id].avatar){
+            this.state.users[id].avatar = this.state.defaultAvatar
+          }
+        }
+      })
+		},
+    doSearch(searchString, page1){
+      this.state.search.items = []
+      this.state.search.timerHandle = null
+      let sendData = {
+        string: searchString.trim(),
+        loggedinUserName: this.state.loggedinUserName,
+        page: this.state.curPage,
+        allWords: this.state.search.allWords,
+        exact: this.state.search.exact,
+        passhash: this.state.loggedin ? this.state.passhash : '',
+        maxResultsPerPage: this.state.maxResultsPerPage
+      }
+      this.state.exactClicked = true
+      fetch(this.state.baseURL + '/search.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        data[0].map(v=>{
+          v.private = !!(+v.private)
+          this.state.incrementViews(v.id)
+          this.state.fetchUserData(v.userID)
+          this.state.fetchUserData(v.creatorID)
+          v.comments = v.comments.map(q=>{
+            q.updated = false
+            q.editing = false
+            this.state.fetchUserData(q.userID)
+            return q
+          })
+          v.iteration = 0
+          return v
+        })
+        if(this.state.search.string) this.state.search.hits = +data[3]
+        this.state.search.items = data[0]
+        switch(this.state.mode){
+          case 'user':
+            this.state.totalUserPages = +data[1]
+            if(this.state.curUserPage && this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+          break
+          case 'default':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
+          case 'token':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
+        }
+        this.state.loaded = true
+        this.state.search.inProgress = false
+      })
+    },
+    beginSearch(page1){
+      if(this.state.search.string.charAt(0) != ' '){
+        this.state.search.inProgress = true
+        if(page1){
+          history.replaceState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + (this.state.search.string))
+          this.state.curPage = 0
+        } else {
+          history.replaceState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + (this.state.search.string))
+        }
+        let d = (new Date()).getTime()
+        if(this.state.search.timerHandle != null) clearTimeout(this.state.search.timerHandle)
+        let searchString = this.state.search.string
+        this.state.search.timerHandle = setTimeout(()=>{
+          this.doSearch(searchString, page1)
+          this.state.search.timer = d
+        }, Math.min(1000, d-this.state.search.timer))
+      } else {
+				this.state.search.string = this.state.search.string.trim()
+			}
+    },
+    getWalletData(){
+      if(this.state.templeWalletPollTimerStarted){
+        (async () => {
+          try {
+            this.state.tezos = this.state.wallet.toTezos()
+            this.state.walletData.address = await this.state.tezos.wallet.pkh()
+            this.state.walletData.balance = await this.state.tezos.tz.getBalance(this.state.walletData.address)
+            this.state.walletData.balance/=1000000
+            fetch(this.state.baseURL + '/XTZ_to_USD.php',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: '',
+            })
+            .then(json=>json.json()).then(data=>{
+              this.state.XTZ_to_USD = +data[1]
+            })
+          } catch (err) {
+            console.error(err)
+          }
+        })()
+        if(Math.abs(this.state.inception - window.inception)<1){
+          setTimeout(()=>{
+            this.getWalletData()
+          }, this.state.walletPollTimerInterval)
+        }
+      }
+    },
+    getSiteWalletData(){
+      if(this.state.templeWalletConnected) return
+      this.state.templeWalletPollTimerStarted = false
+      if(this.state.siteWalletPollTimerStarted){
+        this.state.walletData.address = this.state.loggedinUserPkh
+        let sendData = {pkh: this.state.walletData.address}
+        fetch(this.state.baseURL + '/getBalanceFromPkh.php',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        })
+        .then(json=>json.json()).then(data=>{
+          if(data[0]){
+            this.state.walletData.balance = +data[1]
+            this.state.XTZ_to_USD = +data[2]
+          }
+        })
+        if(Math.abs(this.state.inception - window.inception)<1){
+          setTimeout(()=>{
+            this.getSiteWalletData()
+          }, this.state.walletPollTimerInterval)
+        }
+      }
+    },
+    templeWalletAvailabilityChange(val){
+      this.state.templeWalletAvailable = val
+    },
+    siteWalletSyncButtonClick(){
+      if(this.state.siteWalletConnected){
+        this.state.walletData = JSON.parse(JSON.stringify(this.state.defaultWalletData))
+        this.logout()
+      } else {
+        this.state.showSiteWalletModal = true
+        this.state.modalShowing = true
+      }
+    },
+    templeSyncButtonClick(){
+      this.state.walletData = JSON.parse(JSON.stringify(this.state.defaultWalletData));
+      (async () => {
+        try {
+          if(this.state.templeWalletAvailable){
+            if(this.state.templeWalletConnected){
+              let sendData = {pkh: this.state.templeWalletPerms.pkh, connected: false}
+              fetch(this.state.baseURL + '/loadProfile.php',{
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sendData),
+              })
+              .then(json=>json.json()).then(data=>{
+                if(data[0]){
+                  this.state.isAdmin = false
+                  this.state.loggedin = false
+                  this.state.loggedinUserPkh = ''
+                  this.state.loggedinUserName = ''
+                  this.state.loggedinUserID = null
+                  this.state.loggedinUserAvatar = ''
+                  this.state.templeWalletConnected = false
+                  this.state.templeWalletPollTimerStarted = false
+                  this.state.walletData = JSON.parse(JSON.stringify(this.state.defaultWalletData))
+                  this.state.fetchUserData(this.state.loggedinUserID)
+                }
+              })
+            } else {
+              this.connectTempleWalletMaybe(true)
+            }
+          } else {
+            this.state.showTempleDownloadModal = true
+            this.state.modalShowing=true
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    },
+    setCookie() {
+      let cookies = document.cookie
+      cookies.split(';').map(v=>{
+        document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      })
+      document.cookie = 'loggedinUser=' + this.state.loggedinUserName + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'minimized=' + this.state.minimized + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'loggedinUserID=' + this.state.loggedinUserID + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'token=' + this.state.passhash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'monochrome=' + this.state.monochrome + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    },
+    connectTempleWallet(){
+      (async () => {
+        try {
+          await this.state.wallet.connect('mainnet');
+          let perms = await TempleWallet.getCurrentPermission()
+          this.state.templeWalletPerms = perms
+          let sendData = {pkh: this.state.templeWalletPerms.pkh, connected: true}
+          fetch(this.state.baseURL + '/loadProfile.php',{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(sendData),
+          })
+          .then(json=>json.json()).then(data=>{
+            if(data[0]){
+              if(this.state.siteWalletConnected) this.logout()
+              this.state.siteWalletConnected=false
+              this.state.loggedin = true
+              this.state.loggedinUserName = data[1]
+              this.state.loggedinUserID = data[2]
+              this.state.loggedinUserAvatar = data[3] ? data[3] : this.state.defaultAvatar
+              this.state.loggedinUserPkh = data[4]
+              this.state.walletData.address = data[4]
+              this.state.isAdmin = (!!data[5])
+              this.state.templeWalletConnected = true
+              this.state.tezos = this.state.wallet.toTezos()
+              this.state.templeWalletPollTimerStarted = true
+              this.state.siteWalletPollTimerStarted = false
+              this.getWalletData()
+            } else {
+              this.logout()
+            }
+            
+          })
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    },
+    connectTempleWalletMaybe(connect = false){
+      (async () => {
+        try {
+          let perms = await TempleWallet.getCurrentPermission()
+          if(perms != null && typeof perms.rpc == 'string' && typeof perms.pkh == 'string' && typeof perms.publicKey == 'string') {
+            this.state.templeWalletPerms = perms
+            let sendData = {pkh: this.state.templeWalletPerms.pkh}
+            fetch(this.state.baseURL + '/checkConnectionStatus.php',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(sendData),
+            })
+            .then(json=>json.json()).then(data=>{
+              if(data[0] || connect){
+                this.connectTempleWallet()
+              }
+            })
+          } else {
+            if(connect){
+                this.connectTempleWallet()
+            } else {
+              this.state.templeWalletConnected = false
+            }
+          }
+          TempleWallet.onAvailabilityChange(this.templeWalletAvailabilityChange)
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    },
+    loadToken(slug){
+      let sendData = {
+        id: slug,
+        loggedinUserName: this.state.loggedinUserName,
+        passhash: this.state.passhash
+      }
+      fetch(this.state.baseURL + '/loadToken.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        this.state.itemDataReceived = true
+        if(data[0]) {
+          this.state.items = [data[1]]
+          this.state.items = this.state.items.map(v=>{
+            v.userID = +v.userID
+            v.creatorID = +v.creatorID
+            this.incrementViews(v.id)
+            if(typeof this.state.users[v.userID].id == 'undefined'){
+              let sendData = {userID: v.userID}
+              fetch(this.state.baseURL + '/getUserInfo.php',{
+                method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sendData),
+              })
+              .then(res => res.json())
+              .then(data => {
+                if(data[0]){
+                  this.state.users[v.userID] = data[1]
+                  if(!this.state.users[v.userID].avatar){
+                    this.state.users[v.userID].avatar = this.state.defaultAvatar
+                  } 
+                }
+              })
+            }
+            if(typeof this.state.users[v.creatorID].id == 'undefined'){
+              let sendData = {userID: v.creatorID}
+              fetch(this.state.baseURL + '/getUserInfo.php',{
+                method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sendData),
+              })
+              .then(res => res.json())
+              .then(data => {
+                if(data[0]){
+                  this.state.users[v.creatorID] = data[1]
+                  if(!this.state.users[v.creatorID].avatar){
+                    this.state.users[v.creatorID].avatar = this.state.defaultAvatar
+                  } 
+                }
+              })
+            }
+            v.private = !!(+v.private)
+            v.comments = v.comments.map(q=>{
+              q.updated = false
+              q.editing = false
+              this.fetchUserData(q.userID)
+              return q
+            })
+            return v
+          })
+        } else {
+          this.state.tokenNotFound = true
+        }
+        this.state.refreshAvatar = true
+        this.state.loaded = true
+      })
+    },
+    checkSiteWallet(){
+      //if(this.state.templeWalletConnected) return
+      let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinUser')
+      if(l.length){
+        this.state.loggedinUserName = l[0].split('=')[1]
+        let l_ = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinUserID')
+        this.state.loggedinUserID = +(l_[0].split('=')[1])
+        let l2 = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='token')
+        if(l2.length){
+          this.state.passhash = l2[0].split('=')[1]
+          let l3 = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinUserID')
+          if(l3.length){
+            let sendData = {passhash: this.state.passhash, connected: true}
+            this.state.loggedinUserID = l3[0].split('=')[1]
+            fetch(this.state.baseURL + '/loadProfileFromHash.php',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(sendData),
+            })
+            .then(json=>json.json()).then(data=>{
+              if(data[0]){
+                this.state.templeWalletConnected = false
+                this.state.loggedin = true
+                this.state.loggedinUserName = data[1]
+                this.state.loggedinUserID = data[2]
+                this.state.loggedinUserAvatar = data[3] ? data[3] : this.state.defaultAvatar
+                this.state.loggedinUserPkh = data[4]
+                this.state.passhash = data[7]
+                this.state.walletData.address = data[4]
+                this.state.isAdmin = (!!data[5])
+                this.state.setCookie()
+                this.state.siteWalletConnected = true
+                this.state.siteWalletPollTimerStarted = true
+                this.state.templeWalletPollTimerStarted = false
+                this.getSiteWalletData()
+              } else {
+                this.logout()
+              }
+            })
+          }
+        }
+      }
+    },
+    checkTempleWallet(){
+      (async () => {
+        try {
+          this.state.wallet = new TempleWallet('plorg.net')
+          if(!this.state.siteWalletConnected){
+            this.state.templeWalletAvailable = await TempleWallet.isAvailable()
+            if(this.state.templeWalletAvailable){
+              this.connectTempleWalletMaybe()
+            }
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      })();
+    },
+		getPages(){
+      if(this.state.search.string != '') this.beginSearch()
+			switch(this.state.mode){
+				case 'user':
+        this.loadUserData(this.state.user.name)
+				break
+				case 'token':
+				this.loadItem()
+				break
+				case 'default':
+				this.loadLanding()
+				break
+			}
+		},
+    decToAlpha(n){
+      let alphabet='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      let ret='', r
+      while(n){
+        ret = alphabet[Math.round((n/62-(r=n/62|0))*62)|0] + ret
+        n=r
+      }
+      return ret == '' ? '0' : ret
+    },
+    resetPrepop(){
+      this.state.prepop = JSON.parse(JSON.stringify(this.state.defaultPrepop))
+    },
+    uploadFiles(files){
+      this.state.dragover = true
+      this.state.uploadInProgress = true
+      this.$nextTick(()=>{
+        if(!this.state.loggedin || this.state.walletData.address.length != 36) return
+        if(files[0].size && files[0].size<this.state.maxFileSize){
+          if(
+            files[0].type.indexOf('application/x-zip-compressed')!==-1 ||
+            files[0].type.indexOf('image/')!==-1 ||
+            files[0].type.indexOf('audio/')!==-1
+          ){
+            let l
+            this.state.uploadedFileSuffix = '.'+(l=files[0].name.split('.'))[l.length-1]
+            var data = new FormData()
+            let file=files[0]
+            data.append('file0',file,file.name)
+            data.append('pkh', this.state.walletData.address)
+            data.append('suffix', this.state.uploadedFileSuffix)
+            fetch(this.state.baseURL + '/receiveFiles.php', {
+              method: 'POST',
+              body: data
+            }).then(res=>res.json()).then(data=>{
+              if(data[0]){
+                this.state.uploadedContentURL = data[1]
+                this.state.uploadedFileType = data[2]
+                this.state.uploadedFileSize = data[3]
+                if(!(+data[4])){
+                  alert("your file's type indicated by its suffix ("+this.state.uploadedFileSuffix+" -> "+files[0].type+") didn't match the content, so the type has been officially switched to '" + data[2] + "'\n\nthanks for being honest!\n\nmoving on...");
+                }
+                if(
+                  this.state.uploadedFileType.indexOf('application/x-zip-compressed')!==-1 ||
+                  this.state.uploadedFileType.indexOf('image/')!==-1 ||
+                  this.state.uploadedFileType.indexOf('audio/')!==-1
+                ){
+                  this.state.fileUploadSucceeded = true
+                  this.state.showMintModal = true
+                //} else if(this.state.uploadedFileType.indexOf('audio/')!==-1){
+                
+                } else {
+                  alert("\n\nruh roh\n\nfor now, this site only accepts images (png, jpg, gif) and generative works\n\nfor generative, simply zip a demo's root directory (with an index.html file in it), then upload the zip");
+                }
+              } else {
+                if(data[1]) alert(data[1])
+                this.state.uploadedContentURL =''
+                this.state.uploadedFileType =''
+                this.state.fileUploadSucceeded = false
+              }
+              this.state.uploadInProgress = false
+              this.state.dragover=false
+            })
+          } else {
+            this.state.uploadInProgress = false
+            alert("\n\nruh roh\n\nfor now, this site only accepts images (png, jpg, gif) and generative works\n\nfor generative, simply zip a demo's root directory (with an index.html file in it), then upload the zip");
+            this.state.dragover = false
+          }
+        } else {
+          this.state.uploadInProgress = false
+          alert('your file has too much scrumf! keep it under 100MB, eh?');
+          this.state.dragover = false
+        }
+      })
+    },
+    manualUpload(){
+      let el = document.createElement('input')
+      el.setAttribute('type', 'file')
+      el.onchange=e=>{
+        var path = e.path || (e.composedPath && e.composedPath());
+        this.uploadFiles(path[0].files)
+      }
+      el.click()
+    },
+    alphaToDec(val){
+      let pow=0
+      let res=0
+      let cur, mul
+      while(val!=''){
+        cur=val[val.length-1]
+        val=val.substring(0,val.length-1)
+        mul=cur.charCodeAt(0)<58?cur:cur.charCodeAt(0)-(cur.charCodeAt(0)>96?87:29)
+        res+=mul*(62**pow)
+        pow++
+      }
+      return res
+    },
+    toggleShowTransactionModal(){
+      if(this.state.showTransactionModal){
+        this.closePrompts()
+      }else{
+        this.state.showTransactionModal = true
+        this.state.modalShowing=true
+      }
+    },
+    loadUserPage(){
+      window.location.href=window.location.origin + '/u/' + this.state.loggedinUserName
+    },
+    checkWallets(){
+      this.checkSiteWallet()
+      this.checkTempleWallet()
+    },
+    toggleShowMintModal(){
+      this.showMintModal = !this.showMintModal
+    },
+    userNameString(){
+      let s = this.state.loggedinUserName
+      s = s.length > 30 ? s.substring(0,30) + '...' : s
+      return s + (this.state.walletData.address !== this.state.loggedinUserName ? ' (<span style="'+(this.state.monochrome?'color:#eee':'color:#0fc')+'">'+this.state.walletData.address+'</span>)':'')
+    },
+    getMode(){
+      let vars = window.location.pathname.split('/').filter(v=>v)
+      if(vars.length>0){
+        switch(vars[0]){
+          case 't':
+            this.state.mode = 'token'
+            this.state.curPage = (+vars[1])-1
+            this.state.tokenID = vars[1]
+            this.$nextTick(()=>this.loadToken(this.alphaToDec(vars[1])))
+            if(vars[2]){
+              this.state.search.string = decodeURIComponent(vars[2])
+            }
+            break
+          case 'u':
+            if(!vars[1]) window.location.href = window.location.origin
+            this.state.viewAuthor = decodeURIComponent(vars[1]);
+            this.state.user = {name: decodeURIComponent(vars[1])}
+            this.state.mode = 'user'
+            if(vars[2]){
+              this.state.curUserPage = (+vars[2])-1
+              if(vars[3]){
+                this.state.search.string = decodeURIComponent(vars[3])
+                search = '/' + vars[3]
+                history.pushState(null,null,window.location.origin + '/u/' + (this.state.user.name) + '/' + (this.state.curPage + 1)) + search
+                this.beginSearch()
+              }else{
+                if(!this.state.curUserPage || this.state.curUserPage < 0 || this.state.curUserPage > 1e6) this.state.curUserPage = 0
+                history.pushState(null,null,window.location.origin + '/u/' + (vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+                this.getPages()
+              }
+            } else {
+              this.state.curUserPage = 0
+              history.pushState(null,null,window.location.origin + '/u/' + (vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+              this.getPages()
+            }
+          break
+          default:
+            this.state.mode = 'default'
+            let search = ''
+            if(vars[0]){
+              this.state.curPage = (+vars[0])-1
+              if(vars[1]){
+                this.state.search.string = decodeURIComponent(vars[1])
+                search = '/' + vars[1]
+                history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1)) + search
+                this.beginSearch()
+              }else{
+                history.pushState(null,null,window.location.origin + '/' + this.state.curPage ? (this.state.curPage + 1) : '')
+                if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
+                this.getPages()
+              }
+            }else{
+              window.location.href = window.location.origin
+            }
+          break
+        }
+      }else{
+        this.state.mode = 'default'
+        this.getPages()
+				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+      }
+    },
+    launchItem(item){
+      this.state.displayItem = item
+      this.state.toggleShowAssetModal()
+    },
+    purchaseToken(item){
+      if(this.state.siteWalletConnected || this.state.templeWalletConnected){
+        if(item.userID == this.state.loggedinUserID){
+          alert("you can't mint your own token")
+        } else {
+          let curbal = this.state.walletData.balance
+          if(curbal < item.price){
+            this.state.minimized = false
+            alert("\n\nyou don't have enogh coin for this item!\n\n"+(this.state.siteWalletConnected ? "you can make a deposit by copying your wallet address (just click it), then send Tezos (XTZ) from anywhere.":''))
+          } else {
+            this.closePrompts()
+            this.state.showPurchaseModal = true
+          }
+        }
+      } else {      
+        this.doWalletNotConnectedNotice()
+      }
+    },      
+    doListItem(item){
+      this.state.listItem = item
+      this.closePrompts()
+      this.state.showListingModal = true
+    },
+    finalizeListing(){
+      if(!this.state.loggedin) return
+      let sendData={
+        userID: this.loggedinUserID,
+        passhash: this.state.passhash,
+        itemID: item.id
+      }
+      fetch(this.state.baseURL + '/listItem.php', {
+        method: 'POST',
+        body: data
+      }).then(res=>res.json()).then(data=>{
+        if(data[0]){
+        }
+      })
+    },
+    finalizePurchase(item){
+      let curbal = this.state.walletData.balance
+      if(curbal < item.price){
+        this.state.minimized = false
+        alert("\n\nyou don't have enogh coin for this item!\n\n"+(this.state.siteWalletConnected ? "you can make a deposit by copying your wallet address (just click it), then send Tezos (XTZ) from anywhere.":''))
+      } else {
+        this.state.closePrompts()
+        this.state.prepop={
+          doPrepop: true,
+          item
+        }
+        this.state.toggleShowTransactionModal()
+      }
+    },
+    doWalletNotConnectedNotice(){
+        this.closePrompts()
+      //alert("\n\nyou haven't connected a wallet!\n\nyou may use a Temple wallet\navailable as a plugin for desktop browsers,\n\nor the wallet provided by this site\nwith anonymous, instant registration");
+      alert("\n\nyou haven't connected a wallet!\n\nyou may use the wallet provided by this site\nwith anonymous, instant registration");
+      this.state.showSiteWalletModal = true
+    },
+    toggleFullScreen(el){
+      el.requestFullscreen()
+    },
+    loadDropListeners(){
+    
+      this.state.dropListenersLoaded = true
+      this.$refs.dropSurface.onmouseup=this.$refs.dropSurface.dragleave=e=>{
+        this.$refs.dropSurface.style.pointerEvents = 'none'
+        this.state.dragover=false
+      }
+      
+      document.body.ondragover=e=>{
+        if(this.state.loggedin) {
+          this.$refs.dropSurface.style.pointerEvents = 'all'
+        } else {
+          this.doWalletNotConnectedNotice()
+        }
+      }
+      
+      this.$refs.dropSurface.ondragover=e=>{
+        e.preventDefault()
+        e.stopPropagation()
+        if(this.state.loggedin) {
+          if(!this.state.showMintModal){
+            this.state.dragover=true
+          }
+        } else {
+          this.doWalletNotConnectedNotice()
+        }
+      }
+      this.$refs.dropSurface.ondragleave=e=>{
+        if(this.state.loggedin) {
+          e.preventDefault()
+          e.stopPropagation()
+          this.state.dragover=false
+          this.$refs.dropSurface.style.pointerEvents = 'none'
+        }
+      }
+      this.$refs.dropSurface.ondrop=e=>{
+        e.preventDefault()
+        e.stopPropagation()
+        if(this.state.loggedin) {
+          this.uploadFiles(e.dataTransfer.files)
+          this.$refs.dropSurface.style.pointerEvents = 'none'
+        } else {
+          this.doWalletNotConnectedNotice()
+        }
+      }
+    }
+  },
+  watch:{
+    'state.monochrome'(val){
+      if(val){
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/jKSS2.jpg)'
+        document.body.style.background = 'linear-gradient(45deg, #111e, #000b, #111)'
+        this.setCookie()
+      } else {
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/1QxCBC.jpg)'
+        document.body.style.background = 'linear-gradient(45deg, #012e, #000b, #102)'
+        this.setCookie()
+      }
+    },
+    'state.showMintModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showListingModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.userSettingsVisible'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showSeedPhraseModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showSiteWalletModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showTransactionModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showTempleDownloadModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showAssetModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.showPurchaseModal'(val){
+      if(val) this.state.modalShowing=true
+    },
+    'state.loggedin'(val){
+      if(val && !this.state.dropListenersLoaded) this.loadDropListeners()
+    },
+    'state.minimized'(val){
+      this.$nextTick(()=>{this.setCookie()})
+    },
+    'state.templeWalletAvailable'(val){
+      //console.log('wallet is '+(val?'':'NOT ')+'available')
+    }
+  },
+  computed:{
+  },
+  mounted(){
+    setInterval(()=>{
+      this.state.globalT+=1/60
+    },1/60*1000|0)
+    this.state.logout = this.logout
+    this.state.lastPage = this.lastPage
+    this.state.doListItem = this.doListItem
+    this.state.setCookie = this.setCookie
+    this.state.getAvatar = this.getAvatar
+    this.state.firstPage = this.firstPage
+    this.state.loadToken = this.loadToken
+    this.state.alphaToDec = this.alphaToDec
+    this.state.launchItem = this.launchItem
+    this.state.decToAlpha = this.decToAlpha
+    this.state.regressPage = this.regressPage
+    this.state.resetPrepop = this.resetPrepop
+    this.state.beginSearch = this.beginSearch
+    this.state.uploadFiles = this.uploadFiles
+    this.state.advancePage = this.advancePage
+		this.state.userAgent = navigator.userAgent
+    this.state.loadUserPage = this.loadUserPage
+    this.state.manualUpload = this.manualUpload
+    this.state.loadUserData = this.loadUserData
+    this.state.purchaseToken = this.purchaseToken
+    this.state.fetchUserData = this.fetchUserData
+    this.state.closeControls = this.closeControls
+    this.state.updateUserNae = this.updateUserName
+    this.state.userNameString = this.userNameString
+    this.state.incrementViews = this.incrementViews
+    this.state.loggedinUserAvatar = this.getAvatar()
+    this.state.extractEmbedURL= this.extractEmbedURL
+    this.state.wallet = new TempleWallet('plorg.net')
+    this.state.finalizeListing = this.finalizeListing
+    this.state.checkSiteWallet = this.checkSiteWallet
+    this.state.finalizePurchase = this.finalizePurchase
+    this.state.toggleFullScreen = this.toggleFullScreen
+    this.state.getCommentAvatar = this.getCommentAvatar
+    this.state.getSiteWalletData = this.getSiteWalletData
+    this.state.toggleShowControls = this.toggleShowControls
+    this.state.toggleShowMintModal = this.toggleShowMintModal
+    this.state.toggleShowAssetModal = this.toggleShowAssetModal
+    this.state.templeSyncButtonClick = this.templeSyncButtonClick
+    this.state.siteWalletSyncButtonClick = this.siteWalletSyncButtonClick
+    this.state.toggleShowTransactionModal = this.toggleShowTransactionModal
+
+    
+    this.checkPrefs()
+    this.loadHotKeys()
+    this.state.wallet = new TempleWallet('plorg.net')
+    this.checkWallets()
+    this.state.closePrompts = this.closePrompts
+    this.getMode()
+    if(this.state.loggedin) loadDropListeners()
+  }
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+html,body{
+  font-family: 'Source Code Pro';
+  margin: 0;
+  background-size: cover;
+  overflow: hidden;
+}
+body{
+  min-height: calc(100vh);
+  color: #cee;
+}
+.dropSurface{
+  position: fixed;
+  z-index: 10000;
+  left:0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+#app{
+  background-color: #0000;
+}
+button{
+  font-family: 'Source Code Pro';
+  font-size: 12px;
+  border: none;
+  border-radius: 3px;
+  background: #adc;
+  padding: 2px;
+  padding-bottom: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-weight: 900;
+  margin: 10px;
+  min-width: 140px;
+  cursor: pointer;
+}
+option{
+  text-align: center;
+}
+select{
+  background: #012;
+	color: #8fc;
+}
+::-webkit-scrollbar {
+  width: 12px!important;
+  cursor: pointer!important;
+}
+::-webkit-scrollbar:hover{
+  cursor: pointer!important;
+  background: #f44!important; 
+}
+
+::-webkit-scrollbar-track {
+  cursor: pointer!important;
+  background: #222!important; 
+}
+::-webkit-scrollbar-track:hover {
+  cursor: pointer!important;
+  background: #444!important; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  cursor: pointer!important;
+  background: #666!important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888!important; 
+  cursor: pointer!important;
+}
+a,button{
+  cursor: pointer;
+}
+a{
+  color: #8ff;
+  text-decoration: none;
+}
+.spacerDiv{
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #0000, #4dd8, #0000);
+  margin-top: .3em;
+  margin-bottom: .3em;
+}
+/* Customize the label (the checkboxLabel) */
+.checkboxLabel {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: -2px;
+  margin-left: 30px;
+  margin-top: 3px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkboxLabel input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border: 1px solid #4448;
+}
+.normalCheckmark{
+  background-color: #111;
+}
+.monochromeCheckmark{
+  background-color: #111;
+}
+/* On mouse-over, add a grey background color */
+.checkboxLabel:hover input ~ .checkmark {
+  background-color: #333;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkboxLabel input:checked ~ .checkmark {
+  background-color: #888;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkboxLabel input:checked ~ .checkmark:after {
+  display: block;
+}
+input[type=text]{
+  background: #0004;
+  border: none;
+  border-bottom: 1px solid #4fc4;
+  color: #ffa;
+  font-family: 'Source Code Pro';
+}
+textarea{
+  font-family: 'Source Code Pro';
+}
+input[type=checkbox]{
+  transform: scale(1.5);
+  margin: 8px;
+  margin-left: 5px;
+}
+input:focus{
+  outline: none;
+}
+button:focus{
+  outline: none;
+}
+select:focus{
+  outline: none;
+}
+/* Style the checkmark/indicator */
+.checkboxLabel .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.launchButton, .mintButton{
+  margin: 0;
+  color: #fff;
+  margin-bottom: 5px;
+  font-size: 15px;
+  text-shadow: 1px 1px 2px #000;
+  border: 1px solid #fff2;
+  margin-left: 10px;
+  width: calc(50% - 10px);
+}
+.normalButtonBG{
+  background: #255;
+}
+.monochromeButtonBG{
+  background: #444;
+}
+.launchButton{
+  margin-top: 10px;  
+}
+.mintButton{
+  margin-top: 10px;
+}
+.disabledButton{
+  color: #888!important;
+  cursor: default;
+  background: #333!important;
+}
+.commentContainer{
+	background: #2020;
+	padding: 10px;
+	margin-top: 6px;
+}
+.commentsHeader{
+	font-size: 28px;
+	text-align: left;
+	width: calc(100% - 200px);
+	vertical-align: top;
+  float: left;
+  display: inline-block;
+  padding:5px;
+  padding-right: 200px;
+  padding-left: 10px;
+  margin-bottom: 0px;
+  height: 25px;
+  line-height: 20px;
+  margin-left: -10px;
+}
+.normalCommentsHeader{
+  color:#2f4;
+	background: linear-gradient(90deg, #306f, #1026, #0000);
+}
+.monochromeCommentsHeader{
+  color:#eee;
+	background: linear-gradient(90deg, #333f, #1116, #0000);
+}
+.commentText{
+  color: #ff8;
+  text-align: left;
+  display: inline-block;
+  font-size: 18px;
+	padding-left: 10px;
+	padding-right: 10px;
+  background: #0046;
+  margin-top: 5px;
+  margin-left: 10px;
+  width: calc(100% - 75px);
+  max-width: calc(100% - 75px);
+}
+.commentInput:focus{
+	outline: none;
+}
+.commentInput{
+	border: none;
+	text-align: left;
+	vertical-align: top;
+	display: inline-block;
+	font-size: 18px;
+  margin-top: 5px;
+  margin-left:10px;
+  width: calc(100% - 110px);
+  min-width: calc(100% - 110px);
+  max-width: calc(100% - 110px);
+  margin-right: 10px;
+}
+.normalCommentInput{
+	color: #ef8;
+	background: #001c;
+}
+.monochromeCommentInput{
+	color: #ccc;
+	background: #000c;
+}
+.commentAvatar{
+  position: absolute;
+	margin-left: -1px;
+  max-height: 50px;
+  max-width: 50px;
+  width: auto;
+  border-radius: 50%;
+	height:50px;
+	margin-top: 15px;
+  cursor: pointer;
+}
+.commentMain{
+  width: 100%;
+	margin-top: 4px;
+	padding-bottom: 6px;
+  text-align: left;
+}
+.commentUserName{
+	color: #6dc;
+	padding: 0;
+	padding-left: 50px;
+	padding-right: 5px;
+	padding-top: 2px;
+	vertical-align: top;
+}
+.commentDeleteButton{
+	background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
+	background-repeat: no-repeat;
+	background-size: 25px 25px;
+	background-position: center center;
+	width: 34px;
+	height: 34px!important;
+	vertical-align: top;
+	margin-top: -5px;
+	border-radius: 5px;
+	background-color: #f880;
+}
+.commentEditButton{
+  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px!important;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
+}
+.newComment{
+  width: calc(100% - 75px)!important;
+  min-width: calc(100% - 75px)!important;
+  max-width: calc(100% - 75px)!important;
+	float:left;
+}
+table{
+  margin-left: auto;
+  margin-right: auto;
+}
+.loadCommentsButton{
+  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #3ce4;
+  color: #fffc;
+  font-weight: 300;
+  font-size: 24px;
+  position: relative;
+  display: inline-block;
+}
+table{
+  margin-left: auto;
+  margin-right: auto;
+}
+.loadCommentsButton{
+  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #3ce4;
+  color: #fffc;
+  font-weight: 300;
+  font-size: 24px;
+  position: relative;
+  display: inline-block;
+}
+.smallControlButton{
+  width: 32px;
+  height: 32px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  border-radius: 50%;
+  position: absolute!important;
+  min-width: 0;
+}
+.highlighted{
+  background-color: #0fa;
+  background-image: url(https://jsbot.cantelope.org/uploads/14MAyj.png);
+}
+.cancelButton:focus{
+  outline: solid;
+}
+.nextButton:focus{
+  outline: solid;
+}
+.normalMainContainer{
+  background: linear-gradient(-45deg, #103a, #000c, #023a);
+}
+.monochromeMainContainer{
+  background: linear-gradient(-45deg, #222a, #000c, #222a);
+}
+.normalAssetContainer{
+  background-color: linear-gradient(45deg, rgb(17, 0, 34), rgb(0, 0, 0), rgb(0, 34, 51));
+}
+.monochromeAssetContainer{
+  background-color: linear-gradient(45deg, #222, #000, #222);
+}
+</style>

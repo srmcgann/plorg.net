@@ -1,0 +1,366 @@
+<template>
+  <div class="seedPhraseModalContainer">
+    <div v-if="locked" class="lockScreen">
+      <div class="mainContainer" style="white-space:pre-wrap;text-align: left; color: #aaa;" :class="{'normalMainContainer': !state.monochrome,'monochromeMainContainer': state.monochrome}">
+      <span class="title" style="font-size: 18px;color: #8fc;">tezos network</span><br>
+        <div
+          ref="responseDiv"
+          style="font-size:24px;overflow:hidden;height:130px;resize:none;height: calc(100% - 80px);font-size:14px;padding: 5px; background: #001;overflow-y:auto"
+        ><br><div style="text-align:center;"><br><br><span style="font-size:24px;">transaction broadcasted!</span><br><br><br><br>waiting for 5 network confirmations<br><br>result will be displayed here...<br><br><br><br><br><br><br>
+        <img style="width: 50px;" src="https://jsbot.cantelope.org/uploads/1o4WO1.gif"></div></div>
+        <button class="cancelButton" style="position: absolute; bottom: 10px;right: 10px;" @click="unlock()">close</button>
+      </div>
+    </div>
+    <div class="mainContainer" :class="{'normalMainContainer': !state.monochrome,'monochromeMainContainer': state.monochrome}">
+      <span style="color: #08f">WALLET TOOLS</span>
+      <br>
+      <br>
+      <input
+        style="position: absolute; z-index:-1; opacity: 0;z-index: -1"
+        ref="tabAnchor"
+        type="text"
+      >
+      <div style="padding: 5px;">
+        <br>
+        <span v-if="!doPrepop" style="font-size: 1.5em;">SEND</span>
+        <span v-else style="font-size: 1.5em;line-height:1em;">PURCHASING<br>"<span style="font-size:.9em;color: #fff;">{{state.prepop.item.title}}</span>"<br>FROM<br><span style="color:#ff0;line-height:.2em;">{{state.users[state.prepop.item.userID].name}}<br><span style="color:#aaa;font-size:.6em;">{{state.users[state.prepop.item.userID].pkh}}</span></span></span>
+        <br><br><br>
+        <div v-if="!this.doPrepop">
+          <span class="title" v-html="userNameString()"></span>
+          <br>
+          <span class="title" style="color:#fff;width: 20px;float:left;margin-right: 20px;display: inline-block">To</span>
+          <span class="title" style="float: left; width: auto;">&nbsp;&nbsp;recipient address (Tezos ONLY!)</span><br>
+          <input
+            type="text"
+            ref="recipient"
+            spellcheck="false"
+            class="input"
+            :disabled="doPrepop"
+            @input="fixRecipient()"
+            v-model="recipient"
+            v-on:keydown.esc="state.closePrompts()"
+            v-on:keydown.shift.tab="$refs.bottomTabAnchor.focus()"
+            v-on:keydown.enter="submit()"
+            @click="$event.target.select()"
+            placeholder="e.g. tz1V2xhjbZsZ2Zx86zcuajdqJfChXdi51rB1"
+          >
+          <br><br>
+        </div>
+        <div v-else style="font-size:1.2em;">for {{amount}}ꜩ</div>
+        <div v-if="!doPrepop">
+          <span class="title">
+            amount
+            <button
+              v-if="!this.doPrepop"
+              class="useMaxButton normalOutline"
+              @click="useMax()"
+              v-on:keydown.esc="state.closePrompts()"
+            >
+              use max {{state.walletData.balance}}
+            </button>
+          </span><br>
+          <input
+            type="text"
+            ref="amount"
+            v-model="amount"
+            spellcheck="false"
+            :disabled="doPrepop"
+            class="input"
+            v-on:keydown.enter="submit()"
+            @click="$event.target.select()"
+            placeholder="e.g. 16.2"
+          >
+        </div>  
+        <br><br>
+        <div v-if="state.templeWalletConnected">
+          <button style="font-size:24px;" @click="templeSubmit()"> confirm in Temple</button>
+        </div>
+        <div v-else>
+          <span class="title" style="text-align: center;">enter your mnemonic seed phrase for<br>wallet <span style="font-size:.8em;">{{this.state.walletData.address}}</span></span><br>
+          <textarea
+            @input="startHideTimer();updateValidation()"
+            class="input"
+            ref="mnemonic"
+            style="font-size:24px;overflow:hidden;height:130px;resize:none;border: 1px solid #4ff8;"
+            placeholder="e.g. wish shoot dinner promote choice air elder hero pelican join present energy"
+          ></textarea><br>
+          <div style="text-align: left;margin-top: 15px;">
+            <label for="agreeToFeesCheckbox">
+              <input
+                ref="agreeToFeesCheckbox"
+                type="checkbox"
+                @input="checkCheckbox()"
+                v-model="agreeToFees"
+                id="agreeToFeesCheckbox"
+                style="transform: scale(2);margin:10px;"
+              >
+              agree to pay burn fees, if any<br>
+              <span style="color: #aaa;font-size: .8em;">Occasionally the network requires a small storage fee in addition to the baking fee. If you uncheck this box, your transaction may fail.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div v-if="this.transactionComplete">
+        <div class="spacerDiv" style="margin-top: 20px;"></div>
+        <div
+          class="status"
+          style="font-size:24px;overflow:hidden;height:130px;resize:none;"
+        >
+        </div>
+      </div>
+      <br>
+      <button
+        v-if="!state.templeWalletConnected"
+        v-on:keydown.tab="$refs.loginTabAnchor.focus()"
+        v-on:keydown.shift.tab="$refs.cancelButton.focus()"
+        ref="submitButton"
+        @click="submit()"
+        style="bottom: 0;position:relative;background:#265;color: #8fc;"
+        class="normalOutline"
+        :disabled="!validate"
+        :class="{'disabledButton': !validate}"
+      >submit</button>
+      <button
+        @click="state.closePrompts()"
+        v-on:keydown.tab="$refs.tabAnchor.focus()"
+        v-on:keydown.shift.tab="$refs.cancelButton.focus()"
+        v-on:keydown.esc="state.closePrompts()"
+        ref="cancelButton"
+        style="bottom: 0;position:relative;"
+        class="cancelButton"
+      >close [ESC]</button>
+      <input
+        style="position: absolute;; z-index:-1; opacity: 0;z-index: -1"
+        ref="bottomTabAnchor"
+        type="text"
+      >
+    </div>
+  </div>
+</template>
+
+<script>
+
+export default{
+  name: 'TransactionModal',
+  props: [ 'state', 'prepop' ],
+  data(){
+    return{
+      recipient: '',
+      amount: '',
+      hideTimer: 0,
+      agreeToFees: true,
+      mnemonic: '',
+      locked: false,
+      doPrepop: false,
+      transactionComplete: false,
+      mint: {}
+    }
+  },
+  computed: {
+    validate(){
+      return this.state.templeWalletConnected || (this.recipient && this.recipient.length==36 && this.amount && this.$refs.mnemonic.value && (+this.amount) > 0)
+    }
+  },
+  methods:{
+    fixRecipient(){
+      this.recipient = this.recipient.replace(' ', '')
+    },
+    updateValidation(){
+      let tmp = this.amount
+      this.amount=0
+      this.$nextTick(()=>this.amount=tmp)
+    },
+    userNameString(){
+      return '<span style="color:#fff;">From</span> '+this.state.userNameString()
+    },  
+    templeSubmit(){
+    },
+    submit(){
+      if(this.validate){
+        this.locked=true
+        let sendData = {
+          userName: this.state.loggedinUserName,
+          passhash: this.state.passhash,
+          sender: this.state.walletData.address,
+          recipient: this.recipient,
+          amount: this.amount,
+          mnemonic: this.mnemonic.replace('  ', ' ').replace("\n",'').trimLeft().trimLeft(),
+          agreeToFees: this.agreeToFees ? 'true' : 'false',
+          mint: JSON.parse(JSON.stringify(this.mint))
+        }
+        fetch(this.state.baseURL + '/transact.php',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        })
+        .then(res => res.json())
+        .then(data => {
+          let res = (data[0] ? '<span style="color: #afa;font-size: 20px;">SUCCESS!</span><br><br><br>' : 'TRANSACTION FAILED<br><br><br>' + (data[1].indexOf('Balance of contract ' + this.state.walletData.address + ' too low') != -1 ? 'Insufficient balance.' : 'unknown error :('))
+          data[1] = data[1].substring(0, data[1].indexOf('The operation has only been included'))
+          res += data[1].indexOf('This sequence of operations was run:') != -1 ? data[1].substring(data[1].indexOf('This sequence of operations was run:')) : data[1]
+          this.$refs.responseDiv.innerHTML = res
+          if(data[0] && data[4]){
+            alert("transaction successful!\n\ncongratulations on your purchase!")
+            window.location.href = window.location.origin + '/t/' + this.state.decToAlpha(+data[4])
+          }
+        })
+      } else {
+        this.showInvalid = true
+      }
+    },
+    unlock(){
+      this.$refs.responseDiv.innerHTML = ''
+      this.locked=false
+      this.state.closePrompts()
+    },
+    useMax(){
+      this.amount=(this.state.walletData.balance * .98).toFixed(6)
+    },
+    checkCheckbox(){
+      //console.log(!this.agreeToFees)
+    },
+    startHideTimer(){
+      if(this.hideTimer){
+        clearTimeout(this.hideTimer)
+      }
+      this.hideTimer = setTimeout(()=>{
+        if(this.$refs.mnemonic.value.indexOf('●') == -1) this.mnemonic = this.$refs.mnemonic.value
+        this.$refs.mnemonic.value=this.$refs.mnemonic.value.split('').map(v=>{
+          return v.charCodeAt(0) == 32 ? ' ' : '●'
+        }).join('')
+        this.hideTimer = 0
+      },1000)
+    }
+  },
+  mounted(){
+    document.getElementsByTagName('HTML')[0].style.overflowY = 'hidden'
+    if(this.state.prepop.doPrepop){
+      this.doPrepop = true
+      this.amount = this.state.prepop.item.price
+      this.recipient = this.state.users[this.state.prepop.item.userID].pkh
+      this.mint = {
+        item: this.state.prepop.item
+      }
+      if(!this.state.templeWalletConnected) this.$refs.mnemonic.focus()
+    } else {
+      this.$refs.recipient.focus()
+    }
+  },
+  beforeUnmount(){
+    this.state.prepop = JSON.parse(JSON.stringify(this.state.defaultPrepop))
+  }
+}
+</script>
+
+<style scoped>
+.seedPhraseModalContainer{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  top: 0;
+  background: #012e;
+  text-align: center;
+}
+.useMaxButton{
+  margin: 0;
+  height: initial;
+  min-height: initial;
+  width: initial;
+  min-width: initial;
+  background: #065;
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+  padding: 0;
+  position: absolute;
+  margin-top: 2px;
+  margin-left: 10px;
+  text-shadow: 1px 1px 2px #000;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.mainContainer{
+  padding: 20px;
+  margin-top:20px;
+  line-height: .85em;
+  border: 1px solid #4ff2;
+  min-width: 650px;
+  max-width: 650px;
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  font-size: 24px;
+  transform: translate(-50%, -50%) scale(.9);
+}
+.normalMainContainer{
+  background: linear-gradient(-45deg, #103a, #000c, #023a);
+}
+.monochromeMainContainer{
+  background: linear-gradient(-45deg, #222a, #000c, #222a);
+}
+.lockScreen{
+  position: fixed;
+  top:0;
+  left:0;
+  width: 100vw;
+  height: 100vh;
+  background: #0008;
+  z-index: 2000;
+}
+.cancelButton{
+  background: #800;
+  color: #faa;
+}
+.inputContainer{
+  padding: 10px;
+  line-height: .8em;
+}
+.title{
+  font-size: .9em;
+  display: inline-block;
+  margin: 0;
+  margin-bottom: 8px;
+  padding:0;
+  text-align: left;
+  width: 100%;
+}
+.status{
+  text-align: left;
+  background: #0004;
+  border: none;
+  width: calc(100% - 5px);
+  font-size: 16px;
+  color: #8fa;
+}
+.inputTitle{
+  text-align: left;
+  width: 300px;
+  font-size:.8em;
+  margin:0;
+}
+.disabledButton{
+  color: #888;
+  cursor: default;
+  background: #333!important;
+}
+.normalOutline:focus{
+  outline: solid;
+}
+.pkh{
+  border-radius: 5px;
+  padding:1px;
+  padding-left: 10px!important;
+  padding-right: 10px!important;
+  margin-left: -20px;
+  margin-top:-10px;
+  font-size:.7em;
+  position: relative;
+  z-index: 20;
+}
+</style>
+
