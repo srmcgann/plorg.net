@@ -10,7 +10,7 @@
             {{item.description}}
           </div>
         </div>
-        <div class="assetContainer">
+        <div class="assetContainer" :class="{'normalAssetContainer':!state.monochrome,'monochromeAssetContainer':state.monochrome}">
           <button
             class="fullscreenButton"
             @click="toggleFullScreen()"
@@ -119,7 +119,6 @@ export default{
   height:625px;
   margin-left: auto;
   margin-right: auto;
-  background: linear-gradient(45deg, #102, #000, #023);
 }
 .assetMain{
   width: 100%;

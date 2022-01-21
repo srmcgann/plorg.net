@@ -95,18 +95,6 @@ export default {
         case 'user': return +this.state.curUserPage; break
         case 'default': return +this.state.curPage; break
       }
-    },
-    pagenumber(){
-      let num
-      switch(this.state.mode){
-        case 'user':
-          num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
-        break
-        case 'default':
-          num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
-        break
-      }
-      return num
     }
   }
 }
@@ -188,16 +176,6 @@ export default {
   position: absolute;
   transform: scale(2.0);
   margin-top: 11px;
-}
-.curPageContainer{
-  display: inline-block;
-  width: 270px;
-	line-height: .8em;
-	min-height: 25px;
-  margin-top: 3px;
-	margin-left: -15px;
-  vertical-align: top;
-  padding-top: 0px;
 }
 .advancedControls{
 	top: 0;

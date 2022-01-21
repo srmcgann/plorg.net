@@ -75,6 +75,7 @@ export default{
         id: null,
         userID: +this.item.creatorID,
         author: this.state.users[this.item.creatorID].name,
+        avatar: this.state.users[this.item.creatorID].avatar,
         trackName: this.item.title,
         playlist:'',
         suffix: this.item.suffix,

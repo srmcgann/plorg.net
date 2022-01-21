@@ -62,6 +62,7 @@ export default {
         baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
         doListItem: null,
         loggedinUserName: '',
+        pagenumber: null,
         uploadInProgress: false,
         showAssetModal: false,
         showControls: false,
@@ -977,6 +978,7 @@ export default {
         if(files[0].size && files[0].size<this.state.maxFileSize){
           if(
             files[0].type.indexOf('application/x-zip-compressed')!==-1 ||
+            files[0].type.indexOf('application/zip')!==-1 ||
             files[0].type.indexOf('image/')!==-1 ||
             files[0].type.indexOf('audio/')!==-1
           ){
@@ -995,11 +997,12 @@ export default {
                 this.state.uploadedContentURL = data[1]
                 this.state.uploadedFileType = data[2]
                 this.state.uploadedFileSize = data[3]
-                if(!(+data[4])){
-                  alert("your file's type indicated by its suffix ("+this.state.uploadedFileSuffix+" -> "+files[0].type+") didn't match the content, so the type has been officially switch to '" + data[2] + "'\n\nthanks for being honest!\n\nmoving on...");
+                if(!(+data[4]) && (data[2] !== 'application/zip')){
+                  alert("your file's type indicated by its suffix ("+this.state.uploadedFileSuffix+" -> "+files[0].type+") didn't match the content, so the type has been officially switched to '" + data[2] + "'\n\nthanks for being honest!\n\nmoving on...");
                 }
                 if(
                   this.state.uploadedFileType.indexOf('application/x-zip-compressed')!==-1 ||
+                  this.state.uploadedFileType.indexOf('application/zip')!==-1 ||
                   this.state.uploadedFileType.indexOf('image/')!==-1 ||
                   this.state.uploadedFileType.indexOf('audio/')!==-1
                 ){
@@ -1212,7 +1215,7 @@ export default {
       }
       
       document.body.ondragover=e=>{
-        if(this.state.loggedin) {
+        if(this.state.loggedin && !this.state.modalShowing) {
           this.$refs.dropSurface.style.pointerEvents = 'all'
         } else {
           this.doWalletNotConnectedNotice()
@@ -1248,6 +1251,9 @@ export default {
           this.doWalletNotConnectedNotice()
         }
       }
+    },
+    pagenumber(){
+      return
     }
   },
   watch:{
@@ -1307,11 +1313,12 @@ export default {
     },1/60*1000|0)
     this.state.logout = this.logout
     this.state.lastPage = this.lastPage
-    this.state.doListItem = this.doListItem
     this.state.setCookie = this.setCookie
     this.state.getAvatar = this.getAvatar
     this.state.firstPage = this.firstPage
     this.state.loadToken = this.loadToken
+    this.state.doListItem = this.doListItem
+    this.state.pagenumber = this.pagenumber
     this.state.alphaToDec = this.alphaToDec
     this.state.launchItem = this.launchItem
     this.state.decToAlpha = this.decToAlpha

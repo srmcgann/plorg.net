@@ -45,16 +45,22 @@
         </div>
       </div>
     </div>
+    <div style="position: relative;left: 50%;margin-top:-50px;margin-bottom: 30px;transform: translate(-50%);width: 400px;text-align: center;">
+      <Navigation :state="state"/>
+    </div>
   </div>
 </template>
 
 <script>
 import Card from './Card'
+import Navigation from './Navigation'
+
 export default {
   name: 'Main',
   props: [ 'state' ],
   components:{
-    Card
+    Card,
+    Navigation
   },
   data(){
     return {
@@ -155,8 +161,8 @@ export default {
   background-color: #333;
 }
 .item{
-  margin: 15px;
-  margin-top: 50px;
+  margin: 3px;
+  margin-top: 40px;
   padding: 5px;
   float: left;
   min-width:600px;  

@@ -1,196 +1,198 @@
 <template>
-  <div class="itemHeaderTitle" :class="{'normalItemHeaderTitle':!state.monochrome, 'monochromeItemHeaderTitle': state.monochrome}">
-    <div>
-      {{item.title}}
-    </div>
-    <div class="itemHeaderDescription">
-      {{item.description}}
-    </div>
-  </div>
-  <div style="float: left;display: inline-block; min-width: 300px;">
-    <div @click="state.launchItem(item)" class="itemImage" :style="'cursor: pointer;background-image: url(' + item.image + ');'"></div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">link</span>
-      <div class="cardVal">
-        <a
-          :href="state.baseURL+'/t/'+state.decToAlpha(item.id)"
-          @click="loadToken(item.id)"
-          class="slug"
-          :class="{'normalSlug': !state.monochrome,'monochromeSlug': state.monochrome}"
-          v-html="slug()"
-        ></a></div>
-    </div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">views</span>
-      <div class="cardVal">{{item.views}}</div>
-    </div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">minted</span>
-      <div class="cardVal">{{processedTimestamp(item.date)}}</div>
-    </div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">created</span>
-      <div class="cardVal">{{processedTimestamp(item.created)}}</div>
-    </div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">edition</span>
-      <div class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints+1)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
-    </div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">price</span>
-      <div class="cardVal">{{item.price}}ꜩ</div>
-    </div>
-    <div class="clear"></div>
-    <div class="itemData">
-      <span class="itemTitle">royalties</span>
-      <div class="cardVal">{{item.royalties}}%</div>
-    </div>
-  </div>
-  <div style="max-width: 260px;float: right;width: 260px;display: inline-block;padding: 0px;margin:0;">
-    <div 
-      style="cursor: pointer;  background: #0000;border-radius: 0px;padding:5px;padding-top: 5px;"
-    >
-      <div style="text-align: center;margin-bottom: 10px;margin-top:-10px;">this token owner</div>
-      <div
-        class="avatar"
-        title="load user page"
-        @click="loadUserPage(item.userID)"
-        :style="'background-image: url(' + state.users[item.userID].avatar + ');'"
-      ></div>
-      <span class="name" v-html="state.users[item.userID].name"></span>
-      <div class="pkh" :class="{'highlight':addresscopied}" title="click to copy tezos address" @click="copyAddress()">{{state.users[item.userID].pkh}}</div><br>
-      <div style="font-size: .8em;">
-        <span class="itemTitle itl">joined</span>
-        <span class="itemData">
-          &nbsp;{{processedTimestamp(state.users[item.userID].joined, 1)}}
-        </span>
-        <br>
-        <span class="itemTitle itl">tokens created</span>
-        <span class="itemData">
-          &nbsp;{{state.users[item.userID].numCreated}}
-        </span>
-        <br>
-        <span class="itemTitle itl">tokens owned</span>
-        <span class="itemData">
-          &nbsp;{{state.users[item.userID].numOwned}}
-        </span>
+  <div class="card">
+    <div class="itemHeaderTitle" :class="{'normalItemHeaderTitle':!state.monochrome, 'monochromeItemHeaderTitle': state.monochrome}">
+      <div>
+        {{item.title}}
+      </div>
+      <div class="itemHeaderDescription">
+        {{item.description}}
       </div>
     </div>
-    <div class="spacerDiv" style="margin-top: 10px;margin-bottom: 20px;"></div>
-        <div v-if="(+item.originalContent)" class="marketSegment originalContent">
-          THIS TOKEN IS IN<br>
-          THE <b>PRIMARY MARKET</b>
-        </div>
-        <div v-else class="marketSegment secondaryMarket">
-          THIS TOKEN IS IN<br>
-          THE <b>SECONDARY MARKET</b>
-        </div>
+    <div style="float: left;display: inline-block; min-width: 300px;">
+      <div @click="state.launchItem(item)" class="itemImage" :style="'cursor: pointer;background-image: url(' + item.image + ');'"></div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">link</span>
+        <div class="cardVal">
+          <a
+            :href="state.baseURL+'/t/'+state.decToAlpha(item.id)"
+            @click="loadToken(item.id)"
+            class="slug"
+            :class="{'normalSlug': !state.monochrome,'monochromeSlug': state.monochrome}"
+            v-html="slug()"
+          ></a></div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">views</span>
+        <div class="cardVal">{{item.views}}</div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">minted</span>
+        <div class="cardVal">{{processedTimestamp(item.date)}}</div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">created</span>
+        <div class="cardVal">{{processedTimestamp(item.created)}}</div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">edition</span>
+        <div class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints+1)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">price</span>
+        <div class="cardVal">{{item.price}}ꜩ</div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle">royalties</span>
+        <div class="cardVal">{{item.royalties}}%</div>
+      </div>
     </div>
-    <div class="itemData itemRoyalties" @click="loadUserPage(item.creatorID)" style="display: inline-block;cursor: pointer;min-width:200px;min-width: 55%;max-width: calc(100% - 10px);margin-bottom:0px;position: relative;transform: translatey(-20px);">
-      <span class="itemTitle">creator</span>
-        <div
-          class="small_avatar"
-          :style="'background-image: url(' + state.users[item.creatorID].avatar + ');margin-left: 10px;'"
-        ></div>
-        <div style="display: inline-block;margin-top: 10px;margin-left: 5px;word-break: break-all;max-width:calc(100% - 165px);width: 500px;">{{state.users[item.creatorID].name}}</div>
-    </div>
-    <button
-      @click="state.launchItem(item)"
-      class="launchButton"
-      :class="{'normalButtonBG':!state.monochrome,'monochromeButtonBG':state.monochrome}"
-
-      style="margin-top: 0px;"
-    >
-     launch
-    </button>
-    <MintButton :state="state" :item="item"/>
-  <div v-if="0" class="itemCard" v-html="cardData(item)"></div>
-  <div class="commentContainer">
-    <div class="commentsHeader" :class="{'normalCommentsHeader': !state.monochrome, 'monochromeCommentsHeader': state.monochrome}">
-      comments
-    </div>
-    <div v-if="state.loggedin">
-      <input
-        maxlength="512"
-        v-on:keyup.enter="postComment(item.id)"
-        :ref="'newComment' + item.id" placeholder="say something..."
-        class="commentInput newComment textInput"
-        :class="{'normalCommentInput':!state.monochrome,'monochromeCommentInput':state.monochrome}"
-        style="margin-left: 0;margin-top: 16px; border: 1px solid #123f;"
+    <div style="max-width: 260px;float: right;width: 260px;display: inline-block;padding: 0px;margin:0;">
+      <div 
+        style="cursor: pointer;  background: #0000;border-radius: 0px;padding:5px;padding-top: 5px;"
       >
+        <div style="text-align: center;margin-bottom: 10px;margin-top:-10px;">this token owner</div>
+        <div
+          class="avatar"
+          title="load user page"
+          @click="loadUserPage(item.userID)"
+          :style="'background-image: url(' + state.users[item.userID].avatar + ');'"
+        ></div>
+        <span class="name" v-html="state.users[item.userID].name"></span>
+        <div class="pkh" :class="{'highlight':addresscopied}" title="click to copy tezos address" @click="copyAddress()">{{state.users[item.userID].pkh}}</div><br>
+        <div style="font-size: .8em;">
+          <span class="itemTitle itl">joined</span>
+          <span class="itemData">
+            &nbsp;{{processedTimestamp(state.users[item.userID].joined, 1)}}
+          </span>
+          <br>
+          <span class="itemTitle itl">tokens created</span>
+          <span class="itemData">
+            &nbsp;{{state.users[item.userID].numCreated}}
+          </span>
+          <br>
+          <span class="itemTitle itl">tokens owned</span>
+          <span class="itemData">
+            &nbsp;{{state.users[item.userID].numOwned}}
+          </span>
+        </div>
+      </div>
+      <div class="spacerDiv" style="margin-top: 10px;margin-bottom: 20px;"></div>
+          <div v-if="(+item.originalContent)" class="marketSegment originalContent">
+            THIS TOKEN IS IN<br>
+            THE <b>PRIMARY MARKET</b>
+          </div>
+          <div v-else class="marketSegment secondaryMarket">
+            THIS TOKEN IS IN<br>
+            THE <b>SECONDARY MARKET</b>
+          </div>
+      </div>
+      <div class="itemData itemRoyalties" @click="loadUserPage(item.creatorID)" style="display: inline-block;cursor: pointer;min-width:200px;min-width: 55%;max-width: calc(100% - 10px);margin-bottom:0px;position: relative;transform: translatey(-20px);">
+        <span class="itemTitle">creator</span>
+          <div
+            class="small_avatar"
+            :style="'background-image: url(' + state.users[item.creatorID].avatar + ');margin-left: 10px;'"
+          ></div>
+          <div style="display: inline-block;margin-top: 10px;margin-left: 5px;word-break: break-all;max-width:calc(100% - 165px);width: 500px;">{{state.users[item.creatorID].name}}</div>
+      </div>
       <button
-        @click="postComment(item.id)"
+        @click="state.launchItem(item)"
+        class="launchButton"
         :class="{'normalButtonBG':!state.monochrome,'monochromeButtonBG':state.monochrome}"
-        style="color:#fff;padding: 2px;font-size: 1em;padding-bottom: 4px;margin: 0;width: 55px;display: block; margin-top: 17px; min-width: initial; padding: 0; float:right;"
-      >post</button>
-      <div style="clear:both"></div>
-    </div>
-    <div v-if="item.comments.length">
-      <div v-for="(comment, idx) in filteredComments">
-        <div class="commentMain" :class="{'useBorder': 1||idx}">
-              <div 
-                @click="loadUserPage(comment.userID)"
-                :class="{'bumpUp': state.userAgent.toUpperCase().indexOf('FIREFOX')!==-1}"
-                class="commentAvatar" :style="'background-image:url('+state.getCommentAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;position: relative;float: left;'"></div>
-          <div style="float:left;max-width: calc(100% - 52px);width:calc(100% - 52px);">
-          <span  v-if="typeof state.users[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
-            <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
-              <a :href="state.baseURL + '/u/' + state.users[comment.userID].name" style="color:#4dc!important;font-style: oblique;margin-left: 5px;float: left;margin-top: 10px;">{{state.users[comment.userID].name}}</a>
-            </span>
-            <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
-              <input
-                maxlength="512"
-                type="text"
-                placeholder="say something..."
-                :ref="'comment' + comment.id"
-                class="commentInput textInput"
-                style="width: calc(100% - 100px);"
-                @input="editComment(comment)"
-                v-model="comment.text"
-                :class="{'success':comment.updated==1,'failure':comment.updated==-1}"
-              >
-              <button
-                v-if="comment.userID == state.loggedinUserID || state.isAdmin"
-                @click='comment.editing = !comment.editing'
-                class="commentEditButton"
-                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
-              ></button>
-              <button
-                @click='deleteComment(comment, item)'
-                class="commentDeleteButton"
-                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
-              ></button>
-            </div>
-            <div v-else style="display: inline-block;width: calc(100% + 10px);left: 0!important;padding-right: 0;">
-              <span class="commentText" v-html="comment.text" v-linkified style="width: calc(100% - 68px)"></span>
-              <button
-                v-if="comment.userID == state.loggedinUserID || state.isAdmin"
-                @click='toggleEditMode(comment)'
-                class="commentEditButton"
-                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://jsbot.cantelope.org/uploads/2cyWBg.png);"
-              ></button>
+
+        style="margin-top: 0px;"
+      >
+       launch
+      </button>
+      <MintButton :state="state" :item="item"/>
+    <div v-if="0" class="itemCard" v-html="cardData(item)"></div>
+    <div class="commentContainer">
+      <div class="commentsHeader" :class="{'normalCommentsHeader': !state.monochrome, 'monochromeCommentsHeader': state.monochrome}">
+        comments
+      </div>
+      <div v-if="state.loggedin">
+        <input
+          maxlength="512"
+          v-on:keyup.enter="postComment(item.id)"
+          :ref="'newComment' + item.id" placeholder="say something..."
+          class="commentInput newComment textInput"
+          :class="{'normalCommentInput':!state.monochrome,'monochromeCommentInput':state.monochrome}"
+          style="margin-left: 0;margin-top: 16px; border: 1px solid #123f;"
+        >
+        <button
+          @click="postComment(item.id)"
+          :class="{'normalButtonBG':!state.monochrome,'monochromeButtonBG':state.monochrome}"
+          style="color:#fff;padding: 2px;font-size: 1em;padding-bottom: 4px;margin: 0;width: 55px;display: block; margin-top: 17px; min-width: initial; padding: 0; float:right;"
+        >post</button>
+        <div style="clear:both"></div>
+      </div>
+      <div v-if="item.comments.length">
+        <div v-for="(comment, idx) in filteredComments">
+          <div class="commentMain" :class="{'useBorder': 1||idx}">
+                <div 
+                  @click="loadUserPage(comment.userID)"
+                  :class="{'bumpUp': state.userAgent.toUpperCase().indexOf('FIREFOX')!==-1}"
+                  class="commentAvatar" :style="'background-image:url('+state.getCommentAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;position: relative;float: left;'"></div>
+            <div style="float:left;max-width: calc(100% - 52px);width:calc(100% - 52px);">
+            <span  v-if="typeof state.users[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
+              <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
+                <a :href="state.baseURL + '/u/' + state.users[comment.userID].name" style="color:#4dc!important;font-style: oblique;margin-left: 5px;float: left;margin-top: 10px;">{{state.users[comment.userID].name}}</a>
+              </span>
+              <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
+                <input
+                  maxlength="512"
+                  type="text"
+                  placeholder="say something..."
+                  :ref="'comment' + comment.id"
+                  class="commentInput textInput"
+                  style="width: calc(100% - 100px);"
+                  @input="editComment(comment)"
+                  v-model="comment.text"
+                  :class="{'success':comment.updated==1,'failure':comment.updated==-1}"
+                >
+                <button
+                  v-if="comment.userID == state.loggedinUserID || state.isAdmin"
+                  @click='comment.editing = !comment.editing'
+                  class="commentEditButton"
+                  style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
+                ></button>
+                <button
+                  @click='deleteComment(comment, item)'
+                  class="commentDeleteButton"
+                  style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
+                ></button>
+              </div>
+              <div v-else style="display: inline-block;width: calc(100% + 10px);left: 0!important;padding-right: 0;">
+                <span class="commentText" v-html="comment.text" v-linkified style="width: calc(100% - 68px)"></span>
+                <button
+                  v-if="comment.userID == state.loggedinUserID || state.isAdmin"
+                  @click='toggleEditMode(comment)'
+                  class="commentEditButton"
+                  style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://jsbot.cantelope.org/uploads/2cyWBg.png);"
+                ></button>
+              </div>
             </div>
           </div>
+            <div style="clear:both;"></div>
         </div>
-          <div style="clear:both;"></div>
+        <div v-if="moreComments" style="text-align: center;">
+          <span style="display: inline-block;font-size: 32px;">...</span>
+          <button
+            class = "loadCommentsButton"
+            @click="incrComments()"
+          >load more comments</button>
+        </div>
       </div>
-      <div v-if="moreComments" style="text-align: center;">
-        <span style="display: inline-block;font-size: 32px;">...</span>
-        <button
-          class = "loadCommentsButton"
-          @click="incrComments()"
-        >load more comments</button>
+      <div v-else><br>
+        <div style="text-align: center;">-- no comments --</div>
+        <div v-if="!state.loggedin" style="text-align: center;">(log in to comment on this item)</div>
       </div>
-    </div>
-    <div v-else><br>
-      <div style="text-align: center;">-- no comments --</div>
-      <div v-if="!state.loggedin" style="text-align: center;">(log in to comment on this item)</div>
     </div>
   </div>
 </template>
@@ -466,6 +468,9 @@ export default {
 }
 </script>
 <style scoped>
+.card{
+  margin-top: 0;
+}
 .success{
   background: #264!important;
 }

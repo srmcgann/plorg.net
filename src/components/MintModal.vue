@@ -153,7 +153,7 @@
       <div v-else-if="stage==1" style="margin-top:-15px;">
         <div style="display: inline-block;width: 100%;font-size: .7em;color:#ccc;text-align: center;margin-bottom: 20px;">thumbnail</div><br>
         <div class="spaceHolder"></div>
-        <div v-if="state.uploadedFileType == 'application/x-zip-compressed'">
+        <div v-if="state.uploadedFileType == 'application/x-zip-compressed' || state.uploadedFileType == 'application/zip'">
           <div
             class="imagePreview"
             :class="{'portrait': assetLoaded && !(thumbnail.width<thumbnail.height), 'landscape': assetLoaded && (thumbnail.width<thumbnail.height),'showSpinner':shotInProgress}"

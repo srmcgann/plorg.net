@@ -1,6 +1,6 @@
 <template>
   <div class="listingModal">
-    <div class="mainContainer">
+    <div class="mainContainer" :class="{'normalMainContainer': !state.monochrome,'monochromeMainContainer': state.monochrome}">
       <div style="text-align: center;">list</div>
       <div class="spacerDiv" style="margin-bottom: 20px;"></div>
       <div v-if="stage==0">
@@ -496,7 +496,6 @@ export default{
   border: 1px solid #4ff1;
   min-width: 625px;
   max-width: 625px;
-  background: linear-gradient(-45deg, #103a, #000c, #023a);
   position: absolute;
   top: 47%;
   left: 50%;

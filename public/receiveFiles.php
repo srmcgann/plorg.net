@@ -26,7 +26,7 @@
     }
     if($size < $maxFileSize){
       $escaped_name = escapeshellarg($name);
-      if($type == 'application/x-zip-compressed'){
+      if($type == 'application/x-zip-compressed' || $type=='application/zip'){
         $zipOutput = shell_exec("cd $uploads_dir; unzip $escaped_name 2>&1; rm $escaped_name");
         chdir($uploads_dir);
         $files = glob('*');

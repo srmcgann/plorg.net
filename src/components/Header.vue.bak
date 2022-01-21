@@ -46,7 +46,7 @@
             <div v-else style="display: inline-block;">
               <button
                 class="syncButton"
-                :class="{'activeButton': state.siteWalletConnected && !state.monochrome, 'activeButtonMonochrome': state.siteWalletConnected && state.monochrome}"
+                :class="{'activeButton':!state.monochrome, 'activeButtonMonochrome': state.monochrome}"
                 :title="state.siteWalletConnected?'unsync plorg.net wallet':'sync plorg.net wallet'"
                 @click="state.siteWalletSyncButtonClick()"
                 v-html="siteButtonText()"
@@ -81,42 +81,7 @@
             <span>monochrome theme</span>
           </label>
         </div>
-        <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'token' || (state.search.string && state.totalPages>1)"
-          :class="{'bumpLeft': !state.loggedin}">
-          <button
-            class="navButton"
-            :class="{'disabled': curPage < 1}"
-            :disabled="curPage < 1"
-            @click="state.firstPage()"
-          >
-            &lt;&lt;
-          </button>
-          <button
-            class="navButton"
-            :disabled="curPage < 1"
-            :class="{'disabled': curPage < 1}"
-            @click="state.regressPage()"
-          >
-            &lt;
-          </button>
-          {{pagenumber}}
-          <button
-            class="navButton"
-            :class="{'disabled': totalPages == curPage+1}"
-            :disabled="totalPages == curPage+1"
-            @click="state.advancePage()"
-          >
-            &gt;
-          </button>
-          <button
-            class="navButton"
-            :class="{'disabled': totalPages == curPage+1}"
-            :disabled="totalPages == curPage+1"
-            @click="state.lastPage()"
-          >
-            &gt;&gt;
-          </button>
-        </div>
+        <Navigation :state="state"/>
         <div
           @click="state.toggleShowControls()"
           v-if="1 || state.mode !== 'token'"
@@ -138,6 +103,7 @@
 <script>
 import { TempleWallet } from "@temple-wallet/dapp"
 import UploadButton from "./UploadButton"
+import Navigation from "./Navigation"
 
 export default {
   name: 'Header',
@@ -150,7 +116,8 @@ export default {
     }
   },
   components:{
-    UploadButton
+    UploadButton,
+    Navigation
   },
   props: [ 'state' ],
   methods:{
@@ -231,25 +198,6 @@ export default {
         case 'default': return +this.state.curPage; break
         case 'single': return +this.state.curPage; break
       }
-    },
-    pagenumber(){
-      let num
-      if(this.state.search.string){
-        num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
-      }else{
-        switch(this.state.mode){
-          case 'user':
-            num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
-          break
-          case 'default':
-            num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
-          break
-          case 'single':
-            num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
-          break
-        }
-      }
-      return num
     },
     origin(){
       return window.location.origin
@@ -358,28 +306,6 @@ export default {
   }
   .monochromeHideImgBG{
     background-image: url(https://jsbot.cantelope.org/uploads/1qoP9P.png);
-  }
-  .curPageContainer{
-    display: inline-block;
-    line-height: .8em;
-    margin-top: 25px;
-    min-height: 25px;
-    margin-left: 0px;
-    position: relative;
-    vertical-align: top;
-    padding-top: 0px;
-    font-size: .8em;
-    z-index: 50;
-  }
-  .navButton{
-    min-width:0;
-    height: 25px;
-    padding: 0;
-    background: #0cc;
-    margin: 0;
-    margin-left: 2px;
-    margin-right: 2px;
-    width: 25px;
   }
   .shortControlsContainer{
     height: 0px!important;

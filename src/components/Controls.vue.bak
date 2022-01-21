@@ -11,11 +11,11 @@
               <input id="searchInput" type="text" spellcheck="false" ref="searchInput" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="textInput searchInput" style="display: inline-block;float: left;margin-bottom: 25px;margin-left: 75px;margin-top: 15px;position: relative!important: z-index:10000!important;">
               <label for="allWords" class="checkboxLabel" style="float: left;margin-left: 0px;margin-bottom:0px;display: inline-block;margin-left: 20px;margin-top: -2px;max-width:140px;font-size:.8em;">
                 <input type="checkbox" :disabled="state.search.exact" :checked="state.search.allWords || state.search.exact" id="allWords" v-model="state.search.allWords" @input="state.beginSearch(1)">require all words
-                <span class="checkmark"></span>
+                <span class="checkmark" :class="{'normalCheckmark':!state.monochrome,'monochromeCheckmark':state.monochrome}"></span>
               </label><br>
               <label for="exact" class="checkboxLabel" style="float:left;display: inline-block;margin: 0;margin-top: 8px;margin-left: 20px;">
                 <input type="checkbox" id="exact" v-model="state.search.exact" @input="state.beginSearch(1)">exact phrase
-                <span class="checkmark"></span>
+                <span class="checkmark" :class="{'normalCheckmark':!state.monochrome,'monochromeCheckmark':state.monochrome}"></span>
               </label>
               <div style="clear: both;"></div>
               <div v-if="state.search.hits" style="position: absolute;left: 50%;margin-left: -100px;margin-top: -80px;">
@@ -95,18 +95,6 @@ export default {
         case 'user': return +this.state.curUserPage; break
         case 'default': return +this.state.curPage; break
       }
-    },
-    pagenumber(){
-      let num
-      switch(this.state.mode){
-        case 'user':
-          num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
-        break
-        case 'default':
-          num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
-        break
-      }
-      return num
     }
   }
 }

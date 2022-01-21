@@ -16,7 +16,7 @@
             @click="toggleFullScreen()"
           >
           </button>
-          <iframe v-if="item.type=='application/x-zip-compressed'" class="assetFrame" :src="state.baseIPFSURL + '/' + item.ipfs" id="asset"></iframe>
+          <iframe v-if="item.type=='application/x-zip-compressed' || item.type=='application/zip'" class="assetFrame" :src="state.baseIPFSURL + '/' + item.ipfs" id="asset"></iframe>
           <div
             v-else class="assetInner"
             id="asset"
