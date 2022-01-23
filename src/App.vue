@@ -185,7 +185,7 @@ export default {
         templeWalletConnected: false,
         siteWalletConnected: false,
         connectTempleWallet: null,
-        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; contact <a href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com</a>',
+        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a>',
         users: Array(5e5).fill().map(v=>{ return {avatar: ''} }),
         landingPage:{
           items: []
@@ -1218,7 +1218,7 @@ export default {
         if(this.state.loggedin && !this.state.modalShowing) {
           this.$refs.dropSurface.style.pointerEvents = 'all'
         } else {
-          this.doWalletNotConnectedNotice()
+          //this.doWalletNotConnectedNotice()
         }
       }
       
@@ -1261,10 +1261,10 @@ export default {
           case 'user':
             num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
           break
-          case 'default':
+          case 'token':
             num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
           break
-          case 'single':
+          default:
             num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
           break
         }
@@ -1391,7 +1391,7 @@ html,body{
 }
 body{
   min-height: calc(100vh);
-  color: #cee;
+  color: #ddd;
 }
 .dropSurface{
   position: fixed;
@@ -1458,7 +1458,7 @@ a,button{
   cursor: pointer;
 }
 a{
-  color: #8ff;
+  color: #fff;
   text-decoration: none;
 }
 .spacerDiv{
@@ -1621,17 +1621,23 @@ select:focus{
 	background: linear-gradient(90deg, #333f, #1116, #0000);
 }
 .commentText{
-  color: #ff8;
   text-align: left;
   display: inline-block;
   font-size: 18px;
 	padding-left: 10px;
 	padding-right: 10px;
-  background: #0046;
   margin-top: 5px;
   margin-left: 10px;
   width: calc(100% - 75px);
   max-width: calc(100% - 75px);
+}
+.normalCommentText{
+  color: #ff8;
+  background: #0046;
+}
+.monochromeCommentText{
+  color: #ccc;
+  background: #3336;
 }
 .commentInput:focus{
 	outline: none;

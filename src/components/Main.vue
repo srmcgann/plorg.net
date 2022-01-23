@@ -46,7 +46,7 @@
       </div>
     </div>
     <div style="position: relative;left: 50%;margin-top:-50px;margin-bottom: 30px;transform: translate(-50%);width: 400px;text-align: center;">
-      <Navigation :state="state"/>
+      <Navigation v-if="!state.search.inProgress" :state="state"/>
     </div>
   </div>
 </template>
@@ -301,6 +301,7 @@ export default {
   height: 235px;
   background-size: cover;
   background-position: center center;
+  background-repeat: no-repeat;
   border: 1px solid #aff0;
   float: right;
   margin: 0;

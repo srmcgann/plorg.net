@@ -6,7 +6,7 @@
     $sql = 'SELECT enabled FROM users WHERE pkh = "'.$pkh.'" AND enabled = 1';
     $res = mysqli_query($link, $sql);
     if(!mysqli_num_rows($res)) die();
-    $hash=md5($_POST['pkh']);
+    $hash=md5($_POST['pkh'].$_FILES['file0']['name']);
     $uploads_dir = "/var/www/html/plorg.net/dist_public/scratchfolder/$hash";
     mkdir($uploads_dir);
     $maxSimultaneousUploads = 1;

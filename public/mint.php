@@ -41,6 +41,7 @@
             mints,
             type,
             size,
+            listed,
             originalContent
             ) VALUES(
             \"$title\",
@@ -61,6 +62,7 @@
             0,
             \"$type\",
             \"$size\",
+            1,
             1)";
     $res = mysqli_query($link, $sql);
     if($insertID = mysqli_insert_id($link)){

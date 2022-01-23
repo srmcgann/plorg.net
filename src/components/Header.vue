@@ -74,7 +74,7 @@
         :class="{'smallTop':minimized , 'normalTop': !minimized}"
       >
       <div style="min-width:500px;">
-        <div style="position: absolute;left: 20px;margin-top:-5px;transform: scale(.7);">
+        <div style="position: fixed;top:5px;left: 300px;margin-top:-5px;transform: scale(.7);">
           <label :for="'monochromeCheckbox'" class="checkboxLabel" style="width: 165px;text-align: left;" title="toggle monochrome theme">
             <input type="checkbox" :id="'monochromeCheckbox'" v-model="state.monochrome">
             <span class="checkmark" :class="{'normalCheckmark':!state.monochrome,'monochromeCheckmark':state.monochrome}"></span>

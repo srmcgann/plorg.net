@@ -2,8 +2,8 @@
   <button
     @click="state.finalizePurchase(item)"
     class="confirmPurchaseButton"
-    :class="{'disabledButton': !(+item.enabled) || (+item.mints) >= (+item.editions)}"
-    :disabled="!item.enabled || (+item.mints) >= (+item.editions)"
+    :class="{'disabledButton': !item.enabled || item.mints >= item.editions}"
+    :disabled="!item.enabled || item.mints >= item.editions"
   >
    confirm purchase for {{item.price}} tez
   </button>

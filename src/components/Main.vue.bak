@@ -162,7 +162,7 @@ export default {
 }
 .item{
   margin: 3px;
-  margin-top: 20px;
+  margin-top: 40px;
   padding: 5px;
   float: left;
   min-width:600px;  
@@ -301,6 +301,7 @@ export default {
   height: 235px;
   background-size: cover;
   background-position: center center;
+  background-repeat: no-repeat;
   border: 1px solid #aff0;
   float: right;
   margin: 0;

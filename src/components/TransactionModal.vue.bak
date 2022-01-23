@@ -204,7 +204,7 @@ export default{
           data[1] = data[1].substring(0, data[1].indexOf('The operation has only been included'))
           res += data[1].indexOf('This sequence of operations was run:') != -1 ? data[1].substring(data[1].indexOf('This sequence of operations was run:')) : data[1]
           this.$refs.responseDiv.innerHTML = res
-          if(data[0] && (+data[4])){
+          if(data[0] && data[4]){
             alert("transaction successful!\n\ncongratulations on your purchase!")
             window.location.href = window.location.origin + '/t/' + this.state.decToAlpha(+data[4])
           }

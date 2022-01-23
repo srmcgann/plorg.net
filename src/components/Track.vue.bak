@@ -165,7 +165,7 @@
               ></button>
             </div>
             <div v-else style="display: inline-block;width: calc(100% + 10px);left: 0!important;padding-right: 0;">
-              <span class="commentText" :class="{'normalCommentText':!state.monochrome,'monochromeCommentText':state.monochrome}" v-html="comment.text" v-linkified style="width: calc(100% - 68px)"></span>
+              <span class="commentText" v-html="comment.text" v-linkified style="width: calc(100% - 68px)"></span>
               <button
                 v-if="comment.userID == state.loggedinUserID || state.isAdmin"
                 @click='toggleEditMode(comment)'

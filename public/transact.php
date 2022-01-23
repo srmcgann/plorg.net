@@ -6,6 +6,7 @@
   $amount = escapeshellarg(mysqli_real_escape_string($link, $data->{'amount'}));
   $mnemonic = mysqli_real_escape_string($link, $data->{'mnemonic'});
   $agreeToFees = mysqli_real_escape_string($link, $data->{'agreeToFees'});
+  $suffix = mysqli_real_escape_string($link, $data->{'suffix'});
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $mint = $data->{'mint'}->{'item'};
@@ -42,20 +43,11 @@
       }else{
         $adjustedAmount = $amount;
       }
-      $command = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $adjustedAmount from $sender to $recipient $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+      $command = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $adjustedAmount from $sender to $recipient $burn -D < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
       $output = shell_exec($command);
-      $success = strpos($output, 'The operation has only been included') !== false;
-      if($success){
+      $prelim_success = strpos($output, 'This transaction was successfully applied') !== false;
+      if($prelim_success){
         if($mint->{'id'}){
-          if($royalty){
-            $sql2 = "SELECT pkh FROM users WHERE id = " . intval($mint->{'creatorID'});
-            if($res2 = mysqli_query($link, $sql2)){
-              $creatorpkh = mysqli_fetch_assoc($res2)['pkh'];
-              $burn = $agreeToFees == 'true' ? ('--burn-cap .06425') : '';
-              $royaltiesCommand = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $royalty from $sender to $creatorpkh $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
-              $royaltiesOutput = shell_exec($royaltiesCommand);
-            }
-          }
           $row=mysqli_fetch_assoc($res);
           $userID = $row['id'];
           $newMintID = 0;
@@ -65,9 +57,35 @@
             $row = mysqli_fetch_assoc($res);
             $targetID = $row['id'];
             if($row['mints']<$row['editions']){
-              $ak=array_keys($row);
-              unset($ak[0]); //id
-              unset($ak[3]); //date
+              $ak=[
+                'title',
+                'address',
+                'userID',
+                'description',
+                'image',
+                'private',
+                'metaData',
+                'views',
+                'price',
+                'royalties',
+                'history',
+                'created',
+                'ipfs',
+                'creatorID',
+                'editions',
+                'edition',
+                'mints',
+                'enabled',
+                'type',
+                'size',
+                'listed',
+                'originalContent',
+                'suffix',
+                'allowDownload'
+              ];
+              //$ak=array_keys($row);
+              //unset($ak[0]); //id
+              //unset($ak[3]); //date
               $sql = 'INSERT INTO items ('.implode(',',$ak).') VALUES("'.
               ($row['title']).'","'.
               ($purchaserPKH).'","'.
@@ -78,19 +96,21 @@
               ($row['metaData']).'",'.
               (0).',"'.
               ($row['price']).'","'.
-              ($row['royalties']).'",'.
-              ($row['mints']+1).',"'.
+              ($row['royalties']).'","'.
               ($row['history']).'","'.
               ($row['created']).'","'.
               ($row['ipfs']).'",'.
               ($row['creatorID']).','.
               ($row['editions']).','.
+              ($row['mints']+1).','.
               (0).','.
               ($row['enabled']).',"'.
               ($row['type']).'",'.
               ($row['size']).','.
               (0).','.
-              (0).')';
+              (0).',"'.
+              ($suffix).'",'.
+              (1).')';
               if(mysqli_query($link, $sql1=$sql)){
                 $newMintID = mysqli_insert_id($link);
               }
@@ -109,19 +129,34 @@
             die();
           }
         }
+        $command = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $adjustedAmount from $sender to $recipient $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+        $output = shell_exec($command);
+        $success = strpos($output, 'Operation found in block:') !== false;
+        if($success && $royalty){
+          $sql2 = "SELECT pkh FROM users WHERE id = " . intval($mint->{'creatorID'});
+          if($res2 = mysqli_query($link, $sql2)){
+            $creatorpkh = mysqli_fetch_assoc($res2)['pkh'];
+            $burn = $agreeToFees == 'true' ? ('--burn-cap .06425') : '';
+            $royaltiesCommand = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $royalty from $sender to $creatorpkh $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+            $royaltiesOutput = shell_exec($royaltiesCommand);
+          } else {
+            echo json_encode([false, 'transaction failed, but mint succeeded! whhhhaaaaa?']);
+            die();
+          }
+        }
         if($mint->{'id'} && $newMintID && !$success){
           echo json_encode([false, 'transaction failed, but mint succeeded! whhhhaaaaa?']);
           die();
         }
-        echo json_encode([$success, $output, $command, $mint, $mint->{'id'} ? mysqli_insert_id($link) : '']);
+        echo json_encode([$success, $output, $command, $mint, $mint->{'id'} ? $newMintID : '']);
       } else {
         echo json_encode([false, 'the payment failed', $command]);
+        die();
       }
       @unlink('./temp/'.$filename);
     } else {
       echo json_encode([false, '']);
+      die();
     }
-  } else {
-    echo json_encode([false, '']);
   }
 ?>

@@ -324,7 +324,7 @@ export default{
       thumbWidth: 800,
       allowDownload: true,
       shotInProgress: false,
-      thumbDelay: 1000,
+      thumbDelay: 3000,
       description: '',
       metaData: '',
       price: '',
@@ -478,6 +478,7 @@ export default{
         body: JSON.stringify(sendData),
       })
       .then(res => res.json()).then(data => {
+        console.log(data)
         if(data[0]){
           window.location.href = window.location.origin + '/t/' + this.state.decToAlpha(data[1])
         }

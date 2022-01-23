@@ -1,5 +1,5 @@
 <template>
-  <div class="footer" v-html="state.footerMarkup" :class="{'normalFooter':!state.monochrome,'monochromeFooter':state.monochrome}">
+  <div class="footer" v-html="state.footerMarkup">
   </div>
 </template>
 
@@ -26,15 +26,10 @@ export default {
     position: fixed;
     bottom: 0;
     width: 100%;
+    background: linear-gradient(90deg, #0438, #000, #2058);
     color: #fff;
     text-shadow: 1px 1px 2px #000;
     height: 25px;
     text-align: center;
-  }
-  .normalFooter{
-    background: linear-gradient(90deg, #0438, #000, #2058);
-  }
-  .monochromeFooter{
-    background: linear-gradient(90deg, #3338, #000, #3338);
   }
 </style>

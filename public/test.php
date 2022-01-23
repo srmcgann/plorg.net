@@ -12,5 +12,6 @@
     return $ret==""?"0":$ret;
   }
 
-  echo decToAlpha(2121777265) . "\n";
+  //echo decToAlpha(2121777265) . "\n";
+  echo strtotime('2022-01-17 17:23:02');
 ?>
