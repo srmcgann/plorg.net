@@ -42,8 +42,20 @@
       <img style="cursor: pointer;" onclick="window.location.href='/'" src="https://jsbot.cantelope.org/uploads/VCNU1.png"><br><br><br>
       <div class="title">plorg.net decentralized data</duv><br>
       <span style="font-size: .7em;">(links open in new tabs)</span><br><br>
-      <a href="https://ipfs.dweet.net/ipfs/QmTtj4mu4SZwspDbpru2Hb7rdaa7H3WXXanoswyrrBMAPi" target="_blank">site source</a><br>
-      <a href="https://ipfs.dweet.net/ipfs/QmYBM9W4sfNGVDLPLbnCCG4b8s9uJpw4v4ac6af3xFxTXH" target="_blank">rolling database (live sync'd w/ site)</a><br>
+      <div id="linkDiv">
+      </div>
+      <script>
+        fetch('links.php').then(res=>res.json()).then(data=>{
+          links = data
+          for(let i=0;i<data.length;++i){
+            let el = document.createElement('a')
+            el.setAttribute('target', '_blank')
+            el.setAttribute('href', data[i][0])
+            el.innerHTML=data[i][1]
+            document.querySelector('#linkDiv').appendChild(el)
+          }
+        })
+      </script>
     </div>
   </body>
 </html>
