@@ -16,7 +16,12 @@
 	$items = [];
 
   for($i = 0; $i < mysqli_num_rows($res); ++$i){
-    $items[] = mysqli_fetch_assoc($res);
+    $item = mysqli_fetch_assoc($res);
+    $sql2 = 'SELECT enabled FROM users WHERE id = ' . $item['userID'];
+    $res2 = mysqli_query($link, $sql2);
+    if(intval(mysqli_fetch_assoc($res2)['enabled'])){
+      $items[] = $item;
+    }  
   }
   forEach($items as &$item){
 		$itemID = $item['id'];

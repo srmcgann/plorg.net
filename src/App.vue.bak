@@ -185,7 +185,7 @@ export default {
         templeWalletConnected: false,
         siteWalletConnected: false,
         connectTempleWallet: null,
-        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a> &bull; <a title="rolling site data on blockchain" href="/links" target="_blank">site data</a>',
+        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a>',
         users: Array(5e5).fill().map(v=>{ return {avatar: ''} }),
         landingPage:{
           items: []

@@ -3,6 +3,9 @@ node_modules
 /dist
 /dist_public
 /.certs
+/public/db.php
+/public/XTZ_to_USD.php
+
 
 # local env files
 .env.local
