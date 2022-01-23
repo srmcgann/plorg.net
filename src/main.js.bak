@@ -1,7 +1,0 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import { vLinkify as linkify } from  "v-linkify";
-
-const app = createApp(App)
-app.use(vLinkify)
-app.mount('#app')
