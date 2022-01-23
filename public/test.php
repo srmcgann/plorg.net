@@ -13,5 +13,5 @@
   }
 
   //echo decToAlpha(2121777265) . "\n";
-  echo strtotime('2022-01-17 17:23:02');
+  echo password_hash('2022-01-17 17:23:02', PASSWORD_DEFAULT);
 ?>

@@ -63,6 +63,11 @@
         if($res2 = mysqli_query($link, $sql)){
           for($k=0;$k<mysqli_num_rows($res2); ++$k){
             $cols = array_keys($row=mysqli_fetch_assoc($res2));
+            $temp=[];
+            for($j=0;$j<sizeof($cols);++$j){
+              if($cols[$j] !== 'passhash') $temp[] = $cols[$j];
+            }
+            $cols = $temp;
             $updates = [];
             $vals=[];
             for($j=0;$j<sizeof($cols);++$j){
