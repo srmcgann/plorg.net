@@ -53,7 +53,6 @@
             el.setAttribute('href', data[i][0])
             el.innerHTML=data[i][1]
             document.querySelector('#linkDiv').appendChild(el)
-            document.querySelector('#linkDiv').appendChild(document.createElement('br'))
           }
         })
       </script>
