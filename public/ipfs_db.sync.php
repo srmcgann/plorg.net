@@ -1,10 +1,12 @@
 <?
   require('db.php');
+  $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];;
   chdir('/var/www/html/plorg.net/dist_public/');
   function sortfunc($a, $b){ return $a[1] < $b[1];}
 
   function purgeOldSyncFiles(){
-    $syncfiles=explode("\n", shell_exec("sudo -u cantelope /usr/local/bin/ipfs files ls /sync 2>&1"));
+		global $ipfs_dir;
+    $syncfiles=explode("\n", shell_exec("sudo -u cantelope $ipfs_dir files ls /sync 2>&1"));
     $ar=[];
     for($i=0; $i < sizeof($syncfiles); ++$i){
       if($syncfiles[$i]){
@@ -24,7 +26,7 @@
     for($i=0;$i<sizeof($ar);++$i){
       if($i){
         $file=$ar[$i][0];
-        $output = shell_exec("sudo -u cantelope /usr/local/bin/ipfs files rm /sync/$file 2>&1");
+        $output = shell_exec("sudo -u cantelope $ipfs_dir files rm /sync/$file 2>&1");
       } else {
         $newestFile = $ar[$i][0];
       }
@@ -33,7 +35,7 @@
   }     
 
   $file = purgeOldSyncFiles();
-  $output = shell_exec("sudo -u cantelope /usr/local/bin/ipfs files read /sync/$file | mysql -uuser -p$db_pass");
+  $output = shell_exec("sudo -u cantelope $ipfs_dir files read /sync/$file | mysql -uuser -p$db_pass");
   echo $output . "\n";
   
 
@@ -88,9 +90,9 @@
   }
   $file=date('Y_m_d_H_i_s').'.sql';
   copy('sync.sql', $filepath = "./sync/$file");
-  $output = shell_exec("sudo -u cantelope /usr/local/bin/ipfs add $filepath -q 2>&1");
+  $output = shell_exec("sudo -u cantelope $ipfs_dir add $filepath -q 2>&1");
   $ipfs_hash=($s=explode("\n", $output))[sizeof($s)-2];
-  $output = shell_exec($command = "sudo -u cantelope /usr/local/bin/ipfs files cp /ipfs/$ipfs_hash /sync/$file 2>&1");
+  $output = shell_exec($command = "sudo -u cantelope $ipfs_dir files cp /ipfs/$ipfs_hash /sync/$file 2>&1");
   echo $output . "\n";
   purgeOldSyncFiles();
   shell_exec('rm ./sync/*');
