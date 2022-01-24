@@ -96,4 +96,8 @@
   echo $output . "\n";
   purgeOldSyncFiles();
   shell_exec('rm ./sync/*');
+
+  // sync with master
+  $output = shell_exec("curl $masterDBSyncURL | mysql -uuser -p$db_pass");
+  echo $output . "\n";
 ?>
