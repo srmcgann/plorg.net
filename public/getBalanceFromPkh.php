@@ -7,11 +7,11 @@
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
       if($pkh = mysqli_fetch_assoc($res)['pkh']){
-        $bal=explode(' ', shell_exec('node /home/cantelope/tezos-nodejs/Main.js getBalance ' . $pkh))[0];
+        $bal=explode(' ', $output=shell_exec($command='sudo tezos-client get balance for ' . $pkh . ' 2>&1'))[0];
         $xtz_to_usd = json_decode(file_get_contents('https://'.$baseURL.'/XTZ_to_USD.php'));
         echo json_encode([true, $bal, $xtz_to_usd[0]?$xtz_to_usd[1]:'']);
       } else {
-        echo json_encode([false]);
+        echo json_encode([false, $output, $sql]);
       }
     } else {
       echo json_encode([false]);

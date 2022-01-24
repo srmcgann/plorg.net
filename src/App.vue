@@ -55,11 +55,11 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorg.net',
+        rootDomain: 'plorgmirror.appliedlearning.academy',
         alphaToDec: null,
         autolaunchTokens: false,
-        baseURL: 'https://plorg.net',
-        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
+        baseURL: 'https://plorgmirror.appliedlearning.academy',
+        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
@@ -635,6 +635,7 @@ export default {
               body: '',
             })
             .then(json=>json.json()).then(data=>{
+							console.log(data)
               this.state.XTZ_to_USD = +data[1]
             })
           } catch (err) {
@@ -662,6 +663,7 @@ export default {
           body: JSON.stringify(sendData),
         })
         .then(json=>json.json()).then(data=>{
+					console.log(data)
           if(data[0]){
             this.state.walletData.balance = +data[1]
             this.state.XTZ_to_USD = +data[2]
