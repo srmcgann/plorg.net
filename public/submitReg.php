@@ -36,7 +36,7 @@
     file_put_contents('./temp/'.$filename, $passphrase . "\n", FILE_APPEND);
     file_put_contents('./temp/'.$filename, $passphrase . "\n", FILE_APPEND);
 
-    $output = shell_exec("sudo /home/cantelope/.local/bin/tezos-client import keys from mnemonic $alias -f --encrypt < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1");
+    $output = shell_exec("sudo tezos-client import keys from mnemonic $alias -f --encrypt < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1");
     @unlink('./temp/'.$filename);
     $pkh = str_replace("\n", '', explode('Tezos address added: ', $output)[1]);
     $wallet = [true, $pkh, str_replace("\n", '', $mnemonic)];

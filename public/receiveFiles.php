@@ -1,5 +1,6 @@
 <?
   if($_POST['pkh'] && isset($_FILES['file0'])){
+    $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];;
     $maxFileSize=104857600; // 100Mb
     require('db.php');
     $pkh = $_POST['pkh'];
@@ -37,13 +38,13 @@
           }
         }
         if($indexFound){
-          $output = shell_exec($command = "sudo -u cantelope /usr/local/bin/ipfs add $uploads_dir -r -q 2>&1");
+          $output = shell_exec($command = "sudo -u cantelope $ipfs_dir add $uploads_dir -r -q 2>&1");
         } else {
           echo json_encode([false, 'index file not found!']);
           die();
         }
       } else {
-        $output = shell_exec($command = "sudo -u cantelope /usr/local/bin/ipfs add ".escapeshellarg("$uploads_dir/$name")." -q 2>&1");
+        $output = shell_exec($command = "sudo -u cantelope $ipfs_dir add ".escapeshellarg("$uploads_dir/$name")." -q 2>&1");
       }
       $t = 2;
       

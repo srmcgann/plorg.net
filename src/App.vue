@@ -995,6 +995,7 @@ export default {
               method: 'POST',
               body: data
             }).then(res=>res.json()).then(data=>{
+             console.log(data)
               if(data[0]){
                 this.state.uploadedContentURL = data[1]
                 this.state.uploadedFileType = data[2]

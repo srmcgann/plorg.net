@@ -1,5 +1,6 @@
 <?
   require('db.php');
+  $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];;
   $data = json_decode(file_get_contents('php://input'));
   $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
   $sql = "SELECT * FROM users WHERE pkh = \"$pkh\" AND enabled = 1";
@@ -15,9 +16,9 @@
       if($delay < 0 || $delay > 30000) $delay = 0;
       if(!$width || $width < 0 || $width > 1920) $width = 800;
       if(!$height || $height < 0 || $height > 1080) $height = 800;
-      shell_exec("webshot $url $delay $width $height $out");
+      $webshotOutput = exec($webshotCommand = "webshot $url $delay $width $height $out  2>&1");
       //echo file_get_contents($out);
-      $output = shell_exec($command = "sudo -u cantelope /usr/local/bin/ipfs add $out -q 2>&1");
+      $output = shell_exec($command = "sudo -u cantelope $ipfs_dir add $out -q 2>&1");
       $t = 2;
       $ipfs_hash=($s=explode("\n", $output))[sizeof($s)-$t];
       unlink($out);

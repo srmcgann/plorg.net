@@ -1,5 +1,6 @@
 <?
-  if($_SERVER['SERVER_NAME'] !== 'plorg.net') die();
+  require('../db.php');
+  if($_SERVER['SERVER_NAME'] !== $baseURL) die();
   $url = escapeshellarg($_GET['url']);
   $delay = intval($_GET['delay']);
   $width = intval($_GET['width']);

@@ -377,6 +377,7 @@ export default{
         body: JSON.stringify(sendData),
       })
       .then(res=>res.json()).then(data=>{
+        console.log(data)
         this.shotInProgress = false
         if(data[0]){
           this.state.uploadedFileThumbnail = data[1]

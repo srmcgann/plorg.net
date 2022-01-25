@@ -43,7 +43,7 @@
       }else{
         $adjustedAmount = $amount;
       }
-      $command = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $adjustedAmount from $sender to $recipient $burn -D < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+      $command = "sudo tezos-client transfer $adjustedAmount from $sender to $recipient $burn -D < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
       $output = shell_exec($command);
       $prelim_success = strpos($output, 'This transaction was successfully applied') !== false;
       if($prelim_success){
@@ -129,7 +129,7 @@
             die();
           }
         }
-        $command = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $adjustedAmount from $sender to $recipient $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+        $command = "sudo tezos-client transfer $adjustedAmount from $sender to $recipient $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
         $output = shell_exec($command);
         $success = strpos($output, 'Operation found in block:') !== false;
         if($success && $royalty){
@@ -137,7 +137,7 @@
           if($res2 = mysqli_query($link, $sql2)){
             $creatorpkh = mysqli_fetch_assoc($res2)['pkh'];
             $burn = $agreeToFees == 'true' ? ('--burn-cap .06425') : '';
-            $royaltiesCommand = "TEZOS_CLIENT_DIR=/home/cantelope/.local/bin/tezos-client;sudo /home/cantelope/.local/bin/tezos-client transfer $royalty from $sender to $creatorpkh $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+            $royaltiesCommand = "sudo tezos-client transfer $royalty from $sender to $creatorpkh $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
             $royaltiesOutput = shell_exec($royaltiesCommand);
           } else {
             echo json_encode([false, 'transaction failed, but mint succeeded! whhhhaaaaa?']);
