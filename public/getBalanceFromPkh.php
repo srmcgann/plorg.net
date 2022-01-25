@@ -1,6 +1,6 @@
 <?php
   require('db.php');
-	$data = json_decode(file_get_contents('php://input'));
+  $data = json_decode(file_get_contents('php://input'));
   $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
   if($pkh){
     $sql = 'SELECT pkh FROM users WHERE pkh = "' . $pkh . '" AND enabled = 1';
@@ -11,7 +11,7 @@
         $xtz_to_usd = json_decode(file_get_contents('https://'.$baseURL.'/XTZ_to_USD.php'));
         echo json_encode([true, $bal, $xtz_to_usd[0]?$xtz_to_usd[1]:'']);
       } else {
-        echo json_encode([false, $output, $sql]);
+        echo json_encode([false]);
       }
     } else {
       echo json_encode([false]);
@@ -20,3 +20,4 @@
     echo json_encode([false]);
   }
 ?>
+
