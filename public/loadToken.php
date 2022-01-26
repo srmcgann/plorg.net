@@ -45,14 +45,15 @@
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){
     $ret = mysqli_fetch_assoc($res);
-    $sql = 'SELECT * FROM comments WHERE itemHash = \"' . $hash . '" ORDER BY date DESC';
+    $hash = $ret['hash'];
+    $sql = 'SELECT * FROM comments WHERE itemHash = "' . $hash . '" ORDER BY date DESC';
     $res = mysqli_query($link, $sql);
     $comments = [];
     for($i= 0; $i < mysqli_num_rows($res); ++$i){
       $comments[] = mysqli_fetch_assoc($res);
     }
     $ret['comments'] = $comments;
-    echo json_encode([true, $ret]);
+    echo json_encode([true, $ret, $sql]);
   }else{
     echo '[false]';
   }

@@ -2,6 +2,7 @@
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
+  $userHash = mysqli_real_escape_string($link, $data->{'userHash'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $comment = mysqli_real_escape_string($link, $data->{'comment'});
   $itemID = mysqli_real_escape_string($link, $data->{'itemID'});
@@ -13,7 +14,7 @@
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       $hash=md5($row['pkh'] . strtotime('now') . rand());
-      $sql1=$sql = 'INSERT INTO comments (text, itemHash, itemID, userHash, userID, $hash) VALUES("'.$comment.'","'.$itemHash.'", '.$itemID.',"'.$userHash.'" '.$row['id'].', "'.$hash.'")';
+      $sql1=$sql = 'INSERT INTO comments (text, itemHash, itemID, userHash, userID, hash) VALUES("'.$comment.'","'.$itemHash.'", '.$itemID.',"'.$userHash.'", '.$row['id'].', "'.$hash.'")';
       mysqli_query($link, $sql);
       $success = true;
     }

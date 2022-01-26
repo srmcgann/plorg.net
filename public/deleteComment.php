@@ -3,7 +3,7 @@
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $commentID = mysqli_real_escape_string($link, $data->{'commentID'});
+  $commentHash = mysqli_real_escape_string($link, $data->{'commentHash'});
   $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'" AND enabled = 1;';
   $res = mysqli_query($link, $sql);
   $success = false;
@@ -11,9 +11,9 @@
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       if($row['admin']){
-        $sql = 'DELETE FROM comments WHERE id = ' . $commentID;
+        $sql = 'DELETE FROM comments WHERE hash = "' . $commentHash . '"';
       } else {
-        $sql = 'DELETE FROM comments WHERE id = ' . $commentID . ' AND userHash = "' . $row['userHash'].'"';
+        $sql = 'DELETE FROM comments WHERE hash = "' . $commentHash . '" AND userHash = "' . $row['hash'].'"';
       }
       mysqli_query($link, $sql);
       $success = true;

@@ -58,11 +58,11 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorgmirror.appliedlearning.academy',
+        rootDomain: 'plorg.net',
         alphaToDec: null,
         autolaunchTokens: false,
-        baseURL: 'https://plorgmirror.appliedlearning.academy',
-        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
+        baseURL: 'https://plorg.net',
+        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
@@ -535,7 +535,7 @@ export default {
     },
 		fetchUserData(hash){
       if(typeof this.state.users[hash] !== 'undefined') return
-      let sendData = {userHash: hash}
+      let sendData = {userHash: hash, creatorHash: hash}
       fetch(this.state.baseURL + '/getUserInfo.php',{
         method: 'POST',
         headers: {
@@ -545,6 +545,7 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
+        console.log('user data', data)
         if(data[0]){
           this.state.users[hash] = data[1]
           if(!this.state.users[hash].avatar){
@@ -837,6 +838,7 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
+        console.log(data)
         this.state.itemDataReceived = true
         if(data[0]) {
           this.state.items = [data[1]]
@@ -1196,7 +1198,7 @@ export default {
         itemID: item.id,
         itemHash: item.hash
       }
-      fetch(this.state.baseURL + '/listItem.php', {
+      fetch(this.state.baseURL + '/list.php', {
         method: 'POST',
         body: data
       }).then(res=>res.json()).then(data=>{

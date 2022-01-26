@@ -58,11 +58,11 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorgmirror.appliedlearning.academy',
+        rootDomain: 'plorg.net',
         alphaToDec: null,
         autolaunchTokens: false,
-        baseURL: 'https://plorgmirror.appliedlearning.academy',
-        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
+        baseURL: 'https://plorg.net',
+        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
@@ -535,7 +535,7 @@ export default {
     },
 		fetchUserData(hash){
       if(typeof this.state.users[hash] !== 'undefined') return
-      let sendData = {userHash: hash}
+      let sendData = {userHash: hash, creatorHash: hash}
       fetch(this.state.baseURL + '/getUserInfo.php',{
         method: 'POST',
         headers: {
@@ -837,6 +837,7 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
+        console.log(data)
         this.state.itemDataReceived = true
         if(data[0]) {
           this.state.items = [data[1]]
@@ -1105,7 +1106,7 @@ export default {
             this.state.curPage = (+vars[1])-1
             this.state.tokenMode = vars[1].length > 30 ? 'hash' : 'id'
             //this.state.tokenID = this.alphaToDec(vars[1]))
-            let slug = this.state.tokenMode == 'hash' ? vars[1] : this.alphaToDec(+vars[1])
+            let slug = this.state.tokenMode == 'hash' ? vars[1] : this.alphaToDec(vars[1])
             this.$nextTick(()=>this.loadToken(slug))
             if(vars[2]){
               this.state.search.string = decodeURIComponent(vars[2])
@@ -1196,7 +1197,7 @@ export default {
         itemID: item.id,
         itemHash: item.hash
       }
-      fetch(this.state.baseURL + '/listItem.php', {
+      fetch(this.state.baseURL + '/list.php', {
         method: 'POST',
         body: data
       }).then(res=>res.json()).then(data=>{

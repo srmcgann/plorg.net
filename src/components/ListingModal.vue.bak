@@ -423,7 +423,7 @@ export default{
         userHash: this.state.loggedinUserHash,
         userID: this.state.loggedinUserID,
         userName: this.state.loggedinUserName,
-        itemID: this.item.id,
+        itemID: this.item.id
         itemHash: this.item.hash
       }
       fetch(this.state.baseURL + '/list.php',{
