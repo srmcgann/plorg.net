@@ -469,7 +469,6 @@ export default{
         suffix: this.state.uploadedFileSuffix,
         image: this.state.uploadedFileThumbnail,
         userID: this.state.loggedinUserID,
-        userHash: this.state.loggedinUserHash,
         userName: this.state.loggedinUserName
       }
       fetch(this.state.baseURL + '/mint.php',{

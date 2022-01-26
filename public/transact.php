@@ -11,7 +11,7 @@
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $mint = $data->{'mint'}->{'item'};
   if(isset($mint->{'address'})){
-    $sql = "SELECT pkh FROM users WHERE id = " . intval($mint->{'userID'});
+    $sql = "SELECT pkh FROM users WHERE hash = \"" . $mint->{'userHash'} . '"';
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
       $row=mysqli_fetch_assoc($res);
@@ -51,16 +51,18 @@
           $row=mysqli_fetch_assoc($res);
           $userID = $row['id'];
           $newMintID = 0;
-          $sql = 'SELECT * FROM items WHERE id = ' . $mint->{'id'} . ' AND enabled = 1';
+          $sql = 'SELECT * FROM items WHERE hash = "' . $mint->{'hash'} . '" AND enabled = 1';
           $res = mysqli_query($link, $sql);
           if(mysqli_num_rows($res)){
             $row = mysqli_fetch_assoc($res);
-            $targetID = $row['id'];
+            $targetID = $row['hash'];
             if($row['mints']<$row['editions']){
               $ak=[
                 'title',
                 'address',
                 'userID',
+                'userHash',
+                'creatorHash',
                 'description',
                 'image',
                 'private',
@@ -90,6 +92,8 @@
               ($row['title']).'","'.
               ($purchaserPKH).'","'.
               ($userID).'","'.
+              ($row['userHash']).'","'.
+              ($row['creatorHash']).'","'.
               ($row['description']).'","'.
               ($row['image']).'","'.
               ($row['private']).'","'.
@@ -115,7 +119,7 @@
                 $newMintID = mysqli_insert_id($link);
               }
               if($mint->{'id'} && $newMintID){
-                  $sql = "UPDATE items SET mints = mints+1 WHERE id = $targetID";
+                  $sql = "UPDATE items SET mints = mints+1 WHERE hash = \"$targetHash\"";
                   mysqli_query($link, $sql);
               }
             } else {
@@ -133,7 +137,7 @@
         $output = shell_exec($command);
         $success = strpos($output, 'Operation found in block:') !== false;
         if($success && $royalty){
-          $sql2 = "SELECT pkh FROM users WHERE id = " . intval($mint->{'creatorID'});
+          $sql2 = "SELECT pkh FROM users WHERE hash = \"" . $mint->{'creatorHash'} . '"';
           if($res2 = mysqli_query($link, $sql2)){
             $creatorpkh = mysqli_fetch_assoc($res2)['pkh'];
             $burn = $agreeToFees == 'true' ? ('--burn-cap .06425') : '';

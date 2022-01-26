@@ -1,4 +1,5 @@
 <?
+die();
 require('db.php');
 $s=['application/1d-interleaved-parityfec',
 'application/3gpdash-qoe-report+xml',

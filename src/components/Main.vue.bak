@@ -85,8 +85,6 @@ export default {
             key !== 'views' &&
             key !== 'royalties' &&
             key !== 'userID' &&
-            key !== 'userHash' &&
-            key !== 'creatorHash' &&
             key !== 'private' &&
             key !== 'metaData' &&
             key !== 'creatorID' &&
@@ -96,7 +94,7 @@ export default {
           html += '<span class="itemTitle'+(this.state.monochrome?' monchromeItemTitle':' normalItemTitle')+'">' + key + '</span>'
           html += '<div class="itemData">'+val+'</div><br>'
         }
-        if(key == 'creatorHash'){
+        if(key == 'creatorID'){
           html += '<span class="itemTitle'+(this.state.monochrome?' monchromeItemTitle':' normalItemTitle')+'">creator</span>'
           html += '<div class="itemData">'+this.state.users[val].name+'</div><br>'
         }

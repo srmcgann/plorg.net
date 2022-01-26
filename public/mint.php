@@ -2,12 +2,12 @@
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
   $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
-  $userID = intval(mysqli_real_escape_string($link, $data->{'userID'}));
+  $userHash = intval(mysqli_real_escape_string($link, $data->{'userHash'}));
   $sql = "SELECT * FROM users WHERE pkh = \"$pkh\" AND id = $userID AND enabled = 1";
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
-    $creatorID = $userID = $row['id'];
+    $creatorHash = $userHash = $row['id'];
     
     $title = mysqli_real_escape_string($link, $data->{'title'});
     $description = mysqli_real_escape_string($link, $data->{'description'});
@@ -21,7 +21,9 @@
     $type = mysqli_real_escape_string($link, $data->{'type'});
     $size = mysqli_real_escape_string($link, $data->{'size'});
     $userName = mysqli_real_escape_string($link, $data->{'userName'});
+    $userHash = $creatorHash = mysqli_real_escape_string($link, $data->{'userHash'});
     $metadata = mysqli_real_escape_string($link, $data->{'metadata'});
+    $hash = md5(hash_file('md5', $ipfsURL . $ipfs) . strtotime('now') . rand());
     $sql="INSERT INTO items (
             title,
             address,
@@ -40,9 +42,12 @@
             editions,
             mints,
             type,
+            userHash,
+            creatorHash,
             size,
             listed,
-            originalContent
+            originalContent,
+            hash
             ) VALUES(
             \"$title\",
             \"$pkh\",
@@ -61,12 +66,15 @@
             \"$editions\",
             0,
             \"$type\",
+            \"$userHash\",
+            \"$creatorHash\",
             \"$size\",
             1,
-            1)";
+            1,
+            \"$hash\")";
     $res = mysqli_query($link, $sql);
     if($insertID = mysqli_insert_id($link)){
-      echo json_encode([true, $insertID, $sql]);
+      echo json_encode([true, $insertID, $hash, $sql]);
     } else {
       echo json_encode([false, $sql]);
     }

@@ -27,7 +27,7 @@
 		$sql='SELECT * FROM users WHERE name LIKE "' . $name . '" AND enabled = 1';
     $res = mysqli_query($link, $sql);
     $row=mysqli_fetch_assoc($res);
-    $userID = $row['id'];
+    //$userID = $row['id'];
 		if(strtoupper($row['name']) === strtoupper($loggedinUserName) && $passhash == $loggedinPasshash  || $admin){
 		  $includePrivate = true;
 		}
@@ -35,22 +35,22 @@
 	  $ret = $row;
 		if($includePrivate){
 
-      $sql="SELECT id FROM items WHERE userID = " . $row['id'];
+      $sql="SELECT id FROM items WHERE userHash = " . $row['hash'];
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
       $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
-	    $sql1=$sql = "SELECT * FROM items WHERE userID = " . $row['id'] . ' ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+	    $sql1=$sql = "SELECT * FROM items WHERE userHash = \"" . $row['hash'] . '" ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	  } else {
 
-      $sql="SELECT id FROM items WHERE private = 0 AND userID = " . $row['id'];
+      $sql="SELECT id FROM items WHERE private = 0 AND userHash = \"" . $row['hash'] . '"';
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
       $morePages = false;
       $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
       if($start + $maxResultsPerPage < $totalRecords + 1) $morePages = true;
 
-		  $sql1=$sql = "SELECT * FROM items WHERE userID = " . $row['id'] . ' AND private = 0 ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+		  $sql1=$sql = "SELECT * FROM items WHERE userHash = \"" . $row['hash'] . '" AND private = 0 ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 		}
 		$res = mysqli_query($link, $sql);
 	  $items = [];
@@ -59,8 +59,8 @@
   		$items[]=$row;
   	}
     forEach($items as &$item){
-      $itemID = $item['id'];
-      $sql = 'SELECT * FROM comments WHERE itemID = ' . $itemID . ' ORDER BY date DESC';
+      $itemHash = $item['hash'];
+      $sql = 'SELECT * FROM comments WHERE itemHash = "' . $itemHash . '" ORDER BY date DESC';
       $res2 = mysqli_query($link, $sql);
       $item['comments'] = [];
       for($j=0;$j<mysqli_num_rows($res2);++$j){

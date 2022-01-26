@@ -4,7 +4,7 @@
   $db_host="localhost";
   $db="generative";
   $maxResultsPerPage = 4;
-  $masterDBSyncURL = 'https://ipfs.dweet.net/ipfs/QmYmk8WUWuNfRhkqDNmDrfmvYQvpZ3qdymWZHSEbJ8qhLi/2022_01_24_13_45_02.sql';
+  $masterDBSyncURL = 'https://ipfs.dweet.net/ipfs/QmbVhLj6cEvimBA3NHwxNYSDfbJMNL5f1NxC2ttXKGyhr1/2022_01_25_17_30_02.sql';
   $baseURL = 'plorgmirror.appliedlearning.academy';
   $ipfsURL = 'https://ipfs.appliedlearning.academy/ipfs/';
   

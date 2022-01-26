@@ -67,10 +67,8 @@ export default{
       let sendData = {
         pkh: this.state.walletData.address,
         userID: this.state.loggedinUserID,
-        userHash: this.state.loggedinUserHash,
         passhash: this.state.passhash,
-        itemID: this.item.id,
-        itemHash: this.item.hash
+        itemID: this.item.id
       }
       fetch(this.state.baseURL + '/unlist.php',{
         method: 'POST',

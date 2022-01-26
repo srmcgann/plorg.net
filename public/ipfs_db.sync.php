@@ -1,6 +1,6 @@
 <?
   require('db.php');
-  $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];;
+  $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];
   chdir('/var/www/html/plorg.net/dist_public/');
   function sortfunc($a, $b){ return $a[1] < $b[1];}
 
@@ -35,7 +35,7 @@
   }     
 
   $file = purgeOldSyncFiles();
-  $output = shell_exec("sudo -u cantelope $ipfs_dir files read /sync/$file | mysql -uuser -p$db_pass");
+  $output = shell_exec("sudo -u cantelope $ipfs_dir files read /sync/$file | mysql -uuser -p$db_pass -f");
   echo $output . "\n";
   
 
@@ -44,15 +44,30 @@
   $input=file_get_contents('temp.sql');
   $lines=explode("\n",$input);
   @unlink('sync.sql');
-  file_put_contents('sync.sql', 'USE `' . $db . "`;\n", FILE_APPEND);
+  file_put_contents('sync.sql', "CREATE DATABASE IF NOT EXISTS $db;" . 'USE `' . $db . "`;\n", FILE_APPEND);
+  $addcols=[];
   for($i=0;$i<sizeof($lines);++$i){
     if(strpos($lines[$i], 'DROP TABLE IF EXISTS')===false){
       if(($pos=strpos($lines[$i], 'CREATE TABLE '))!==false){
         $lines[$i] = 'CREATE TABLE IF NOT EXISTS ' . substr($lines[$i],13);
+        $curTable = explode('`', $lines[$i])[1];
+      }
+      if(($pos=strpos($lines[$i], '  `'))===0){
+        if(!isset($addcols[$curTable])) $addcols[$curTable]=[];
+        $addcols[$curTable][] = explode(',', $lines[$i])[0];
       }
       file_put_contents('sync.sql', $lines[$i] . "\n", FILE_APPEND);
     }
   }
+  
+  file_put_contents('sync.sql', "\n\n", FILE_APPEND);
+  forEach($addcols as $key=>$val){
+    for($i=0; $i < sizeof($val); ++$i){
+      file_put_contents('sync.sql', 'ALTER TABLE `' . $key . '` ADD COLUMN' . $val[$i] . ";\n", FILE_APPEND);
+    }
+  }
+  file_put_contents('sync.sql', "\n\n", FILE_APPEND);
+  
   unlink('temp.sql');
   $sql = "SHOW TABLES";
   $res = mysqli_query($link, $sql);
@@ -67,17 +82,13 @@
             $cols = array_keys($row=mysqli_fetch_assoc($res2));
             $temp=[];
             for($j=0;$j<sizeof($cols);++$j){
-              if($cols[$j] !== 'passhash') $temp[] = $cols[$j];
+              if($cols[$j] !== 'passhash' && $cols[$j] !== 'id') $temp[] = $cols[$j];
             }
             $cols = $temp;
             $updates = [];
             $vals=[];
             for($j=0;$j<sizeof($cols);++$j){
-              if($cols[$j]!='updated'){
-                $updates[] = $cols[$j] .'=IF('.$table.'.updated < DATE(newVals.updated),VALUES('.$cols[$j].'),'.$table.'.'.$cols[$j].')';
-              }else{
-                $updates[] = $table.'.updated=IF('.$table.'.updated < DATE(newVals.updated),"'. date('Y-m-d H:i:s') .'", '.$table.'.updated)';
-              }
+              $updates[] = $cols[$j] .'=IF('.$table.'.updated < DATE(newVals.updated), newVals.'.$cols[$j].','.$table.'.'.$cols[$j].')';
               $vals[] = '"'.$row[$cols[$j]].'"';
             }
             $sql = "INSERT INTO $table (" . implode(',',  $cols) . ") VALUES(".implode(',',$vals).") AS newVals ON DUPLICATE KEY UPDATE " . implode(',', $updates).';';
@@ -98,6 +109,6 @@
   shell_exec('rm ./sync/*');
 
   // sync with master
-  $output = shell_exec("curl $masterDBSyncURL | mysql -uuser -p$db_pass");
+  $output = shell_exec("curl $masterDBSyncURL | mysql -uuser -p$db_pass -f");
   echo $output . "\n";
 ?>

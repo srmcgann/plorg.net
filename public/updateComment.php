@@ -4,7 +4,7 @@
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $comment = mysqli_real_escape_string($link, $data->{'comment'});
-  $commentID = mysqli_real_escape_string($link, $data->{'commentID'});
+  $commentHash = mysqli_real_escape_string($link, $data->{'commentHash'});
   $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'" AND enabled = 1;';
   $res = mysqli_query($link, $sql);
   $success = false;
@@ -12,9 +12,9 @@
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       if($row['admin']){
-        $sql = 'UPDATE comments SET text = "'.$comment.'" WHERE id = '.$commentID;
+        $sql = 'UPDATE comments SET text = "'.$comment.'" WHERE hash = '.$commentHash;
       } else {
-        $sql = 'UPDATE comments SET text = "'.$comment.'" WHERE id = '.$commentID . ' AND userID = ' . $row['id'];
+        $sql = 'UPDATE comments SET text = "'.$comment.'" WHERE hash = "'.$commentHash . '" AND userHash = ' . $row['hash'];
       }
       mysqli_query($link, $sql);
       $success = true;

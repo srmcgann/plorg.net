@@ -1,19 +1,20 @@
 <template :class="{'noOverflow': state.userSettingsVisible, 'monochromeApp': state.monochrome, 'normalApp':!state.monochrome}">
-  <div class="dropSurface" ref="dropSurface"></div>
-  <Controls :state="state"/>
   <Header :state="state"/>
+  <Footer :state="state"/>
+  <Controls :state="state"/>
+  <Main :state="state" v-if="state.loaded"/>
   <DropModal :state="state" v-if="state.dragover"/>
+  <div class="dropSurface" ref="dropSurface"></div>
   <MintModal :state="state" v-if="state.showMintModal"/>
-  <ListingModal :state="state" :item="state.listItem" v-if="state.showListingModal"/>
   <UserSettings :state="state" v-if="state.userSettingsVisible"/>
   <SeedPhraseModal :state="state" v-if="state.showSeedPhraseModal"/>
   <SiteWalletModal :state="state" v-if="state.showSiteWalletModal"/>
-  <TransactionModal :state="state" :prepop="state.prepop" v-if="state.showTransactionModal"/>
+  <RenewPasswordModal :state="state" v-if="state.showRenewPasswordModal"/>
   <TempleDownloadModal :state="state" v-if="state.showTempleDownloadModal"/>
   <AssetModal :state="state" :item="state.displayItem" v-if="state.showAssetModal"/>
+  <ListingModal :state="state" :item="state.listItem" v-if="state.showListingModal"/>
   <PurchaseModal :state="state" :item="state.displayItem" v-if="state.showPurchaseModal"/>
-  <Main :state="state"/>
-  <Footer :state="state"/>
+  <TransactionModal :state="state" :prepop="state.prepop" v-if="state.showTransactionModal"/>
 </template>
 
 <script>
@@ -31,6 +32,7 @@ import PurchaseModal from './components/PurchaseModal'
 import SiteWalletModal from './components/SiteWalletModal'
 import SeedPhraseModal from './components/SeedPhraseModal'
 import TransactionModal from './components/TransactionModal'
+import RenewPasswordModal from './components/RenewPasswordModal'
 import TempleDownloadModal from './components/TempleDownloadModal'
 
 export default {
@@ -50,6 +52,7 @@ export default {
     SeedPhraseModal,
     SiteWalletModal,
     TransactionModal,
+    RenewPasswordModal,
     TempleDownloadModal
   },
   data(){
@@ -63,7 +66,13 @@ export default {
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
+        renewPassEmailRequired: false,
+        renewPassMode: null,
+        renewPassToken: null,
+        renewPassHash: null,
+        renewPassPkh: null,
         uploadInProgress: false,
+        renewPasswordModal: false,
         showAssetModal: false,
         showControls: false,
         showPurchaseModal: false,
@@ -73,6 +82,7 @@ export default {
         userNameString: null,
         loadUserPage: null,
         uploadedFileSuffix: '',
+        showRenewPasswordModal: false,
         resetPrepop: null,
         dragover: false,
         monochrome: true,
@@ -80,6 +90,7 @@ export default {
         defaultPrepop: {doprepop: false},
         prepop: {doprepop: false},
         uploadFiles: null,
+        loggedinUserHash: null,
         finalizePurchase: null,
         tokenNotFound: false,
         launchItem: null,
@@ -186,7 +197,7 @@ export default {
         siteWalletConnected: false,
         connectTempleWallet: null,
         footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a> &bull; <a title="rolling site data on blockchain" href="/links" target="_blank">site data</a>',
-        users: Array(5e5).fill().map(v=>{ return {avatar: ''} }),
+        users: {},//Array(5e5).fill().map(v=>{ return {avatar: ''} }),
         landingPage:{
           items: []
         },
@@ -198,15 +209,15 @@ export default {
     }
   },
   methods:{
-    getCommentAvatar(id){
-      if(typeof this.state.users[id] == 'undefined' || !this.state.users[id].avatar){
+    getCommentAvatar(hash){
+      if(typeof this.state.users[hash] == 'undefined' || !this.state.users[hash].avatar){
         return this.state.defaultAvatar
       } else {
-        this.state.users[id].avatar = this.state.users[id].avatar.replace(' ','')
-        return this.state.users[id].avatar
+        this.state.users[hash].avatar = this.state.users[hash].avatar.replace(' ','')
+        return this.state.users[hash].avatar
       }
     },
-    getAvatar(id){
+    getAvatar(hash){
       return this.state.loggedinUserAvatar ? this.state.loggedinUserAvatar : this.state.defaultAvatar
     },
     closePrompts(){
@@ -218,6 +229,7 @@ export default {
       this.state.userSettingsVisible = false
       this.state.showSiteWalletModal = false
       this.state.showTransactionModal = false
+      this.state.showRenewPasswordModal = false
       this.state.showTempleDownloadModal = false
       document.getElementsByTagName('HTML')[0].style.overflowY = 'initial'
       setTimeout(()=>{
@@ -253,8 +265,8 @@ export default {
        }
        return false;
     },
-    incrementViews(id){
-      let sendData = {tokenID: id}
+    incrementViews(hash){
+      let sendData = {tokenHash: hash}
       fetch(this.state.baseURL + '/incrementViews.php',{
         method: 'POST',
         headers: {
@@ -264,14 +276,14 @@ export default {
       })
       .then(res=>res.json()).then(data=>{
         if(this.state.search.string){
-          if(this.state.items.filter(v=>v.id==id).length) this.state.search.items.filter(v=>v.id==id)[0].views++
+          if(this.state.items.filter(v=>v.hash==hash).length) this.state.search.items.filter(v=>v.hash==hash)[0].views++
         }else{
           switch(this.state.mode){
             case 'user':
-              this.state.user.items.filter(v=>(+v.id)==id)[0].views++
+              this.state.user.items.filter(v=>v.hash==hash)[0].views++
               break
-            case 'default': if(this.state.items.filter(v=>v.id==id).length) this.state.items.filter(v=>(+v.id)==id)[0].views++; break
-            case 'token': this.state.items.filter(v=>(+v.id)==id)[0].views++; break
+            case 'default': if(this.state.items.filter(v=>v.hash==hash).length) this.state.items.filter(v=>v.hash==hash)[0].views++; break
+            case 'token': this.state.items.filter(v=>v.hash==hash)[0].views++; break
           }
         }
       })
@@ -412,12 +424,11 @@ export default {
           data[1].map(v=>{
             v.userID = +v.userID
             v.creatorID = +v.creatorID
-            this.incrementViews(v.id)
-            this.fetchUserData(v.userID)
-            this.fetchUserData(v.creatorID)
-              /*
-            if(typeof this.state.users[v.userID].id == 'undefined'){
-              let sendData = {userID: v.userID}
+            this.incrementViews(v.hash)
+            this.fetchUserData(v.userHash)
+            this.fetchUserData(v.creatorHash)
+            if(typeof this.state.users[v.userHash] == 'undefined'){
+              let sendData = {userHash: v.userHash, creatorHash: v.creatorHash}
               fetch(this.state.baseURL + '/getUserInfo.php',{
                 method: 'POST',
                 headers: {
@@ -428,18 +439,17 @@ export default {
               .then(res => res.json())
               .then(data => {
                 if(data[0]){
-                  this.state.users[v.userID] = data[1]
-                  if(!this.state.users[v.userID].avatar){
-                    this.state.users[v.userID].avatar = this.state.defaultAvatar
+                  this.state.users[v.userHash] = data[1]
+                  if(!this.state.users[v.userHash].avatar){
+                    this.state.users[v.userHash].avatar = this.state.defaultAvatar
                   }
                 }
               })
             }
-            */
             v.comments = v.comments.map(q=>{
               q.updated = false
               q.editing = false
-              this.fetchUserData(q.userID)
+              this.fetchUserData(q.userHash)
               return q
             })
           })
@@ -479,9 +489,9 @@ export default {
           if(data) {
             this.state.user.items = data[0].items
             this.state.user.items = this.state.user.items.map(v=>{
-              this.incrementViews(v.id)
-              if(typeof this.state.users[v.userID].id == 'undefined'){
-                let sendData = {userID: v.userID, creatorID: v.creatorID}
+              this.incrementViews(v.hash)
+              if(typeof this.state.users[v.userHash].id == 'undefined'){
+                let sendData = {userID: v.userID, creatorID: v.creatorID, userHash: v.userHash, creatorHash: v.creatorHash}
                 fetch(this.state.baseURL + '/getUserInfo.php',{
                   method: 'POST',
                   headers: {
@@ -492,13 +502,13 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                   if(data[0]){
-                    this.state.users[v.userID] = data[1]
-                    this.state.users[v.creatorID] = data[2]
-                    if(!this.state.users[v.userID].avatar){
-                      this.state.users[v.userID].avatar = this.state.defaultAvatar
+                    this.state.users[v.userHash] = data[1]
+                    this.state.users[v.creatorHash] = data[2]
+                    if(!this.state.users[v.userHash].avatar){
+                      this.state.users[v.userHash].avatar = this.state.defaultAvatar
                     }
-                    if(!this.state.users[v.creatorID].avatar){
-                      this.state.users[v.creatorID].avatar = this.state.defaultAvatar
+                    if(!this.state.users[v.creatorHash].avatar){
+                      this.state.users[v.creatorHash].avatar = this.state.defaultAvatar
                     }
                   }
                 })
@@ -507,7 +517,7 @@ export default {
               v.comments = v.comments.map(q=>{
                 q.updated = false
                 q.editing = false
-                this.fetchUserData(q.userID)
+                this.fetchUserData(q.userHash)
                 return q
               })
               return v
@@ -522,10 +532,9 @@ export default {
         }
       })
     },
-		fetchUserData(id){
-      id=+id
-      if(typeof this.state.users[id].id !== 'undefined') return
-      let sendData = {userID: id}
+		fetchUserData(hash){
+      if(typeof this.state.users[hash] !== 'undefined') return
+      let sendData = {userHash: hash}
       fetch(this.state.baseURL + '/getUserInfo.php',{
         method: 'POST',
         headers: {
@@ -536,9 +545,9 @@ export default {
       .then(res => res.json())
       .then(data => {
         if(data[0]){
-          this.state.users[id] = data[1]
-          if(!this.state.users[id].avatar){
-            this.state.users[id].avatar = this.state.defaultAvatar
+          this.state.users[hash] = data[1]
+          if(!this.state.users[hash].avatar){
+            this.state.users[hash].avatar = this.state.defaultAvatar
           }
         }
       })
@@ -567,13 +576,13 @@ export default {
       .then(data => {
         data[0].map(v=>{
           v.private = !!(+v.private)
-          this.state.incrementViews(v.id)
-          this.state.fetchUserData(v.userID)
-          this.state.fetchUserData(v.creatorID)
+          this.state.incrementViews(v.hash)
+          this.state.fetchUserData(v.userHash)
+          this.state.fetchUserData(v.creatorHash)
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
-            this.state.fetchUserData(q.userID)
+            this.state.fetchUserData(q.userHash)
             return q
           })
           v.iteration = 0
@@ -635,7 +644,6 @@ export default {
               body: '',
             })
             .then(json=>json.json()).then(data=>{
-							console.log(data)
               this.state.XTZ_to_USD = +data[1]
             })
           } catch (err) {
@@ -663,7 +671,6 @@ export default {
           body: JSON.stringify(sendData),
         })
         .then(json=>json.json()).then(data=>{
-					console.log(data)
           if(data[0]){
             this.state.walletData.balance = +data[1]
             this.state.XTZ_to_USD = +data[2]
@@ -708,6 +715,7 @@ export default {
                   this.state.loggedin = false
                   this.state.loggedinUserPkh = ''
                   this.state.loggedinUserName = ''
+                  this.state.loggedinUserHash = ''
                   this.state.loggedinUserID = null
                   this.state.loggedinUserAvatar = ''
                   this.state.templeWalletConnected = false
@@ -736,6 +744,7 @@ export default {
       document.cookie = 'loggedinUser=' + this.state.loggedinUserName + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'minimized=' + this.state.minimized + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'loggedinUserID=' + this.state.loggedinUserID + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'loggedinUserHash=' + this.state.loggedinUserHash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'token=' + this.state.passhash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'monochrome=' + this.state.monochrome + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
@@ -814,7 +823,7 @@ export default {
     },
     loadToken(slug){
       let sendData = {
-        id: slug,
+        hash: slug,
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash
       }
@@ -831,9 +840,9 @@ export default {
           this.state.items = this.state.items.map(v=>{
             v.userID = +v.userID
             v.creatorID = +v.creatorID
-            this.incrementViews(v.id)
-            if(typeof this.state.users[v.userID].id == 'undefined'){
-              let sendData = {userID: v.userID}
+            this.incrementViews(v.hash)
+            if(typeof this.state.users[v.userHash].id == 'undefined'){
+              let sendData = {userHash: v.userHash}
               fetch(this.state.baseURL + '/getUserInfo.php',{
                 method: 'POST',
                 headers: {
@@ -844,15 +853,15 @@ export default {
               .then(res => res.json())
               .then(data => {
                 if(data[0]){
-                  this.state.users[v.userID] = data[1]
-                  if(!this.state.users[v.userID].avatar){
-                    this.state.users[v.userID].avatar = this.state.defaultAvatar
+                  this.state.users[v.userHash] = data[1]
+                  if(!this.state.users[v.userHash].avatar){
+                    this.state.users[v.userHash].avatar = this.state.defaultAvatar
                   } 
                 }
               })
             }
-            if(typeof this.state.users[v.creatorID].id == 'undefined'){
-              let sendData = {userID: v.creatorID}
+            if(typeof this.state.users[v.creatorHash].id == 'undefined'){
+              let sendData = {userHash: v.creatorHash}
               fetch(this.state.baseURL + '/getUserInfo.php',{
                 method: 'POST',
                 headers: {
@@ -863,9 +872,9 @@ export default {
               .then(res => res.json())
               .then(data => {
                 if(data[0]){
-                  this.state.users[v.creatorID] = data[1]
-                  if(!this.state.users[v.creatorID].avatar){
-                    this.state.users[v.creatorID].avatar = this.state.defaultAvatar
+                  this.state.users[v.creatorHash] = data[1]
+                  if(!this.state.users[v.creatorHash].avatar){
+                    this.state.users[v.creatorHash].avatar = this.state.defaultAvatar
                   } 
                 }
               })
@@ -874,7 +883,7 @@ export default {
             v.comments = v.comments.map(q=>{
               q.updated = false
               q.editing = false
-              this.fetchUserData(q.userID)
+              this.fetchUserData(q.userHash)
               return q
             })
             return v
@@ -893,6 +902,8 @@ export default {
         this.state.loggedinUserName = l[0].split('=')[1]
         let l_ = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinUserID')
         this.state.loggedinUserID = +(l_[0].split('=')[1])
+        let l__ = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinUserHash')
+        this.state.loggedinUserHash = l__[0].split('=')[1]
         let l2 = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='token')
         if(l2.length){
           this.state.passhash = l2[0].split('=')[1]
@@ -916,6 +927,7 @@ export default {
                 this.state.loggedinUserAvatar = data[3] ? data[3] : this.state.defaultAvatar
                 this.state.loggedinUserPkh = data[4]
                 this.state.passhash = data[7]
+                this.state.loggedinUserHash = data[8]
                 this.state.walletData.address = data[4]
                 this.state.isAdmin = (!!data[5])
                 this.state.setCookie()
@@ -995,7 +1007,6 @@ export default {
               method: 'POST',
               body: data
             }).then(res=>res.json()).then(data=>{
-             console.log(data)
               if(data[0]){
                 this.state.uploadedContentURL = data[1]
                 this.state.uploadedFileType = data[2]
@@ -1175,8 +1186,10 @@ export default {
       if(!this.state.loggedin) return
       let sendData={
         userID: this.loggedinUserID,
+        userHash: this.loggedinUserHash,
         passhash: this.state.passhash,
-        itemID: item.id
+        itemID: item.id,
+        itemHash: item.hash
       }
       fetch(this.state.baseURL + '/listItem.php', {
         method: 'POST',
@@ -1532,7 +1545,7 @@ a{
 .checkboxLabel input:checked ~ .checkmark:after {
   display: block;
 }
-input[type=text]{
+input[type=text], input[type=password]{
   background: #0004;
   border: none;
   border-bottom: 1px solid #4fc4;

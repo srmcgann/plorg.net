@@ -13,7 +13,7 @@
         $sql = "UPDATE users SET connected = $connectedStatus WHERE passhash = \"$passhash\" AND enabled = 1";
         mysqli_query($link, $sql);
       }
-      echo json_encode([true, $row['name'], $row['id'], $row['avatar'], $row['pkh'], !!$row['isAdmin'], $connected, $row['passhash']]);
+      echo json_encode([true, $row['name'], $row['id'], $row['avatar'], $row['pkh'], !!$row['isAdmin'], $connected, $row['passhash'], $row['hash']]);
     } else {
       echo json_encode([false, $sql]);
     }

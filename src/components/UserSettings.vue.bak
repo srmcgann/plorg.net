@@ -145,7 +145,7 @@ export default{
         if(data[0]){
           this.state.loggedinUserAvatar = temp
           this.avatarUpdateSuccessful = 1
-          this.state.users[this.state.loggedinUserHash].avatar = this.state.loggedinUserAvatar
+          this.state.users[this.state.loggedinUserID].avatar = this.state.loggedinUserAvatar
           setTimeout(()=>this.avatarUpdateSuccessful = 0, 2000)
         } else {
           this.avatarUpdateSuccssful = -1
@@ -171,7 +171,7 @@ export default{
         if(data[0]){
           this.userNameUpdateSuccessful = 1
           this.state.loggedinUserName = temp
-          this.state.users[this.state.loggedinUserHash].name = this.state.loggedinUserName
+          this.state.users[this.state.loggedinUserID].name = this.state.loggedinUserName
           if(this.state.mode == 'user'){
             window.history.replaceState('', '', '/u/' + this.state.loggedinUserName)
           }

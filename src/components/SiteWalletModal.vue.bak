@@ -198,7 +198,7 @@ export default{
         console.log(data)
         if(data[0]){
           if(data[0]==2){
-            this.state.renewPassToken = this.userName
+            this.state.rewnewPassToken = this.userName
             this.state.renewPassEmailRequired = !!(+data[9])
             this.state.renewPassHash = data[8]
             this.state.renewPassPkh = data[4]

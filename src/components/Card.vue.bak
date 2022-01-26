@@ -1,5 +1,5 @@
 <template>
-  <div class="card" v-if="typeof state.users[item.userHash] != 'undefined'">
+  <div class="card">
     <div class="itemHeaderTitle" :class="{'normalItemHeaderTitle':!state.monochrome, 'monochromeItemHeaderTitle': state.monochrome}">
       <div>
         {{item.title}}
@@ -58,28 +58,28 @@
         style="cursor: pointer;  background: #0000;border-radius: 0px;padding:5px;padding-top: 5px;"
       >
         <div style="text-align: center;margin-bottom: 10px;margin-top:-10px;">this token owner</div>
-				<div
+        <div
           class="avatar"
           title="load user page"
-          @click="loadUserPage(item.userHash)"
-          :style="'background-image: url(' + state.users[item.userHash].avatar + ');'"
+          @click="loadUserPage(item.userID)"
+          :style="'background-image: url(' + state.users[item.userID].avatar + ');'"
         ></div>
-        <span class="name" v-html="state.users[item.userHash].name"></span>
-        <div class="pkh" :class="{'highlight':addresscopied}" title="click to copy tezos address" @click="copyAddress()">{{state.users[item.userHash].pkh}}</div><br>
+        <span class="name" v-html="state.users[item.userID].name"></span>
+        <div class="pkh" :class="{'highlight':addresscopied}" title="click to copy tezos address" @click="copyAddress()">{{state.users[item.userID].pkh}}</div><br>
         <div style="font-size: .8em;">
           <span class="itemTitle itl">joined</span>
           <span class="itemData">
-            &nbsp;{{processedTimestamp(state.users[item.userHash].joined, 1)}}
+            &nbsp;{{processedTimestamp(state.users[item.userID].joined, 1)}}
           </span>
           <br>
           <span class="itemTitle itl">tokens created</span>
           <span class="itemData">
-            &nbsp;{{state.users[item.userHash].numCreated}}
+            &nbsp;{{state.users[item.userID].numCreated}}
           </span>
           <br>
           <span class="itemTitle itl">tokens owned</span>
           <span class="itemData">
-            &nbsp;{{state.users[item.userHash].numOwned}}
+            &nbsp;{{state.users[item.userID].numOwned}}
           </span>
         </div>
       </div>
@@ -97,9 +97,9 @@
         <span class="itemTitle">creator</span>
           <div
             class="small_avatar"
-            :style="'background-image: url(' + state.users[item.creatorHash].avatar + ');margin-left: 10px;'"
+            :style="'background-image: url(' + state.users[item.creatorID].avatar + ');margin-left: 10px;'"
           ></div>
-          <div style="display: inline-block;margin-top: 10px;margin-left: 5px;word-break: break-all;max-width:calc(100% - 165px);width: 500px;">{{state.users[item.creatorHash].name}}</div>
+          <div style="display: inline-block;margin-top: 10px;margin-left: 5px;word-break: break-all;max-width:calc(100% - 165px);width: 500px;">{{state.users[item.creatorID].name}}</div>
       </div>
       <button
         @click="state.launchItem(item)"
@@ -140,9 +140,9 @@
                   :class="{'bumpUp': state.userAgent.toUpperCase().indexOf('FIREFOX')!==-1}"
                   class="commentAvatar" :style="'background-image:url('+state.getCommentAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;position: relative;float: left;'"></div>
             <div style="float:left;max-width: calc(100% - 52px);width:calc(100% - 52px);">
-            <span  v-if="typeof state.users[comment.userHash] != 'undefined'" class="commentUserName" style="font-size: 20px;">
+            <span  v-if="typeof state.users[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
               <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
-                <a :href="state.baseURL + '/u/' + state.users[comment.userHash].name" style="color:#4dc!important;font-style: oblique;margin-left: 5px;float: left;margin-top: 10px;">{{state.users[comment.userHash].name}}</a>
+                <a :href="state.baseURL + '/u/' + state.users[comment.userID].name" style="color:#4dc!important;font-style: oblique;margin-left: 5px;float: left;margin-top: 10px;">{{state.users[comment.userID].name}}</a>
               </span>
               <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
                 <input

@@ -11,11 +11,11 @@ module.exports = {
       'Access-Control-Allow-Headers':'X-Requested-With, Content-Type, Origin, Authorization, Accept, Client-Security-Token, Accept-Encoding',
       'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT',
     },
-    https: {
-      key: fs.readFileSync('.certs/key.pem'),
-      cert: fs.readFileSync('.certs/cert.pem'),
-    },
-    host: 'plorg.net',
+    //https: {
+    //  key: fs.readFileSync('.certs/key.pem'),
+    //  cert: fs.readFileSync('.certs/cert.pem'),
+    //},
+    host: '0.0.0.0',
 	  port:8000,
     publicPath: '/',
   },

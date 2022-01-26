@@ -23,7 +23,7 @@
       <div style="padding: 5px;">
         <br>
         <span v-if="!doPrepop" style="font-size: 1.5em;">SEND</span>
-        <span v-else style="font-size: 1.5em;line-height:1em;">PURCHASING<br>"<span style="font-size:.9em;color: #fff;">{{state.prepop.item.title}}</span>"<br>FROM<br><span style="color:#ff0;line-height:.2em;">{{state.users[state.prepop.item.userHash].name}}<br><span style="color:#aaa;font-size:.6em;">{{state.users[state.prepop.item.userHash].pkh}}</span></span></span>
+        <span v-else style="font-size: 1.5em;line-height:1em;">PURCHASING<br>"<span style="font-size:.9em;color: #fff;">{{state.prepop.item.title}}</span>"<br>FROM<br><span style="color:#ff0;line-height:.2em;">{{state.users[state.prepop.item.userID].name}}<br><span style="color:#aaa;font-size:.6em;">{{state.users[state.prepop.item.userID].pkh}}</span></span></span>
         <br><br><br>
         <div v-if="!this.doPrepop">
           <span class="title" v-html="userNameString()"></span>
@@ -242,7 +242,7 @@ export default{
     if(this.state.prepop.doPrepop){
       this.doPrepop = true
       this.amount = this.state.prepop.item.price
-      this.recipient = this.state.users[this.state.prepop.item.userHash].pkh
+      this.recipient = this.state.users[this.state.prepop.item.userID].pkh
       this.mint = {
         item: this.state.prepop.item
       }

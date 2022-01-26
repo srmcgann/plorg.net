@@ -13,7 +13,7 @@
       if($row['admin']){
         $sql = 'DELETE FROM comments WHERE id = ' . $commentID;
       } else {
-        $sql = 'DELETE FROM comments WHERE id = ' . $commentID . ' AND userID = ' . $row['id'];
+        $sql = 'DELETE FROM comments WHERE id = ' . $commentID . ' AND userHash = "' . $row['userHash'].'"';
       }
       mysqli_query($link, $sql);
       $success = true;
