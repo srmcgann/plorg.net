@@ -4,9 +4,10 @@
   $db_host="localhost";
   $db="generative";
   $maxResultsPerPage = 4;
-  $masterDBSyncURL = 'https://ipfs.appliedlearning.academy/ipfs/QmVCs5xjbGiKk9n5taYiUEG8q5DoU5Ky4YY2JVAkxJMeiS/2022_01_26_12_06_16.sql';
-  $baseURL = 'plorg.net';
-  $ipfsURL = 'https://ipfs.dweet.net/ipfs/';
+	$peer = 'https://plorgmirror.appliedlearning.academy';
+  $masterDBSyncURL = file_get_contents($peer . '/links/curlink.php');
+  $baseURL = 'plorgmirror.appliedlearning.academy';
+  $ipfsURL = 'https://ipfs.appliedlearning.academy/ipfs/';
   
   $link = mysqli_connect($db_host, $db_user, $db_pass, $db);
 ?>
