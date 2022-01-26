@@ -8,6 +8,7 @@
   $agreeToFees = mysqli_real_escape_string($link, $data->{'agreeToFees'});
   $suffix = mysqli_real_escape_string($link, $data->{'suffix'});
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
+  $userHash = mysqli_real_escape_string($link, $data->{'userHash'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $mint = $data->{'mint'}->{'item'};
   if(isset($mint->{'address'})){
@@ -94,7 +95,7 @@
               ($row['title']).'","'.
               ($purchaserPKH).'","'.
               ($userID).'","'.
-              ($row['userHash']).'","'.
+              ($userHash).'","'.
               ($row['creatorHash']).'","'.
               ($row['description']).'","'.
               ($row['image']).'","'.
