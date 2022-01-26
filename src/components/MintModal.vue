@@ -482,7 +482,7 @@ export default{
       .then(res => res.json()).then(data => {
         console.log(data)
         if(data[0]){
-          window.location.href = window.location.origin + '/t/' + this.state.decToAlpha(data[2])
+          window.location.href = window.location.origin + '/t/' + data[2]
         }
       })
     }
