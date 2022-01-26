@@ -545,7 +545,6 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        console.log('user data', data)
         if(data[0]){
           this.state.users[hash] = data[1]
           if(!this.state.users[hash].avatar){
@@ -830,7 +829,6 @@ export default {
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash
       }
-      console.log(sendData)
       fetch(this.state.baseURL + '/loadToken.php',{
         method: 'POST',
         headers: {
@@ -838,7 +836,6 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        console.log(data)
         this.state.itemDataReceived = true
         if(data[0]) {
           this.state.items = [data[1]]

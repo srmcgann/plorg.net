@@ -72,7 +72,6 @@ export default{
         itemID: this.item.id,
         itemHash: this.item.hash
       }
-      console.log(sendData)
       fetch(this.state.baseURL + '/unlist.php',{
         method: 'POST',
         headers: {
@@ -82,7 +81,6 @@ export default{
       })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         if(data[0]){
           this.item.listed=false
         }

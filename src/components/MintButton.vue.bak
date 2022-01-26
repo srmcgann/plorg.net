@@ -90,7 +90,7 @@ export default{
     },
     chooseAction(){
       if(this.state.loggedin){
-        if(this.item.userID == this.state.loggedinUserID){
+        if(this.item.userHash == this.state.loggedinUserHash){
           this.state.doListItem(this.state.displayItem=this.item)
         } else {
           if(this.item.listed){

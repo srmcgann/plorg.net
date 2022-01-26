@@ -182,6 +182,7 @@ export default{
         let sendData = {
           userName: this.state.loggedinUserName,
           passhash: this.state.passhash,
+          userHash: this.state.loggedinUserHash,
           sender: this.state.walletData.address,
           recipient: this.recipient,
           amount: this.amount,

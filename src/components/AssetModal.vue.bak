@@ -69,6 +69,7 @@ export default{
     }
   },
   mounted(){
+    console.log(this.item.type)
     if(this.item.type.indexOf('audio/')!==-1){
       this.track={
         id: null,

@@ -545,6 +545,7 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
+        console.log('user data', data)
         if(data[0]){
           this.state.users[hash] = data[1]
           if(!this.state.users[hash].avatar){
