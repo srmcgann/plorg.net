@@ -190,6 +190,7 @@ export default{
           agreeToFees: this.agreeToFees ? 'true' : 'false',
           mint: JSON.parse(JSON.stringify(this.mint))
         }
+        console.log('transaction data:', sendData)
         fetch(this.state.baseURL + '/transact.php',{
           method: 'POST',
           headers: {
@@ -206,7 +207,7 @@ export default{
           this.$refs.responseDiv.innerHTML = res
           if(data[0] && (+data[4])){
             alert("transaction successful!\n\ncongratulations on your purchase!")
-            window.location.href = window.location.origin + '/t/' + this.state.decToAlpha(+data[4])
+            //window.location.href = window.location.origin + '/t/' + data[5]
           }
         })
       } else {

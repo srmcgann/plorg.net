@@ -55,6 +55,7 @@
           $res = mysqli_query($link, $sql);
           if(mysqli_num_rows($res)){
             $row = mysqli_fetch_assoc($res);
+            $newHash = md5(hash_file('md5', $ipfsURL . $row['ipfs']) . strtotime('now') . rand());
             $targetID = $row['hash'];
             if($row['mints']<$row['editions']){
               $ak=[
@@ -68,6 +69,7 @@
                 'private',
                 'metaData',
                 'views',
+                'hash',
                 'price',
                 'royalties',
                 'history',
@@ -99,6 +101,7 @@
               ($row['private']).'","'.
               ($row['metaData']).'",'.
               (0).',"'.
+              ($newHash).'","'.
               ($row['price']).'","'.
               ($row['royalties']).'","'.
               ($row['history']).'","'.
@@ -152,7 +155,7 @@
           echo json_encode([false, 'transaction failed, but mint succeeded! whhhhaaaaa?']);
           die();
         }
-        echo json_encode([$success, $output, $command, $mint, $mint->{'id'} ? $newMintID : '']);
+        echo json_encode([$success, $output, $command, $mint, $mint->{'id'} ? $newMintID : '', $newHash, $sql1]);
       } else {
         echo json_encode([false, 'the payment failed', $command]);
         die();

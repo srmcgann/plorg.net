@@ -2,12 +2,13 @@
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
   $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
-  $userHash = intval(mysqli_real_escape_string($link, $data->{'userHash'}));
-  $sql = "SELECT * FROM users WHERE pkh = \"$pkh\" AND id = $userID AND enabled = 1";
+  $userHash = mysqli_real_escape_string($link, $data->{'userHash'});
+  $sql = "SELECT * FROM users WHERE pkh = \"$pkh\" AND hash = \"$userHash\" AND enabled = 1";
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
-    $creatorHash = $userHash = $row['id'];
+    $creatorHash = $userHash = $row['hash'];
+    $userID = $row['id'];
     
     $title = mysqli_real_escape_string($link, $data->{'title'});
     $description = mysqli_real_escape_string($link, $data->{'description'});

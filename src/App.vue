@@ -85,6 +85,7 @@ export default {
         showRenewPasswordModal: false,
         resetPrepop: null,
         dragover: false,
+        tokenMode: null,
         monochrome: true,
         toggleFullScreen: null,
         defaultPrepop: {doprepop: false},
@@ -490,7 +491,7 @@ export default {
             this.state.user.items = data[0].items
             this.state.user.items = this.state.user.items.map(v=>{
               this.incrementViews(v.hash)
-              if(typeof this.state.users[v.userHash].id == 'undefined'){
+              if(typeof this.state.users[v.userHash] == 'undefined'){
                 let sendData = {userID: v.userID, creatorID: v.creatorID, userHash: v.userHash, creatorHash: v.creatorHash}
                 fetch(this.state.baseURL + '/getUserInfo.php',{
                   method: 'POST',
@@ -823,10 +824,12 @@ export default {
     },
     loadToken(slug){
       let sendData = {
-        hash: slug,
+        token: slug,
+        tokenMode: this.state.tokenMode,
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash
       }
+      console.log(sendData)
       fetch(this.state.baseURL + '/loadToken.php',{
         method: 'POST',
         headers: {
@@ -841,7 +844,7 @@ export default {
             v.userID = +v.userID
             v.creatorID = +v.creatorID
             this.incrementViews(v.hash)
-            if(typeof this.state.users[v.userHash].id == 'undefined'){
+            if(typeof this.state.users[v.userHash] == 'undefined'){
               let sendData = {userHash: v.userHash}
               fetch(this.state.baseURL + '/getUserInfo.php',{
                 method: 'POST',
@@ -860,7 +863,7 @@ export default {
                 }
               })
             }
-            if(typeof this.state.users[v.creatorHash].id == 'undefined'){
+            if(typeof this.state.users[v.creatorHash] == 'undefined'){
               let sendData = {userHash: v.creatorHash}
               fetch(this.state.baseURL + '/getUserInfo.php',{
                 method: 'POST',
@@ -1100,8 +1103,10 @@ export default {
           case 't':
             this.state.mode = 'token'
             this.state.curPage = (+vars[1])-1
-            this.state.tokenID = vars[1]
-            this.$nextTick(()=>this.loadToken(this.alphaToDec(vars[1])))
+            this.state.tokenMode = vars[1].length > 30 ? 'hash' : 'id'
+            //this.state.tokenID = this.alphaToDec(vars[1]))
+            let slug = this.state.tokenMode == 'hash' ? vars[1] : this.alphaToDec(vars[1])
+            this.$nextTick(()=>this.loadToken(slug))
             if(vars[2]){
               this.state.search.string = decodeURIComponent(vars[2])
             }

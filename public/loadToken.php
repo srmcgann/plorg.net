@@ -1,7 +1,8 @@
 <?
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
-  $hash = mysqli_real_escape_string($link, $data->{'hash'});
+  $token = mysqli_real_escape_string($link, $data->{'token'});
+  $tokenMode = mysqli_real_escape_string($link, $data->{'tokenMode'});
   $loggedinUserName = mysqli_real_escape_string($link, $data->{'loggedinUserName'});
 	$passhash = mysqli_real_escape_string($link, $data->{'passhash'});
 
@@ -29,9 +30,17 @@
   unset($row['passhash']);
   $ret = $row;
   if($includePrivate){
-    $sql1=$sql = "SELECT * FROM items WHERE hash = \"" . $hash . '"';
+    if($tokenMode=='hash'){
+      $sql1=$sql = "SELECT * FROM items WHERE hash = \"" . $token . '"';
+    } else {
+      $sql1=$sql = "SELECT * FROM items WHERE id = \"" . $token . '"';
+    }
   } else {
-    $sql1=$sql = "SELECT * FROM items WHERE hash = \"" . $hash . '" AND private = 0';
+    if($tokenMode=='hash'){
+      $sql1=$sql = "SELECT * FROM items WHERE hash = \"" . $token . '" AND private = 0';
+    } else {
+      $sql1=$sql = "SELECT * FROM items WHERE id = \"" . $token . '" AND private = 0';
+    }
   }
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){

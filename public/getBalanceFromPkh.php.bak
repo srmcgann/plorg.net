@@ -7,7 +7,7 @@
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
       if($pkh = mysqli_fetch_assoc($res)['pkh']){
-        $bal=explode(' ', shell_exec('sudo tezos-client get balance for ' . $pkh . ' 2>&1'))[0];
+        $bal=explode(' ', shell_exec('sudo tezos-client getBalance for ' . $pkh . ' 2>&1'))[0];
         $xtz_to_usd = json_decode(file_get_contents('https://'.$baseURL.'/XTZ_to_USD.php'));
         echo json_encode([true, $bal, $xtz_to_usd[0]?$xtz_to_usd[1]:'']);
       } else {
