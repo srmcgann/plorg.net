@@ -325,9 +325,9 @@ export default {
   margin-right: 20px;
 }
 .portrait{
-  background-size: 100% auto!important;
+  background-size: contain!important;
 }
 .landscape{
-  background-size: auto 100%!important;
+  background-size: contain!important;
 }
 </style>

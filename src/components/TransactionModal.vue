@@ -206,7 +206,7 @@ export default{
           this.$refs.responseDiv.innerHTML = res
           if(data[0] && (+data[4])){
             alert("transaction successful!\n\ncongratulations on your purchase!")
-            //window.location.href = window.location.origin + '/t/' + data[5]
+            window.location.href = window.location.origin + '/t/' + data[5]
           }
         })
       } else {

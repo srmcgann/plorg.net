@@ -665,12 +665,6 @@ export default{
 }
 </style>
 <style>
-.portrait{
-  background-size: 100% auto!important;
-}
-.landscape{
-  background-size: auto 100%!important;
-}
 .showSpinner{
   background-image: url(https://cantelope.org/out_spedup.gif)!important;
   background-positon: center center!important;
