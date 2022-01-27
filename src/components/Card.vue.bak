@@ -39,6 +39,11 @@
       </div>
       <div class="clear"></div>
       <div class="itemData">
+        <span class="itemTitle">hash</span>
+        <div class="cardVal" style="font-size:.72em;">{{item.hash}}</div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
         <span class="itemTitle">edition</span>
         <div class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints+1)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
       </div>
@@ -97,9 +102,10 @@
         <span class="itemTitle">creator</span>
           <div
             class="small_avatar"
-            :style="'background-image: url(' + state.users[item.creatorHash].avatar + ');margin-left: 10px;'"
+            :style="'background-image: url(' + (state.users[item.creatorHash] ? state.users[item.creatorHash].avatar : '') + ');margin-left: 10px;'"
           ></div>
-          <div style="display: inline-block;margin-top: 10px;margin-left: 5px;word-break: break-all;max-width:calc(100% - 165px);width: 500px;">{{state.users[item.creatorHash].name}}</div>
+          <div style="display: inline-block;margin-top: 10px;margin-left: 5px;word-break: break-all;max-width:calc(100% - 165px);width: 500px;">
+          {{state.users[item.creatorHash] ? state.users[item.creatorHash].name : ''}}</div>
       </div>
       <button
         @click="state.launchItem(item)"
@@ -328,7 +334,6 @@ export default {
         })
         .then(res => res.json())
         .then(data => {
-          console.log(data)
           if(data[0]){
 		  			let comment = {
 			  			userID: this.state.loggedinUserID,
