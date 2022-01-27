@@ -1,6 +1,6 @@
 <?
   $db_user="user";
-  $db_pass="";
+  $db_pass=file_get_contents('/home/cantelope/plorgpw');
   $db_host="localhost";
   $db="payway";
   $link = mysqli_connect($db_host, $db_user, $db_pass, $db);

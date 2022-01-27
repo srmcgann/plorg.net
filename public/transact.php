@@ -57,7 +57,7 @@
           if(mysqli_num_rows($res)){
             $row = mysqli_fetch_assoc($res);
             $newHash = md5(hash_file('md5', $ipfsURL . $row['ipfs']) . strtotime('now') . rand());
-            $targetID = $row['hash'];
+            $targetHash = $row['hash'];
             if($row['mints']<$row['editions']){
               $ak=[
                 'title',

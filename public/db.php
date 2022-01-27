@@ -1,6 +1,6 @@
 <?
   $db_user="user";
-  $db_pass=""; //test
+  $db_pass=file_get_contents('/home/cantelope/plorgpw');
   $db_host="localhost";
   $db="generative";
   $maxResultsPerPage = 4;
