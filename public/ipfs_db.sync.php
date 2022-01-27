@@ -1,5 +1,6 @@
 <?
   require('db.php');
+  $masterDBSyncURL = file_get_contents($peer . '/links/curlink.php');
   $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];
   chdir('/var/www/html/plorg.net/dist_public/');
   function sortfunc($a, $b){ return $a[1] < $b[1];}
@@ -109,6 +110,6 @@
   shell_exec('rm ./sync/*');
 
   // sync with master
-  $output = shell_exec("curl $masterDBSyncURL | mysql -uuser -p$db_pass -f");
-  echo $output . "\n";
+  $output = shell_exec($command = "curl $masterDBSyncURL | mysql -uuser -p$db_pass -f");
+  //echo $output . "\n";
 ?>

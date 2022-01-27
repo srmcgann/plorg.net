@@ -123,7 +123,7 @@
                 $newMintID = mysqli_insert_id($link);
               }
               if($mint->{'id'} && $newMintID){
-                  $sql = "UPDATE items SET mints = mints+1 WHERE hash = \"$targetHash\"";
+                  $sql = "UPDATE items SET mints = mints+1, updated = \"".date("Y-m-d H:i:s")."\" WHERE hash = \"$targetHash\"";
                   mysqli_query($link, $sql);
               }
             } else {

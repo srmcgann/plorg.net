@@ -11,7 +11,7 @@
     $price = mysqli_real_escape_string($link, $data->{'price'});
     $royalties = mysqli_real_escape_string($link, $data->{'royalties'});
     $editions = intval(mysqli_real_escape_string($link, $data->{'editions'}));
-    $sql = "UPDATE items SET price=\"$price\", royalties=\"$royalties\", edition=1, editions=$editions, listed=1 WHERE hash=\"$itemHash\"";
+    $sql = "UPDATE items SET price=\"$price\", royalties=\"$royalties\", edition=1, editions=$editions, listed=1, updated = \"".date("Y-m-d H:i:s")."\" WHERE hash=\"$itemHash\"";
     if(mysqli_query($link, $sql)){
       echo json_encode([true, $itemID, $itemHash, $sql]);
     } else {

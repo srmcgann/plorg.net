@@ -12,9 +12,9 @@
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       if($row['admin']){
-        $sql = 'UPDATE comments SET text = "'.$comment.'" WHERE hash = "'.$commentHash . '"';
+        $sql = 'UPDATE comments SET text = "'.$comment.'", updated = "'.date("Y-m-d H:i:s").'" WHERE hash = "'.$commentHash . '"';
       } else {
-        $sql = 'UPDATE comments SET text = "'.$comment.'" WHERE hash = "'.$commentHash . '" AND userHash = "' . $row['hash'] . '"';
+        $sql = 'UPDATE comments SET text = "'.$comment.'", updated = "'.date("Y-m-d H:i:s").'" WHERE hash = "'.$commentHash . '" AND userHash = "' . $row['hash'] . '"';
       }
       mysqli_query($link, $sql);
       $success = true;

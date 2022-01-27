@@ -13,9 +13,9 @@
     if(mysqli_num_rows($res)){
       $row = mysqli_fetch_assoc($res);
       $userHash = $row['hash'];
-      $sql = 'UPDATE users SET name = "'.$newUserName.'" WHERE (name LIKE "'.$userName.'" OR pkh LIKE "'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
+      $sql = 'UPDATE users SET name = "'.$newUserName.'", updated = "'.date("Y-m-d H:i:s").'" WHERE (name LIKE "'.$userName.'" OR pkh LIKE "'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
       mysqli_query($link, $sql);
-      $sql = 'UPDATE items SET author = "'.$newUserName.'" WHERE creatorHash = "'.$userHash.'"';
+      $sql = 'UPDATE items SET author = "'.$newUserName.'", updated = "'.date("Y-m-d H:i:s").'" WHERE creatorHash = "'.$userHash.'"';
       mysqli_query($link, $sql);
       
       $success = true;

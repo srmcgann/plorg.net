@@ -11,7 +11,7 @@
     $row = mysqli_fetch_assoc($res);
     if(password_verify($currentPassword, $row['passhash'])){
       $newPasshash = password_hash($newPassword, PASSWORD_DEFAULT);
-      $sql = 'UPDATE users SET passhash = "'.$newPasshash.'" WHERE name LIKE "'.$userName.'" AND enabled = 1';
+      $sql = 'UPDATE users SET passhash = "'.$newPasshash.'", updated = "'.date("Y-m-d H:i:s").'" WHERE name LIKE "'.$userName.'" AND enabled = 1';
       mysqli_query($link, $sql);
       $success = true;
     }

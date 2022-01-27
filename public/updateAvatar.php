@@ -9,7 +9,7 @@
   $success = false;
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
-    $sql = 'UPDATE users SET avatar = "'.$newAvatar.'" WHERE name LIKE "'.$userName.'" AND pkh = "'.$pkh.'" AND enabled = 1';
+    $sql = 'UPDATE users SET avatar = "'.$newAvatar.'", updated = "'.date("Y-m-d H:i:s").'" WHERE name LIKE "'.$userName.'" AND pkh = "'.$pkh.'" AND enabled = 1';
     mysqli_query($link, $sql);
     $success = true;
   }

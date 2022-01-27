@@ -11,7 +11,7 @@
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
-      $sql = 'UPDATE users SET ' . $pref . ' = ' . $newval . ' WHERE name LIKE "'.$userName.'" AND enabled = 1';
+      $sql = 'UPDATE users SET ' . $pref . ' = ' . $newval . ', updated = "'.date("Y-m-d H:i:s").'" WHERE name LIKE "'.$userName.'" AND enabled = 1';
       mysqli_query($link, $sql);
       $success = true;
 	  }

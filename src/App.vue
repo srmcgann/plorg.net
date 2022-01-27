@@ -58,7 +58,7 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorg.net',
+        rootDomain: 'plorgmirror.appliedlearning.academy',
         alphaToDec: null,
         autolaunchTokens: false,
         baseURL: 'https://plorgmirror.appliedlearning.academy',
@@ -246,12 +246,39 @@ export default {
       this.state.loggedin = false
       this.state.loggedinUserPkh = ''
       this.state.loggedinUserName = ''
+      this.state.loggedinUserHash = ''
       this.state.loggedinUserID = null
       this.state.passhash = ''
       this.state.loggedinUserAvatar = ''
       this.state.siteWalletConnected = false
       this.state.siteWalletPollTimerStarted = false
       this.state.walletData = JSON.parse(JSON.stringify(this.state.defaultWalletData))
+
+      switch(this.state.mode){
+        case 'user':
+          this.state.user.items.map(v=>{
+            v.comments.map(q=>{
+              q.editing = false
+            })
+          })
+          break
+        case 'token':
+          this.state.items.map(v=>{
+            v.comments.map(q=>{
+              q.editing = false
+            })
+          })
+          break
+        break
+        default: 
+          this.state.items.map(v=>{
+            v.comments.map(q=>{
+              q.editing = false
+            })
+          })
+        break
+      }
+
       //window.location.reload()
     },
     toggleShowAssetModal(){

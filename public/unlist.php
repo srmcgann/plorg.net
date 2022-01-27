@@ -7,7 +7,7 @@
   $sql = "SELECT * FROM users WHERE pkh = \"$pkh\" AND hash = \"$userHash\" AND enabled = 1";
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){
-    $sql = "UPDATE items SET listed=0 WHERE hash=\"$itemHash\"";
+    $sql = "UPDATE items SET listed=0, updated = \"".date("Y-m-d H:i:s")."\" WHERE hash=\"$itemHash\"";
     if(mysqli_query($link, $sql)){
       echo json_encode([true, $itemID, $sql]);
     } else {
