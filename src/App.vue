@@ -257,9 +257,11 @@ export default {
       switch(this.state.mode){
         case 'user':
           this.state.user.items.map(v=>{
-            v.comments.map(q=>{
-              q.editing = false
-            })
+            if(v.comments.length){
+              v.comments.map(q=>{
+                q.editing = false
+              })
+            }
           })
           break
         case 'token':
