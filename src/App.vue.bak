@@ -257,9 +257,11 @@ export default {
       switch(this.state.mode){
         case 'user':
           this.state.user.items.map(v=>{
-            v.comments.map(q=>{
-              q.editing = false
-            })
+            if(v.comments.length){
+              v.comments.map(q=>{
+                q.editing = false
+              })
+            }
           })
           break
         case 'token':
@@ -303,6 +305,7 @@ export default {
         body: JSON.stringify(sendData),
       })
       .then(res=>res.json()).then(data=>{
+        console.log(data)
         if(this.state.search.string){
           if(this.state.items.filter(v=>v.hash==hash).length) this.state.search.items.filter(v=>v.hash==hash)[0].views++
         }else{

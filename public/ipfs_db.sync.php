@@ -89,7 +89,9 @@
             $updates = [];
             $vals=[];
             for($j=0;$j<sizeof($cols);++$j){
-              $updates[] = $cols[$j] .'=IF('.$table.'.updated < DATE(newVals.updated), newVals.'.$cols[$j].','.$table.'.'.$cols[$j].')';
+              $updates[] = $cols[$j] .'=IF('.$table.'.updated < newVals.updated, newVals.'.$cols[$j].','.$table.'.'.$cols[$j].')';
+              //$updates[] = $cols[$j] .'=IF(DATE('.$table.'.updated) < DATE(newVals.updated), newVals.'.$cols[$j].','.$table.'.'.$cols[$j].')';
+              //$updates[] = $cols[$j] .'=IF('.$table.'.updated < DATE(newVals.updated), newVals.'.$cols[$j].','.$table.'.'.$cols[$j].')';
               $vals[] = '"'.$row[$cols[$j]].'"';
             }
             $sql = "INSERT INTO $table (" . implode(',',  $cols) . ") VALUES(".implode(',',$vals).") AS newVals ON DUPLICATE KEY UPDATE " . implode(',', $updates).';';
@@ -111,5 +113,5 @@
 
   // sync with master
   $output = shell_exec($command = "curl $masterDBSyncURL | mysql -uuser -p$db_pass -f");
-  //echo $output . "\n";
+  echo $output . "\n";
 ?>

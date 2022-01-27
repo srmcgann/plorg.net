@@ -1,7 +1,7 @@
 <?
   require("db.php");
   $data = json_decode(file_get_contents('php://input'));
-  $tokenID = mysqli_real_escape_string($link, $data->{'tokenID'});
+  $tokenHash = mysqli_real_escape_string($link, $data->{'tokenHash'});
 
   function ipToDec($ip){
     $parts=explode(".",$ip);
@@ -28,7 +28,7 @@
 
   if($_SERVER['REMOTE_ADDR']){
     $decIP = ipToDec($_SERVER['REMOTE_ADDR']);
-    $sql1=$sql='SELECT time FROM views WHERE decIP = ' . $decIP . ' AND tokenID = ' . $tokenID . ' ORDER BY time DESC';
+    $sql1=$sql='SELECT time FROM views WHERE decIP = ' . $decIP . ' AND tokenHash = "' . $tokenHash . '" ORDER BY time DESC';
     $sql1=$sql;
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
@@ -39,10 +39,10 @@
     }
     if($go){
       $row = mysqli_fetch_assoc($res);
-      $sql = 'UPDATE items SET views = views + 1 WHERE id = ' . $tokenID;
+      $sql = 'UPDATE items SET views = views + 1 WHERE hash = "' . $tokenHash . '"';
       mysqli_query($link, $sql);
       $time = time();
-      $sql2=$sql = 'INSERT INTO views (decIP, tokenID, time) VALUES('.$decIP.','.$tokenID.','.$time.');';
+      $sql2=$sql = 'INSERT INTO views (decIP, tokenHash, time) VALUES('.$decIP.',"'.$tokenHash.'",'.$time.');';
       mysqli_query($link, $sql);
     }
   }
