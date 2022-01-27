@@ -10,7 +10,7 @@
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
-      if($row['admin']){
+      if($row['isAdmin']){
         $sql = 'DELETE FROM comments WHERE hash = "' . $commentHash . '"';
       } else {
         $sql = 'DELETE FROM comments WHERE hash = "' . $commentHash . '" AND userHash = "' . $row['hash'].'"';

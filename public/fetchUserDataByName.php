@@ -20,7 +20,7 @@
   		  $row = mysqli_fetch_assoc($res);
         $pkh = $row['pkh'];
 	  	  $loggedinUserData = $row;
-				if($row['admin']) $admin = true;
+				if($row['isAdmin']) $admin = true;
         $loggedinPasshash = $row['passhash'];
 	  	}
 		}

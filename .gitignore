@@ -16,6 +16,8 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Editor directories and files
+/public/db.php
+/public/XTZ_to_USD.php
 db.*
 XTZ_to_USD.*
 .idea

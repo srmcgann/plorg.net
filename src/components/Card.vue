@@ -332,7 +332,7 @@ export default {
       })
 		},
     postComment(hash, id){
-      let text = this.$refs[hash+'newComment'].value.substring(0, 512)
+      let text = document.querySelector('#newComment'+hash).value.substring(0, 512)
 			if(text.length){
         let sendData = {
           userName: this.state.loggedinUserName,
@@ -381,7 +381,7 @@ export default {
               }        
             }
 
-						this.$refs[hash+'newComment'].value = ''
+						document.querySelector('#newComment'+hash).value = ''
 			  	}
         })
 			}

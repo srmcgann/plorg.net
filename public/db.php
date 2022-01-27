@@ -1,6 +1,6 @@
 <?
   $db_user="user";
-  $db_pass="";
+  $db_pass=""; //test
   $db_host="localhost";
   $db="generative";
   $maxResultsPerPage = 4;

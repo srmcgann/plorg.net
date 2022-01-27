@@ -54,7 +54,7 @@
   		  $row = mysqli_fetch_assoc($res);
 	  	  $loggedinUserData = $row;
         $confirmed = true;
-				if($row['admin']) $admin = true;
+				if($row['isAdmin']) $admin = true;
 	  	}
 		}
 

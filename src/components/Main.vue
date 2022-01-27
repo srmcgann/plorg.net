@@ -218,6 +218,7 @@ export default {
 .cardVal{
   display: inline-block;
   max-width: 250px;
+  padding-left: 4px;
 }
 .name{
   word-break: break-word;

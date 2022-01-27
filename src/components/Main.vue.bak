@@ -218,6 +218,7 @@ export default {
 .cardVal{
   display: inline-block;
   max-width: 250px;
+  padding-left: 10px;
 }
 .name{
   word-break: break-word;
@@ -250,11 +251,11 @@ export default {
 }
 .normalItemTitle{
   color: #aff;
-  background-color: linear-gradient(-90deg, #025, #0000);
+  background: linear-gradient(-90deg, #025, #0000);
 }
 .monochromeItemTitle{
   color: #eee;
-  background-color: linear-gradient(-90deg, #444, #0000);
+  background: linear-gradient(-90deg, #444, #0000);
 }
 .itemHeaderTitle, .itemHeaderDescription{
   text-align: left;
