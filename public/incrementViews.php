@@ -39,7 +39,7 @@
     }
     if($go){
       $row = mysqli_fetch_assoc($res);
-      $sql = 'UPDATE items SET views = views + 1 WHERE hash = "' . $tokenHash . '"';
+      $sql = 'UPDATE items SET views = views + 1, updated = "'.date("Y-m-d H:i:s").'" WHERE hash = "' . $tokenHash . '"';
       mysqli_query($link, $sql);
       $time = time();
       $sql2=$sql = 'INSERT INTO views (decIP, tokenHash, time) VALUES('.$decIP.',"'.$tokenHash.'",'.$time.');';
