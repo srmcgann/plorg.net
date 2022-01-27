@@ -6,6 +6,6 @@
   $maxResultsPerPage = 4;
   $peer = explode("\n", file_get_contents('/home/cantelope/plorgPeer'))[0];
   $baseURL = explode("\n", file_get_contents('/home/cantelope/plorgBaseURL'))[0];
-  $ipfsURL = 'https://ipfs.dweet.net/ipfs/';  
+  $ipfsURL = explode("\n", file_get_contents('/home/cantelope/plorgIpfsURL'))[0];
   $link = mysqli_connect($db_host, $db_user, $db_pass, $db);
 ?>
