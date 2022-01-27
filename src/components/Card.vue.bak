@@ -12,7 +12,7 @@
       <div @click="state.launchItem(item)" class="itemImage" :style="'cursor: pointer;background-image: url(' + item.image + ');'"></div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">link</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">card link</span>
         <div class="cardVal">
           <a
             :href="state.baseURL+'/t/'+state.decToAlpha(item.id)"
@@ -24,37 +24,48 @@
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">views</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">asset</span>
+        <div class="cardVal">
+          <span
+            @click="loadDirectAsset(item)"
+            class="slug"
+            :class="{'normalSlug': !state.monochrome,'monochromeSlug': state.monochrome}"
+            v-html="'link'"
+          ></span></div>
+      </div>
+      <div class="clear"></div>
+      <div class="itemData">
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">views</span>
         <div class="cardVal">{{item.views}}</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">minted</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">minted</span>
         <div class="cardVal">{{processedTimestamp(item.date)}}</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">created</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">created</span>
         <div class="cardVal">{{processedTimestamp(item.created)}}</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">hash</span>
-        <div class="cardVal" style="font-size:.72em;">{{item.hash}}</div>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">hash</span>
+        <div class="cardVal" style="font-size:.7em;">{{item.hash}}</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">edition</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">edition</span>
         <div class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints+1)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">price</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">price</span>
         <div class="cardVal">{{item.price}}ꜩ</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
-        <span class="itemTitle">royalties</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">royalties</span>
         <div class="cardVal">{{item.royalties}}%</div>
       </div>
     </div>
@@ -72,17 +83,17 @@
         <span class="name" v-html="state.users[item.userHash].name"></span>
         <div class="pkh" :class="{'highlight':addresscopied}" title="click to copy tezos address" @click="copyAddress()">{{state.users[item.userHash].pkh}}</div><br>
         <div style="font-size: .8em;">
-          <span class="itemTitle itl">joined</span>
+          <span class="itemTitle itl" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">joined</span>
           <span class="itemData">
             &nbsp;{{processedTimestamp(state.users[item.userHash].joined, 1)}}
           </span>
           <br>
-          <span class="itemTitle itl">tokens created</span>
+          <span class="itemTitle itl" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">tokens created</span>
           <span class="itemData">
             &nbsp;{{state.users[item.userHash].numCreated}}
           </span>
           <br>
-          <span class="itemTitle itl">tokens owned</span>
+          <span class="itemTitle itl" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">tokens owned</span>
           <span class="itemData">
             &nbsp;{{state.users[item.userHash].numOwned}}
           </span>
@@ -99,7 +110,7 @@
           </div>
       </div>
       <div class="itemData itemRoyalties" @click="loadUserPage(item.creatorHash)" style="display: inline-block;cursor: pointer;min-width:200px;min-width: 55%;max-width: calc(100% - 10px);margin-bottom:0px;position: relative;transform: translatey(-20px);">
-        <span class="itemTitle">creator</span>
+        <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">creator</span>
           <div
             class="small_avatar"
             :style="'background-image: url(' + (state.users[item.creatorHash] ? state.users[item.creatorHash].avatar : '') + ');margin-left: 10px;'"
@@ -225,6 +236,12 @@ export default {
     },
     slug(){
       return '/' + this.state.decToAlpha(this.item.id)
+    },
+    loadDirectAsset(item){
+      let el = document.createElement('a')
+      a.href = this.state.baseIPFSURL + '/' + item.ipfs
+      a.target = '_blank'
+      a.click()
     },
     copyAddress(){
       if(window.navigator.userAgent.toUpperCase().indexOf('FIREFOX')!=-1){
@@ -515,6 +532,7 @@ export default {
   padding-right: 10px;
   text-shadow: 1px 1px 2px #000;
   color: #fff;
+  margin-left: 10px;
   border-radius: 5px;
   cursor: pointer;
   line-height: 1em;

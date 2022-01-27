@@ -250,11 +250,11 @@ export default {
 }
 .normalItemTitle{
   color: #aff;
-  background: linear-gradient(-90deg, #025, #0000);
+  background-color: linear-gradient(-90deg, #025, #0000);
 }
 .monochromeItemTitle{
   color: #eee;
-  background: linear-gradient(-90deg, #444, #0000);
+  background-color: linear-gradient(-90deg, #444, #0000);
 }
 .itemHeaderTitle, .itemHeaderDescription{
   text-align: left;
