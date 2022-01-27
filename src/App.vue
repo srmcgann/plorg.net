@@ -58,11 +58,11 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorg.net',
+        rootDomain: 'plorgmirror.appliedlearning.academy',
         alphaToDec: null,
         autolaunchTokens: false,
-        baseURL: 'https://plorg.net',
-        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
+        baseURL: 'https://plorgmirror.appliedlearning.academy',
+        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
