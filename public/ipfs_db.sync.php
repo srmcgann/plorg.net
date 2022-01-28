@@ -89,8 +89,8 @@
             $updates = [];
             $vals=[];
             for($j=0;$j<sizeof($cols);++$j){
-              if($cols[$j] == 'views'){
-                $updates[] = $cols[$j] .'=IF('.$table.'.updated < newVals.updated AND '.$table.'.views < newVals.views, newVals.views, '.$table.'.'.$cols[$j].')';
+              if($cols[$j] == 'views' || $cols[$j] == 'mints'){
+                $updates[] = $cols[$j] .'=IF('.$table.'.updated < newVals.updated AND '.$table.'.'.$cols[$j].' < newVals.'.$cols[$j].', newVals.'.$cols[$j].', '.$table.'.'.$cols[$j].')';
                 $vals[] = '"'.$row[$cols[$j]].'"';
               } else {
                 $updates[] = $cols[$j] .'=IF('.$table.'.updated < newVals.updated, newVals.'.$cols[$j].','.$table.'.'.$cols[$j].')';
