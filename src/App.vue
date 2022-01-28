@@ -58,7 +58,7 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'dweet.net',
+        rootDomain: 'plorg.net',
         alphaToDec: null,
         autolaunchTokens: false,
         baseURL: 'https://plorg.net',
