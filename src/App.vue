@@ -62,7 +62,7 @@ export default {
         alphaToDec: null,
         autolaunchTokens: false,
         baseURL: 'https://plorg.net',
-        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
+        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
