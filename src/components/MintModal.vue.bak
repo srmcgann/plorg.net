@@ -221,32 +221,34 @@
             ref="shootButton"
             :class="{'disabledButton':shotInProgress}"
             :disabled="shotInProgress"
-            style="background: #289;left: 0;color: #fff;text-shadow: 2px 2px 2px #000;padding-left: 20px;padding-right: 20px;position: absolute; left: 50%;font-size: 24px;transform: translate(-50%);border-radius: 30px;"
+            style="background: #289;left: 0;color: #fff;text-shadow: 2px 2px 2px #000;padding-left: 20px;padding-right: 20px;position: relative; left: 50%;font-size: 24px;transform: translate(-50%);border-radius: 30px; margin-left: auto; margin-right: auto;margin-bottom:20px;"
           >accept thumbnail</button>
           <br>
         </div>
         <div
           v-else-if="state.uploadedFileType.indexOf('image/') !== -1"
           class="imageThumb"
-          :class="{'portrait': assetLoaded && !(thumbnail.width<asset.height), 'landscape': assetLoaded && (thumbnail.width<asset.height),'showSpinner':shotInProgress}"                    :style="'background-image: url('+state.uploadedFileThumbnail+')'"
+          :class="{'portrait': assetLoaded && !(thumbnail.width<asset.height), 'landscape': assetLoaded && (thumbnail.width<asset.height),'showSpinner':shotInProgress}"
+          :style="'background-image: url('+state.uploadedFileThumbnail+')'"
           style="margin-bottom:20px;"
         ></div>
         <div
           v-else
           class="imageThumb"
-          :class="{'portrait': assetLoaded && (asset.width<asset.height), 'landscape': assetLoaded && !(asset.width<asset.height),'showSpinner':shotInProgress}"                    :style="'background-image: url('+state.uploadedFileThumbnail+')'"
+          :class="{'portrait': assetLoaded && (asset.width<asset.height), 'landscape': assetLoaded && !(asset.width<asset.height),'showSpinner':shotInProgress}"
+          :style="'background-image: url('+state.uploadedFileThumbnail+')'"
         ></div><br>
         <button
           class="cancelButton"
           @click="next()"
           ref="backButton"
-          style="background: #289;left: 0;color: #fff;text-shadow: 2px 2px 2px #000;padding-left: 20px;padding-right: 20px;position: absolute; left: 50%;font-size: 24px;transform: translate(-50%);border-radius: 30px;"
+          style="background: #289;left: 0;color: #fff;text-shadow: 2px 2px 2px #000;padding-left: 20px;padding-right: 20px;position: relative; left: 50%;font-size: 24px;transform: translate(-50%);border-radius: 30px;margin-left: auto; margin-right: auto;"
         >accept thumbnail</button>
         <button
           class="cancelButton"
           @click="stage--;$nextTick(()=>{$refs.title.focus()})"
           ref="backButton"
-          style="background: #486;left: 0;color: #fff;"
+          style="background: #486;left: 0;color: #fff;width: 140px;"
         >back</button>
       </div>
       <div v-else-if="stage==2" style="margin-top:-10px;">
@@ -284,7 +286,7 @@
           class="cancelButton"
           @click="stage-=state.uploadedFileType.indexOf('audio/')!==-1?2:1;$nextTick(()=>{$refs.title.focus()})"
           ref="backButton"
-          style="background: #486;left: 0;color: #fff;"
+          style="background: #486;left: 0;color: #fff;width; 140px"
         >back</button>
       </div>
       <button
@@ -581,6 +583,7 @@ export default{
   max-width: 625px;
   position: absolute;
   top: 47%;
+  min-height: 700px;
   left: 50%;
   font-size: 32px;
   transform: translate(-50%, -50%) scale(.7);
@@ -665,12 +668,6 @@ export default{
 }
 </style>
 <style>
-.portrait{
-  background-size: 100% auto!important;
-}
-.landscape{
-  background-size: auto 100%!important;
-}
 .showSpinner{
   background-image: url(https://cantelope.org/out_spedup.gif)!important;
   background-positon: center center!important;
