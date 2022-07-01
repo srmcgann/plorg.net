@@ -239,6 +239,7 @@
           :style="'background-image: url('+state.uploadedFileThumbnail+')'"
         ></div><br>
         <button
+				  v-if="state.uploadedFileType.indexOf('image/') !== -1"
           class="cancelButton"
           @click="next()"
           ref="backButton"

@@ -62,7 +62,7 @@ export default {
         alphaToDec: null,
         autolaunchTokens: false,
         baseURL: 'https://plorg.net',
-        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
+        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
@@ -305,7 +305,6 @@ export default {
         body: JSON.stringify(sendData),
       })
       .then(res=>res.json()).then(data=>{
-        console.log(data)
         if(this.state.search.string){
           if(this.state.items.filter(v=>v.hash==hash).length) this.state.search.items.filter(v=>v.hash==hash)[0].views++
         }else{

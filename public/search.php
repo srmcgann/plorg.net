@@ -59,9 +59,9 @@
 		}
 
     if($loggedinUserName && $confirmed){
-      $sql = 'SELECT * FROM items WHERE (private = 0 || userHash = "'.$loggedinUserData['hash'].'") AND ((title LIKE "%' . $tokens[0] . '%"';
+      $sql = 'SELECT * FROM items WHERE (listed = 1 || userHash = "'.$loggedinUserData['userHash'].'") AND ((title LIKE "%' . $tokens[0] . '%"';
     }else{
-      $sql = 'SELECT * FROM items WHERE private = 0 AND ((title LIKE "%' . $tokens[0] . '%"';
+      $sql = 'SELECT * FROM items WHERE listed = 1 AND ((title LIKE "%' . $tokens[0] . '%"';
     }
     if(sizeof($tokens)>1){
       array_shift($tokens);

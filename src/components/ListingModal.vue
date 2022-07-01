@@ -224,7 +224,7 @@
           class="cancelButton"
           @click="stage--;$nextTick(()=>{$refs.title.focus()})"
           ref="backButton"
-          style="background: #486;left: 0;color: #fff;"
+          style="background: #486;left: 0;color: #fff;width: 140px;"
         >back</button>
       </div>
       <div v-else-if="stage==2" style="margin-top:-10px;">
@@ -262,7 +262,7 @@
           class="cancelButton"
           @click="stage-=2;$nextTick(()=>{$refs.title.focus()})"
           ref="backButton"
-          style="background: #486;left: 0;color: #fff;"
+          style="background: #486;left: 0;color: #fff;width:140px;"
         >back</button>
         <button
           class="cancelButton"

@@ -477,7 +477,7 @@ export default {
   },
   mounted(){
     this.showComments = this.state.mode == 'token' ? 50 : 3
-    if((this.state.autolaunchTokens || this.item.type.indexOf('audio/')!==-1) && this.state.mode=='token') this.state.launchItem(this.item)
+    //if((this.state.autolaunchTokens || this.item.type.indexOf('audio/')!==-1) && this.state.mode=='token') this.state.launchItem(this.item)
   },
   computed:{
     moreCommentsVal(){

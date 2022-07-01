@@ -56,7 +56,7 @@
         <td class="tdRight">
           <a
             class="fileLink"
-            :href="'./dlproxy.php?url=' + track.audioFile"
+            :href="track.audioFile"
             :download="track.author + ' - ' + track.trackName + track.suffix"
             style="margin-left: 10px;"
           >

@@ -21,7 +21,7 @@
         if($size > 0 && $size < $maxFileSize){
           move_uploaded_file($tmp_name, "$uploads_dir/$name");
           $type = mime_content_type("$uploads_dir/$name");
-          if($type == 'video/webm') $type = 'audio/mpeg';
+          if($type == 'video/webm') $type = 'audio/mp3';
         }
         $ct++;
       }

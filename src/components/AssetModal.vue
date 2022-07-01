@@ -83,7 +83,7 @@ export default{
         private: 0,
         description: this.item.description,
         audioFile: this.state.baseIPFSURL + '/' + this.item.ipfs,
-        plays: 0,
+        plays: this.item.views,
         allowDownload: !!(+this.item.allowDownload)
       }
     } else if(this.item.type=='image/png' || this.item.type=='image/jpg' || this.item.type == 'image/jpeg' || this.item.type == 'image/gif'){

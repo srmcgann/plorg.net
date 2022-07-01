@@ -1039,6 +1039,7 @@ export default {
               body: data
             }).then(res=>res.json()).then(data=>{
               if(data[0]){
+                console.log(data)
                 this.state.uploadedContentURL = data[1]
                 this.state.uploadedFileType = data[2]
                 this.state.uploadedFileSize = data[3]
@@ -1056,7 +1057,7 @@ export default {
                 //} else if(this.state.uploadedFileType.indexOf('audio/')!==-1){
                 
                 } else {
-                  alert("\n\nruh roh\n\nfor now, this site only accepts images (png, jpg, gif) and generative works\n\nfor generative, simply zip a demo's root directory (with an index.html file in it), then upload the zip");
+                  alert("\n\nruh roh\n\nfor now, this site only accepts images (png, jpg, gif), music, and generative works\n\nfor generative, simply zip a demo's root directory (with an index.html file in it), then upload the zip");
                 }
               } else {
                 if(data[1]) alert(data[1])
