@@ -18,7 +18,7 @@
   }
 
 
-	$data = json_decode(file_get_contents('php://input'));
+  $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $userName = str_replace(';', '', $userName);
   $password = mysqli_real_escape_string($link, $data->{'password'});
@@ -35,15 +35,16 @@
     file_put_contents('./temp/'.$filename, $mnemonic . "\n");
     file_put_contents('./temp/'.$filename, $passphrase . "\n", FILE_APPEND);
     file_put_contents('./temp/'.$filename, $passphrase . "\n", FILE_APPEND);
+    file_put_contents('./temp/'.$filename, $passphrase . "\n", FILE_APPEND);
 
-    $output = shell_exec("sudo tezos-client import keys from mnemonic $alias -f --encrypt < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1");
+    $output = shell_exec("sudo octez-client import keys from mnemonic $alias -f --encrypt < /var/www/html/plorg.dweet.net/dist_public/temp/$filename 2>&1");
     @unlink('./temp/'.$filename);
     $pkh = str_replace("\n", '', explode('Tezos address added: ', $output)[1]);
     $wallet = [true, $pkh, str_replace("\n", '', $mnemonic)];
     $userHash = md5($pkh . strtotime('now') . rand());
     $sql = 'INSERT INTO users (name, email, originalName, passhash, avatar, pkh, prefs, connected, walletAlias, hash) VALUES("'.$userName.'", "'.$email.'", "'.$userName.'", "'.$hash.'", "", "'.$pkh.'", "", 1, "'.$alias.'", "'.$userHash.'");';
     mysqli_query($link, $sql);
-		$id = mysqli_insert_id($link);
+    $id = mysqli_insert_id($link);
     echo json_encode([true, $userName, $id, "", $pkh, 0, true, $hash, $wallet, $userHash]);
   } else {
     echo json_encode([$available,'https://' . $baseURL . "/checkUserNameAvailability.php?userName=".$userName,'username unavailable or password not provided!']);

@@ -1,7 +1,7 @@
 <template>
   <div class="siteWalletModalContainer">
     <div class="mainContainer" :class="{'normalMainContainer': !state.monochrome,'monochromeMainContainer': state.monochrome}">
-      <span style="color: #08f">Do you have a plorg.net wallet?</span>
+      <span style="color: #08f">Do you have a plorg.dweet.net wallet?</span>
       <br>
       <div class="spacerDiv" style="margin-top: 20px;"></div>
       <br>
@@ -259,7 +259,8 @@ export default{
             this.state.showSiteWalletModal = false
             this.state.getSiteWalletData()
             let newWallet = data[8]
-            this.state.walletData.address = newWallet[1]
+            this.state.walletData.address = data[4]
+            this.state.loggedinUserPkh = newWallet[1]
             this.state.seedPhrase = newWallet[2]
             this.state.setCookie()
             setTimeout(()=>{this.state.loggedin = true},200)

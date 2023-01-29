@@ -312,7 +312,7 @@ export default {
   vertical-align: top;
 }
 .fullscreenButton{
-  background-image: url(https://jsbot.cantelope.org/uploads/1ERPZC.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/1ERPZC.png);
   background-size: 100% 100%;
   min-width: initial;
   background-color: transparent;

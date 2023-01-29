@@ -43,31 +43,31 @@ export default {
     showHotkeys(){
       alert("hotkeys cheat-sheet...\n\n")
     },
-		updateUserPrefs(pref){
-			this.$nextTick(()=>{
+    updateUserPrefs(pref){
+      this.$nextTick(()=>{
         let newval
         switch(pref){
           case 'demoPostsPerPage': newval = this.state.maxResultsPerPage; break
         }
         let sendData = {
-	  			userName: this.state.loggedinUserName,
-				  passhash: this.state.passhash,
-					pref,
-			  	newval
- 	  	 }
+          userName: this.state.loggedinUserName,
+          passhash: this.state.passhash,
+          pref,
+          newval
+       }
        fetch(this.state.baseURL + '/updatePrefs.php',{
          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(sendData),
-		  	})
+        })
         .then(res => res.json())
         .then(data => {
-					if(pref == 'demoPostsPerPage') window.location.reload()
+          if(pref == 'demoPostsPerPage') window.location.reload()
         })
-		  })
-	  },
+      })
+    },
     doReg(){
       this.state.showRegister = true
       this.state.showLoginPrompt()
@@ -151,7 +151,7 @@ export default {
 .hideImg{
   width: calc(50px * 1.5);
   height: calc(19px * 1.5);
-  background: url(https://jsbot.cantelope.org/uploads/v9UDT.png) no-repeat;
+  background: url(https://jsbot.whitehot.ninja/uploads/v9UDT.png) no-repeat;
   background-size: 100% 100%;
   background-position: center center;
   position: absolute;
@@ -178,14 +178,14 @@ export default {
   margin-top: 11px;
 }
 .advancedControls{
-	top: 0;
+  top: 0;
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
   margin-bottom: 10px;
-	left: 50%;
-	width: 100%;
+  left: 50%;
+  width: 100%;
 }
 .navContainer{
   margin-top: -50px;
@@ -194,7 +194,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 600px!important;
-	height: 100%;
+  height: 100%;
   position: relative;
   z-index: 0;
 }
@@ -203,9 +203,9 @@ export default {
   width: 80px;
   display: inline-block;
   text-align: center;
-	line-height: .8em;
+  line-height: .8em;
   margin-top: 4px;
-	margin-left: 20px;
+  margin-left: 20px;
   min-width: 0;
 }
 .navButton{
@@ -248,10 +248,10 @@ export default {
 </style>
 <style>
 .normalControlsBackground{
-  background-image: url(https://jsbot.cantelope.org/uploads/Bi6Kz.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/Bi6Kz.png);
 }
 .monochromeControlsBackground{
-  background-image: url(https://jsbot.cantelope.org/uploads/1Mpufx.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/1Mpufx.png);
 }
 .normalBG1{
   background: rgb(34, 68, 102);

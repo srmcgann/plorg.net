@@ -8,7 +8,7 @@
     $res = mysqli_query($link, $sql);
     if(!mysqli_num_rows($res)) die();
     $hash=md5($_POST['pkh'].$_FILES['file0']['name']);
-    $uploads_dir = "/var/www/html/plorg.net/dist_public/scratchfolder/$hash";
+    $uploads_dir = "/var/www/html/plorg.dweet.net/dist_public/scratchfolder/$hash";
     mkdir($uploads_dir);
     $maxSimultaneousUploads = 1;
     $ct=0;

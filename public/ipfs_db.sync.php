@@ -2,11 +2,11 @@
   require('db.php');
   $masterDBSyncURL = file_get_contents($peer . '/links/curlink.php');
   $ipfs_dir = explode("\n",shell_exec('which ipfs'))[0];
-  chdir('/var/www/html/plorg.net/dist_public/');
+  chdir('/var/www/html/plorg.dweet.net/dist_public/');
   function sortfunc($a, $b){ return $a[1] < $b[1];}
 
   function purgeOldSyncFiles(){
-		global $ipfs_dir;
+    global $ipfs_dir;
     $syncfiles=explode("\n", shell_exec("sudo -u cantelope $ipfs_dir files ls /sync 2>&1"));
     $ar=[];
     for($i=0; $i < sizeof($syncfiles); ++$i){

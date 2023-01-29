@@ -79,7 +79,7 @@ export default{
   margin-left: auto;
   margin-right: auto;
   width: 600px!important;
-	height: 100%;
+  height: 100%;
   position: relative;
   z-index: 0;
   display: inline-block;

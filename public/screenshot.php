@@ -10,7 +10,7 @@
     $delay = intval(mysqli_real_escape_string($link, $data->{'delay'}));
     $width = intval(mysqli_real_escape_string($link, $data->{'width'}));
     $height = intval(mysqli_real_escape_string($link, $data->{'height'}));
-    $out='/var/www/html/plorg.net/dist_public/scratchfolder/'.md5($url.(rand())).'.png';
+    $out='/var/www/html/plorg.dweet.net/dist_public/scratchfolder/'.md5($url.(rand())).'.png';
     //header ('Content-Type: image/png');
     if($url){
       if($delay < 0 || $delay > 30000) $delay = 0;

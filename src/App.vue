@@ -58,11 +58,11 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorg.net',
+        rootDomain: 'plorg.dweet.net',
         alphaToDec: null,
         autolaunchTokens: false,
-        baseURL: 'https://plorg.net',
-        baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
+        baseURL: 'https://plorg.dweet.net',
+        baseIPFSURL: 'https://ipfs.dweet.net/ipfs',
         doListItem: null,
         loggedinUserName: '',
         pagenumber: null,
@@ -178,7 +178,7 @@ export default {
         refreshAvatar: false,
         loggedinUserPkh: '',
         userSettingsVisible: false,
-        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
+        defaultAvatar: 'https://jsbot.whitehot.ninja/uploads/1pnBdc.png',
         closePrompts: null,
         wallet: null,
         getAvatar: null,
@@ -197,7 +197,7 @@ export default {
         templeWalletConnected: false,
         siteWalletConnected: false,
         connectTempleWallet: null,
-        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a> &bull; <a title="rolling site data on blockchain" href="/links" target="_blank">site data</a>',
+        footerMarkup: 'plorg.dweet.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a> &bull; <a title="rolling site data on blockchain" href="/links" target="_blank">site data</a>',
         users: {},//Array(5e5).fill().map(v=>{ return {avatar: ''} }),
         landingPage:{
           items: []
@@ -389,10 +389,10 @@ export default {
       l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='monochrome')
       if(l.length) this.state.monochrome = l[0].split('=')[1]=='true'
       if(this.state.monochrome){
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/jKSS2.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/jKSS2.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #111e, #000b, #111)'
       } else {
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/1QxCBC.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/1QxCBC.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #012e, #000b, #102)'
       }
     },
@@ -494,7 +494,7 @@ export default {
         name: decodeURIComponent(name),
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash,
-				maxResultsPerPage: this.state.maxResultsPerPage,
+        maxResultsPerPage: this.state.maxResultsPerPage,
         page: this.state.curUserPage
       }
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
@@ -562,7 +562,7 @@ export default {
         }
       })
     },
-		fetchUserData(hash){
+    fetchUserData(hash){
       if(typeof this.state.users[hash] !== 'undefined') return
       let sendData = {userHash: hash, creatorHash: hash}
       fetch(this.state.baseURL + '/getUserInfo.php',{
@@ -581,7 +581,7 @@ export default {
           }
         }
       })
-		},
+    },
     doSearch(searchString, page1){
       this.state.search.items = []
       this.state.search.timerHandle = null
@@ -655,8 +655,8 @@ export default {
           this.state.search.timer = d
         }, Math.min(1000, d-this.state.search.timer))
       } else {
-				this.state.search.string = this.state.search.string.trim()
-			}
+        this.state.search.string = this.state.search.string.trim()
+      }
     },
     getWalletData(){
       if(this.state.templeWalletPollTimerStarted){
@@ -977,7 +977,7 @@ export default {
     checkTempleWallet(){
       (async () => {
         try {
-          this.state.wallet = new TempleWallet('plorg.net')
+          this.state.wallet = new TempleWallet('plorg.dweet.net')
           if(!this.state.siteWalletConnected){
             this.state.templeWalletAvailable = await TempleWallet.isAvailable()
             if(this.state.templeWalletAvailable){
@@ -989,20 +989,20 @@ export default {
         }
       })();
     },
-		getPages(){
+    getPages(){
       if(this.state.search.string != '') this.beginSearch()
-			switch(this.state.mode){
-				case 'user':
+      switch(this.state.mode){
+        case 'user':
         this.loadUserData(this.state.user.name)
-				break
-				case 'token':
-				this.loadItem()
-				break
-				case 'default':
-				this.loadLanding()
-				break
-			}
-		},
+        break
+        case 'token':
+        this.loadItem()
+        break
+        case 'default':
+        this.loadLanding()
+        break
+      }
+    },
     decToAlpha(n){
       let alphabet='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
       let ret='', r
@@ -1186,7 +1186,7 @@ export default {
       }else{
         this.state.mode = 'default'
         this.getPages()
-				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+        if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
     launchItem(item){
@@ -1325,11 +1325,11 @@ export default {
   watch:{
     'state.monochrome'(val){
       if(val){
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/jKSS2.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/jKSS2.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #111e, #000b, #111)'
         this.setCookie()
       } else {
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/1QxCBC.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/1QxCBC.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #012e, #000b, #102)'
         this.setCookie()
       }
@@ -1393,7 +1393,7 @@ export default {
     this.state.beginSearch = this.beginSearch
     this.state.uploadFiles = this.uploadFiles
     this.state.advancePage = this.advancePage
-		this.state.userAgent = navigator.userAgent
+    this.state.userAgent = navigator.userAgent
     this.state.loadUserPage = this.loadUserPage
     this.state.manualUpload = this.manualUpload
     this.state.loadUserData = this.loadUserData
@@ -1405,7 +1405,7 @@ export default {
     this.state.incrementViews = this.incrementViews
     this.state.loggedinUserAvatar = this.getAvatar()
     this.state.extractEmbedURL= this.extractEmbedURL
-    this.state.wallet = new TempleWallet('plorg.net')
+    this.state.wallet = new TempleWallet('plorg.dweet.net')
     this.state.finalizeListing = this.finalizeListing
     this.state.checkSiteWallet = this.checkSiteWallet
     this.state.finalizePurchase = this.finalizePurchase
@@ -1422,7 +1422,7 @@ export default {
     
     this.checkPrefs()
     this.loadHotKeys()
-    this.state.wallet = new TempleWallet('plorg.net')
+    this.state.wallet = new TempleWallet('plorg.dweet.net')
     this.checkWallets()
     this.state.closePrompts = this.closePrompts
     this.getMode()
@@ -1475,7 +1475,7 @@ option{
 }
 select{
   background: #012;
-	color: #8fc;
+  color: #8fc;
 }
 ::-webkit-scrollbar {
   width: 12px!important;
@@ -1643,15 +1643,15 @@ select:focus{
   background: #333!important;
 }
 .commentContainer{
-	background: #2020;
-	padding: 10px;
-	margin-top: 6px;
+  background: #2020;
+  padding: 10px;
+  margin-top: 6px;
 }
 .commentsHeader{
-	font-size: 28px;
-	text-align: left;
-	width: calc(100% - 200px);
-	vertical-align: top;
+  font-size: 28px;
+  text-align: left;
+  width: calc(100% - 200px);
+  vertical-align: top;
   float: left;
   display: inline-block;
   padding:5px;
@@ -1664,18 +1664,18 @@ select:focus{
 }
 .normalCommentsHeader{
   color:#2f4;
-	background: linear-gradient(90deg, #306f, #1026, #0000);
+  background: linear-gradient(90deg, #306f, #1026, #0000);
 }
 .monochromeCommentsHeader{
   color:#eee;
-	background: linear-gradient(90deg, #333f, #1116, #0000);
+  background: linear-gradient(90deg, #333f, #1116, #0000);
 }
 .commentText{
   text-align: left;
   display: inline-block;
   font-size: 18px;
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-top: 5px;
   margin-left: 10px;
   width: calc(100% - 75px);
@@ -1690,14 +1690,14 @@ select:focus{
   background: #3336;
 }
 .commentInput:focus{
-	outline: none;
+  outline: none;
 }
 .commentInput{
-	border: none;
-	text-align: left;
-	vertical-align: top;
-	display: inline-block;
-	font-size: 18px;
+  border: none;
+  text-align: left;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 18px;
   margin-top: 5px;
   margin-left:10px;
   width: calc(100% - 110px);
@@ -1706,52 +1706,52 @@ select:focus{
   margin-right: 10px;
 }
 .normalCommentInput{
-	color: #ef8;
-	background: #001c;
+  color: #ef8;
+  background: #001c;
 }
 .monochromeCommentInput{
-	color: #ccc;
-	background: #000c;
+  color: #ccc;
+  background: #000c;
 }
 .commentAvatar{
   position: absolute;
-	margin-left: -1px;
+  margin-left: -1px;
   max-height: 50px;
   max-width: 50px;
   width: auto;
   border-radius: 50%;
-	height:50px;
-	margin-top: 15px;
+  height:50px;
+  margin-top: 15px;
   cursor: pointer;
 }
 .commentMain{
   width: 100%;
-	margin-top: 4px;
-	padding-bottom: 6px;
+  margin-top: 4px;
+  padding-bottom: 6px;
   text-align: left;
 }
 .commentUserName{
-	color: #6dc;
-	padding: 0;
-	padding-left: 50px;
-	padding-right: 5px;
-	padding-top: 2px;
-	vertical-align: top;
+  color: #6dc;
+  padding: 0;
+  padding-left: 50px;
+  padding-right: 5px;
+  padding-top: 2px;
+  vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
-	background-repeat: no-repeat;
-	background-size: 25px 25px;
-	background-position: center center;
-	width: 34px;
-	height: 34px!important;
-	vertical-align: top;
-	margin-top: -5px;
-	border-radius: 5px;
-	background-color: #f880;
+  background-image: url(https://jsbot.whitehot.ninja/uploads/XeGsK.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px!important;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
 }
 .commentEditButton{
-  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/ct1hv.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -1766,7 +1766,7 @@ select:focus{
   width: calc(100% - 75px)!important;
   min-width: calc(100% - 75px)!important;
   max-width: calc(100% - 75px)!important;
-	float:left;
+  float:left;
 }
 table{
   margin-left: auto;
@@ -1810,7 +1810,7 @@ table{
 }
 .highlighted{
   background-color: #0fa;
-  background-image: url(https://jsbot.cantelope.org/uploads/14MAyj.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/14MAyj.png);
 }
 .cancelButton:focus{
   outline: solid;

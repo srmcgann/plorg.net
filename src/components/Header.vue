@@ -37,7 +37,7 @@
               <button
                 class="syncButton"
                 :class="{'activeButton': state.siteWalletConnected, 'normalSyncButton':!state.monochrome, 'monochromeSyncButton': state.monochrome}"
-                :title="state.siteWalletConnected?'unsync plorg.net wallet':'sync plorg.net wallet'"
+                :title="state.siteWalletConnected?'unsync plorg.dweet.net wallet':'sync plorg.dweet.net wallet'"
                 @click="state.siteWalletSyncButtonClick()"
                 v-html="siteButtonText()"
               >
@@ -47,7 +47,7 @@
               <button
                 class="syncButton"
                 :class="{'activeButton':!state.monochrome, 'activeButtonMonochrome': state.monochrome}"
-                :title="state.siteWalletConnected?'unsync plorg.net wallet':'sync plorg.net wallet'"
+                :title="state.siteWalletConnected?'unsync plorg.dweet.net wallet':'sync plorg.dweet.net wallet'"
                 @click="state.siteWalletSyncButtonClick()"
                 v-html="siteButtonText()"
               >
@@ -93,7 +93,7 @@
           title="open user settings"
           @click="toggleUserSettings()"
           class="settingsIcon"
-          src="https://jsbot.cantelope.org/uploads/1vfDF7.png"
+          src="https://jsbot.whitehot.ninja/uploads/1vfDF7.png"
         />
       </div>
     </div>
@@ -111,8 +111,8 @@ export default {
     return{
       addresscopied: false,
       clicking: false,
-      siteLogo: 'https://jsbot.cantelope.org/uploads/VCNU1.png',
-      templeLogo: 'https://jsbot.cantelope.org/uploads/CxUEV.png'
+      siteLogo: 'https://jsbot.whitehot.ninja/uploads/VCNU1.png',
+      templeLogo: 'https://jsbot.whitehot.ninja/uploads/CxUEV.png'
     }
   },
   components:{
@@ -140,9 +140,9 @@ export default {
     },
     siteButtonText(){
       if(this.state.siteWalletConnected){
-        return 'unsync &nbsp;<img src="' + this.siteLogo + '" style="width:25px;position: absolute;margin-left:-14px;"/> plorg.net <span class="bal">' + this.state.walletData.balance + 'ꜩ '+this.formatDollars(this.state.XTZ_to_USD*this.state.walletData.balance)+'</span>'
+        return 'unsync &nbsp;<img src="' + this.siteLogo + '" style="width:25px;position: absolute;margin-left:-14px;"/> plorg.dweet.net <span class="bal">' + this.state.walletData.balance + 'ꜩ '+this.formatDollars(this.state.XTZ_to_USD*this.state.walletData.balance)+'</span>'
       } else {
-        return 'sync &nbsp;<img src="' + this.siteLogo + '" style="width:20px;position: absolute;margin-left:-14px;"/> plorg.net wallet'
+        return 'sync &nbsp;<img src="' + this.siteLogo + '" style="width:20px;position: absolute;margin-left:-14px;"/> plorg.dweet.net wallet'
       }
     },
     doAddressClick(){
@@ -282,16 +282,16 @@ export default {
     cursor: pointer;
   }
   .normalShowImgBG{
-    background-image: url(https://jsbot.cantelope.org/uploads/1tgOjR.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/1tgOjR.png);
   }
   .monochromeShowImgBG{
-    background-image: url(https://jsbot.cantelope.org/uploads/23YRGp.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/23YRGp.png);
   }
   .normalHideImgBG{
-    background-image: url(https://jsbot.cantelope.org/uploads/v9UDT.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/v9UDT.png);
   }
   .monochromeHideImgBG{
-    background-image: url(https://jsbot.cantelope.org/uploads/1qoP9P.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/1qoP9P.png);
   }
   .shortControlsContainer{
     height: 0px!important;
@@ -308,7 +308,7 @@ export default {
     width: 45px;
     height: 45px;
     margin-right: -4px;
-    background-image: url(https://jsbot.cantelope.org/uploads/OvenY.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/OvenY.png);
     background-size: 43px;
     background-position: calc(50% + 1px) calc(50% - 2px);
     background-repeat: no-repeat;
@@ -448,11 +448,11 @@ export default {
   }
   .minimized{
     top: 12px;
-    background-image: url(https://jsbot.cantelope.org/uploads/fjmMQ.png);  
+    background-image: url(https://jsbot.whitehot.ninja/uploads/fjmMQ.png);  
   }
   .notMinimized{
     top: 120px;
-    background-image: url(https://jsbot.cantelope.org/uploads/gyZ8s.png);  
+    background-image: url(https://jsbot.whitehot.ninja/uploads/gyZ8s.png);  
   }
   .normalHeader{
     min-height: 160px;
@@ -466,10 +466,10 @@ export default {
     width: 270px;
   }
   .bigNormalLogo{
-    background-image: url(https://jsbot.cantelope.org/uploads/LzPUq.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/LzPUq.png);
   }
   .bigMonochromeLogo{
-    background-image: url(https://jsbot.cantelope.org/uploads/Emhnn.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/Emhnn.png);
   }
   .smallLogo{
     width: 350px!important;
@@ -478,10 +478,10 @@ export default {
     height: 50px!important;
   }
   .smallNormalLogo{
-    background-image: url(https://jsbot.cantelope.org/uploads/F1sbi.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/F1sbi.png);
   }
   .smallMonochromeLogo{
-    background-image: url(https://jsbot.cantelope.org/uploads/118m22.png);
+    background-image: url(https://jsbot.whitehot.ninja/uploads/118m22.png);
   }
   .transitionNav{
     transition: .3s top;

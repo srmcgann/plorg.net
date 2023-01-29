@@ -21,12 +21,12 @@
   }
 
   if($success){
-		$insertID = mysqli_insert_id($link);
-		$sql = 'SELECT date FROM comments WHERE id = ' . $insertID;
-		$res = mysqli_query($link, $sql);
-		$row = mysqli_fetch_assoc($res);
-		echo json_encode([$success, $insertID, $row['date'], $hash, $sql1]);
-	} else {
-		echo json_encode([$success]);
-	}
+    $insertID = mysqli_insert_id($link);
+    $sql = 'SELECT date FROM comments WHERE id = ' . $insertID;
+    $res = mysqli_query($link, $sql);
+    $row = mysqli_fetch_assoc($res);
+    echo json_encode([$success, $insertID, $row['date'], $hash, $sql1]);
+  } else {
+    echo json_encode([$success]);
+  }
 ?>

@@ -44,7 +44,7 @@
       }else{
         $adjustedAmount = $amount;
       }
-      $command = "sudo tezos-client transfer $adjustedAmount from $sender to $recipient $burn -D < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+      $command = "sudo octez-client transfer $adjustedAmount from $sender to $recipient $burn -D < /var/www/html/plorg.dweet.net/dist_public/temp/$filename 2>&1";
       $output = shell_exec($command);
       $prelim_success = strpos($output, 'This transaction was successfully applied') !== false;
       if($prelim_success){
@@ -58,6 +58,8 @@
             $row = mysqli_fetch_assoc($res);
             $newHash = md5(hash_file('md5', $ipfsURL . $row['ipfs']) . strtotime('now') . rand());
             $targetHash = $row['hash'];
+            $row['title'] = mysqli_real_escape_string($link, $row['title']);
+            $row['description'] = mysqli_real_escape_string($link, $row['description']);
             if($row['mints']<$row['editions']){
               $ak=[
                 'title',
@@ -137,7 +139,7 @@
             die();
           }
         }
-        $command = "sudo tezos-client transfer $adjustedAmount from $sender to $recipient $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+        $command = "sudo octez-client transfer $adjustedAmount from $sender to $recipient $burn < /var/www/html/plorg.dweet.net/dist_public/temp/$filename 2>&1";
         $output = shell_exec($command);
         $success = strpos($output, 'Operation found in block:') !== false;
         if($success && $royalty){
@@ -145,7 +147,7 @@
           if($res2 = mysqli_query($link, $sql2)){
             $creatorpkh = mysqli_fetch_assoc($res2)['pkh'];
             $burn = $agreeToFees == 'true' ? ('--burn-cap .06425') : '';
-            $royaltiesCommand = "sudo tezos-client transfer $royalty from $sender to $creatorpkh $burn < /var/www/html/plorg.net/dist_public/temp/$filename 2>&1";
+            $royaltiesCommand = "sudo octez-client transfer $royalty from $sender to $creatorpkh $burn < /var/www/html/plorg.dweet.net/dist_public/temp/$filename 2>&1";
             $royaltiesOutput = shell_exec($royaltiesCommand);
           } else {
             echo json_encode([false, 'transaction failed, but mint succeeded! whhhhaaaaa?']);

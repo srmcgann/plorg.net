@@ -239,7 +239,7 @@
           :style="'background-image: url('+state.uploadedFileThumbnail+')'"
         ></div><br>
         <button
-				  v-if="state.uploadedFileType.indexOf('image/') !== -1"
+          v-if="state.uploadedFileType.indexOf('image/') !== -1"
           class="cancelButton"
           @click="next()"
           ref="backButton"
@@ -670,7 +670,7 @@ export default{
 </style>
 <style>
 .showSpinner{
-  background-image: url(https://cantelope.org/out_spedup.gif)!important;
+  background-image: url(https://jsbot.whitehot.ninja/out_spedup.gif)!important;
   background-positon: center center!important;
   background-size: cover;
   border-radius: 50%;

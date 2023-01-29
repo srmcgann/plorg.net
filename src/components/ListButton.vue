@@ -20,7 +20,7 @@ export default{
   position: absolute;
   width: 160px;
   height: 160px;
-  background-image: url(https://jsbot.cantelope.org/uploads/lNqcL.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/lNqcL.png);
   background-repeat: no-repeat;
   background-size: 150px 150px;
   background-position: center center;

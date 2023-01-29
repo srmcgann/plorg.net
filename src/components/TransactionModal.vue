@@ -7,7 +7,7 @@
           ref="responseDiv"
           style="font-size:24px;overflow:hidden;height:130px;resize:none;height: calc(100% - 80px);font-size:14px;padding: 5px; background: #001;overflow-y:auto"
         ><br><div style="text-align:center;"><br><br><span style="font-size:24px;">transaction broadcasted!</span><br><br><br><br>waiting for 5 network confirmations<br><br>result will be displayed here...<br><br><br><br><br><br><br>
-        <img style="width: 50px;" src="https://jsbot.cantelope.org/uploads/1o4WO1.gif"></div></div>
+        <img style="width: 50px;" src="https://jsbot.whitehot.ninja/uploads/1o4WO1.gif"></div></div>
         <button class="cancelButton" style="position: absolute; bottom: 10px;right: 10px;" @click="unlock()">close</button>
       </div>
     </div>
@@ -179,6 +179,7 @@ export default{
     submit(){
       if(this.validate){
         this.locked=true
+        let sendMint = JSON.parse(JSON.stringify(this.mint))
         let sendData = {
           userName: this.state.loggedinUserName,
           passhash: this.state.passhash,
@@ -189,7 +190,7 @@ export default{
           suffix: this.state.uploadedFileSuffix,
           mnemonic: this.mnemonic.replace('  ', ' ').replace("\n",'').trimLeft().trimLeft(),
           agreeToFees: this.agreeToFees ? 'true' : 'false',
-          mint: JSON.parse(JSON.stringify(this.mint))
+          mint: sendMint
         }
         fetch(this.state.baseURL + '/transact.php',{
           method: 'POST',

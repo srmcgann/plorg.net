@@ -32,11 +32,11 @@ export default{
 .normalUploadButtonBackground{
   box-shadow: 0px 0px 50px 50px #1058;
   background-color: #1058;
-  background-image: url(https://jsbot.cantelope.org/uploads/lNqcL.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/lNqcL.png);
 }
 .monochromeUploadButtonBackground{
   box-shadow: 0px 0px 50px 50px #3338;
   background-color: #3338;
-  background-image: url(https://jsbot.cantelope.org/uploads/iy1vO.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/iy1vO.png);
 }
 </style>

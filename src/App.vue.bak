@@ -58,10 +58,10 @@ export default {
   data(){
     return {
       state: {
-        rootDomain: 'plorg.net',
+        rootDomain: 'plorg.dweet.net',
         alphaToDec: null,
         autolaunchTokens: false,
-        baseURL: 'https://plorg.net',
+        baseURL: 'https://plorg.dweet.net',
         baseIPFSURL: 'https://ipfs.appliedlearning.academy/ipfs',
         doListItem: null,
         loggedinUserName: '',
@@ -178,7 +178,7 @@ export default {
         refreshAvatar: false,
         loggedinUserPkh: '',
         userSettingsVisible: false,
-        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
+        defaultAvatar: 'https://jsbot.whitehot.ninja/uploads/1pnBdc.png',
         closePrompts: null,
         wallet: null,
         getAvatar: null,
@@ -197,7 +197,7 @@ export default {
         templeWalletConnected: false,
         siteWalletConnected: false,
         connectTempleWallet: null,
-        footerMarkup: 'plorg.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a> &bull; <a title="rolling site data on blockchain" href="/links" target="_blank">site data</a>',
+        footerMarkup: 'plorg.dweet.net &bull; &copy;' + (new Date()).getFullYear() + ' &bull; <a title="contact - email" href="mailto:whitehotrobot@gmail.com">whitehotrobot@gmail.com </a> &bull; <a title="chat on discord" href="https://discord.gg/BN3Wfdnn" target="_blank">discord</a> &bull; <a title="rolling site data on blockchain" href="/links" target="_blank">site data</a>',
         users: {},//Array(5e5).fill().map(v=>{ return {avatar: ''} }),
         landingPage:{
           items: []
@@ -389,10 +389,10 @@ export default {
       l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='monochrome')
       if(l.length) this.state.monochrome = l[0].split('=')[1]=='true'
       if(this.state.monochrome){
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/jKSS2.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/jKSS2.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #111e, #000b, #111)'
       } else {
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/1QxCBC.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/1QxCBC.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #012e, #000b, #102)'
       }
     },
@@ -977,7 +977,7 @@ export default {
     checkTempleWallet(){
       (async () => {
         try {
-          this.state.wallet = new TempleWallet('plorg.net')
+          this.state.wallet = new TempleWallet('plorg.dweet.net')
           if(!this.state.siteWalletConnected){
             this.state.templeWalletAvailable = await TempleWallet.isAvailable()
             if(this.state.templeWalletAvailable){
@@ -1324,11 +1324,11 @@ export default {
   watch:{
     'state.monochrome'(val){
       if(val){
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/jKSS2.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/jKSS2.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #111e, #000b, #111)'
         this.setCookie()
       } else {
-        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.cantelope.org/uploads/1QxCBC.jpg)'
+        document.querySelector('html').style.backgroundImage = 'url(https://jsbot.whitehot.ninja/uploads/1QxCBC.jpg)'
         document.body.style.background = 'linear-gradient(45deg, #012e, #000b, #102)'
         this.setCookie()
       }
@@ -1404,7 +1404,7 @@ export default {
     this.state.incrementViews = this.incrementViews
     this.state.loggedinUserAvatar = this.getAvatar()
     this.state.extractEmbedURL= this.extractEmbedURL
-    this.state.wallet = new TempleWallet('plorg.net')
+    this.state.wallet = new TempleWallet('plorg.dweet.net')
     this.state.finalizeListing = this.finalizeListing
     this.state.checkSiteWallet = this.checkSiteWallet
     this.state.finalizePurchase = this.finalizePurchase
@@ -1421,7 +1421,7 @@ export default {
     
     this.checkPrefs()
     this.loadHotKeys()
-    this.state.wallet = new TempleWallet('plorg.net')
+    this.state.wallet = new TempleWallet('plorg.dweet.net')
     this.checkWallets()
     this.state.closePrompts = this.closePrompts
     this.getMode()
@@ -1738,7 +1738,7 @@ select:focus{
 	vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
+	background-image: url(https://jsbot.whitehot.ninja/uploads/XeGsK.png);
 	background-repeat: no-repeat;
 	background-size: 25px 25px;
 	background-position: center center;
@@ -1750,7 +1750,7 @@ select:focus{
 	background-color: #f880;
 }
 .commentEditButton{
-  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/ct1hv.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -1809,7 +1809,7 @@ table{
 }
 .highlighted{
   background-color: #0fa;
-  background-image: url(https://jsbot.cantelope.org/uploads/14MAyj.png);
+  background-image: url(https://jsbot.whitehot.ninja/uploads/14MAyj.png);
 }
 .cancelButton:focus{
   outline: solid;

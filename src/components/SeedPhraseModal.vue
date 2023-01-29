@@ -127,6 +127,7 @@ export default{
     }
   },
   mounted(){
+    console.log("state", this.state)
     window.onbeforeunload=()=>{
       confirm("are you sure you want to leave this page?\n\nyou need to copy your mnemonic!")
     }

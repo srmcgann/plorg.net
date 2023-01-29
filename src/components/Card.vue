@@ -74,7 +74,7 @@
         style="cursor: pointer;  background: #0000;border-radius: 0px;padding:5px;padding-top: 5px;"
       >
         <div style="text-align: center;margin-bottom: 10px;margin-top:-10px;">this token owner</div>
-				<div
+        <div
           class="avatar"
           title="load user page"
           @click="loadUserPage(item.userHash)"
@@ -191,7 +191,7 @@
                   v-if="comment.userHash == state.loggedinUserHash || state.isAdmin"
                   @click='toggleEditMode(comment)'
                   class="commentEditButton"
-                  style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://jsbot.cantelope.org/uploads/2cyWBg.png);"
+                  style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://jsbot.whitehot.ninja/uploads/2cyWBg.png);"
                 ></button>
               </div>
             </div>
@@ -273,17 +273,17 @@ export default {
     incrComments(){
       this.showComments += this.moreCommentsVal
     },
-		toggleEditMode(comment){
-			comment.editing = !comment.editing
-			if(comment.editing){
-				this.$nextTick(()=>{
-			    document.querySelector('#comment'+comment.hash).focus()
-			    document.querySelector('#comment'+comment.hash).select()
-				})
-			}
-		},
+    toggleEditMode(comment){
+      comment.editing = !comment.editing
+      if(comment.editing){
+        this.$nextTick(()=>{
+          document.querySelector('#comment'+comment.hash).focus()
+          document.querySelector('#comment'+comment.hash).select()
+        })
+      }
+    },
     deleteComment(comment, item){
-			if(confirm('are you SURE you want to delete this comment?!?!?\n\n\nTHIS ACTION IS IRREVERSIBLE!')){
+      if(confirm('are you SURE you want to delete this comment?!?!?\n\n\nTHIS ACTION IS IRREVERSIBLE!')){
         let hash = comment.hash
         let sendData = {
           userName: this.state.loggedinUserName,
@@ -303,11 +303,11 @@ export default {
             item.comments = item.comments.filter(v=>v.hash != hash)
           }
         })
-		  }
+      }
     },
-		editComment(comment){
-			let hash = comment.hash
-			let sendData = {
+    editComment(comment){
+      let hash = comment.hash
+      let sendData = {
         userName: this.state.loggedinUserName,
         comment: comment.text,
         passhash: this.state.passhash,
@@ -330,10 +330,10 @@ export default {
           setTimeout(()=>comment.updated = 0, 1000)
         }
       })
-		},
+    },
     postComment(hash, id){
       let text = document.querySelector('#newComment'+hash).value.substring(0, 512)
-			if(text.length){
+      if(text.length){
         let sendData = {
           userName: this.state.loggedinUserName,
           userHash: this.state.loggedinUserHash,
@@ -352,17 +352,17 @@ export default {
         .then(res => res.json())
         .then(data => {
           if(data[0]){
-		  			let comment = {
-			  			userID: this.state.loggedinUserID,
-			  			userHash: this.state.loggedinUserHash,
-				  		text,
-					  	itemHash: hash,
-					  	itemID: id,
+            let comment = {
+              userID: this.state.loggedinUserID,
+              userHash: this.state.loggedinUserHash,
+              text,
+              itemHash: hash,
+              itemID: id,
               id: data[1],
-  						date: data[2],
+              date: data[2],
               updated: false,
               editing: false
-	  				}
+            }
             this.state.fetchUserData(this.state.loggedinUserHash)
 
             if(this.state.search.string){
@@ -381,10 +381,10 @@ export default {
               }        
             }
 
-						document.querySelector('#newComment'+hash).value = ''
-			  	}
+            document.querySelector('#newComment'+hash).value = ''
+          }
         })
-			}
+      }
     },
     loadUserPage(userHash){
       window.location.href = 'https://' + this.state.rootDomain + '/u/' + this.state.users[userHash].name
@@ -509,7 +509,7 @@ export default {
 </style>
 <style>
 .useBorder{
-	border-bottom: 2px solid #48f3;
+  border-bottom: 2px solid #48f3;
 }
 .pkh{
   border-radius: 5px;
