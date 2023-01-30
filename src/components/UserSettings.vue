@@ -8,10 +8,10 @@
       <div class="spacerDiv" style="margin-top: 20px;"></div>
       your user name<br>
       <span style="margin-top:5px;font-size:.6em;float:left;vertical-align: top;text-align: left;line-height: .95em;">type a new name<br>and hit enter</span>
-      <div v-if="!userNameAvailable" style="display: inline-block; color: #f00;position: absolute;font-size:.7em;margin-top:-20px;margin-left: 160px;">
+      <div v-if="!userNameAvailable" style="width:270px;display: inline-block; color: #f00;position: absolute;font-size:.7em;margin-top:10px;margin-left: -77px;">
         &nbsp;&nbsp;&nbsp; <i>user name unavailable</i>
       </div>
-      <div v-if="userNameAvailable && newUserName" style="display: inline-block; color: #0f4;position: absolute;font-size:.7em;margin-top:-20px;margin-left: 160px;">
+      <div v-if="userNameAvailable && newUserName && newUserName.toUpperCase() != state.loggedinUserName.toUpperCase()" style="width:270px;display: inline-block; color: #4fc;position: absolute;font-size:.7em;margin-top:10px;margin-left: -77px;">
         &nbsp;&nbsp;&nbsp; <i>user name available</i>
       </div>
       <input style="opacity: 0; position: absolute;z-index: -1;" ref="tabAnchor"

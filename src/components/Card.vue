@@ -56,7 +56,8 @@
       <div class="clear"></div>
       <div class="itemData">
         <span class="itemTitle" :class="{'normalItemTitle':!state.monochrome,'monochromeItemTitle':state.monochrome}">edition</span>
-        <div class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints+1)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
+        <div v-if="+item.originalContent" class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints+1)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
+        <div v-else class="cardVal">{{((+item.mints)<(+item.editions)?((+item.originalContent)||(+item.listed)?(+item.mints)+'/'+item.editions:(item.edition)):item.editions+'/'+item.editions+' [minted out!]')}}</div>
       </div>
       <div class="clear"></div>
       <div class="itemData">
