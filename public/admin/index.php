@@ -65,7 +65,6 @@
       <table class="dataTable">
         <?
           $headers = "<tr><th>pkh</th><th>bal</th><th>originalName</th><th>name</th><th>originalName</th><th>email</th></tr>";
-          echo $headers;
           $sql = "SELECT * FROM users";
           $res = mysqli_query($link, $sql);
           for($i=0; $i<mysqli_num_rows($res); ++$i){
