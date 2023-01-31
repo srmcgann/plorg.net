@@ -18,14 +18,18 @@
         text-align: center;
         background:#234;
       }
+      .highlight{
+        background: #400;
+        color: #f00;
+      }
       .dataTable{
         border-collapse: collapse;
       }
       td{
-        padding: 6px;
+        padding: 10px;
       }
       #main{
-        
+
       }
       #total{
         display: inline-block;
@@ -34,11 +38,16 @@
   </head>
   <body>
     <script>
-      convert = total = 0;
-      fetch('/XTZ_to_USD.php').then(res=>res.json()).then(data=>{
-        convert = +data[1]
-      })
-      getBal = pkh =>{
+      convert = total = 0
+      rows = []
+      async function getXTZ_exchangeVal(){
+        await fetch('/XTZ_to_USD.php').then(res=>res.json()).then(data=>{
+          convert = +data[1]
+        })
+      }
+      headers = '<tr><th>pkh</th><th>bal</th><th>USD</th><th>originalName</th><th>name</th></tr>'
+      getXTZ_exchangeVal()
+      getBal = (pkh, joined, name, originalName, updated, email) =>{
         let sendData = {pkh}
         fetch('/getBalanceFromPkh.php',{
           method: 'POST',
@@ -48,10 +57,56 @@
           body: JSON.stringify(sendData),
         })
         .then(res=>res.json()).then(data=>{
-          document.querySelectorAll('#'+pkh)[0].innerHTML = data[1]
-          if(+data[1]>1) document.querySelector('#row_'+pkh).style.background='#400'
-          total += +data[1]
-          document.querySelector('#total').innerHTML = +total + " ($" + (Math.round(total*convert*100)/100)+")"
+          bal=+data[1]
+          let table = document.querySelectorAll('.dataTable')[0]
+          table.innerHTML = ''
+
+          let tr
+          let td
+          tr = document.createElement('tr')
+
+          td = document.createElement('td')
+          td.innerHTML = pkh
+          tr.appendChild(td)
+
+          td = document.createElement('td')
+          td.innerHTML = bal
+          tr.appendChild(td)
+          if(bal>1){
+            tr.classList = 'highlight'
+          }
+          
+          td = document.createElement('td')
+          USD = td.innerHTML = " ($" + (Math.round(total*convert*100)/100)+")"
+          tr.appendChild(td)
+          
+          td = document.createElement('td')
+          td.innerHTML = originalName
+          tr.appendChild(td)
+          
+          td = document.createElement('td')
+          td.innerHTML = name
+          tr.appendChild(td)
+          
+          /*
+          td = document.createElement('td')
+          td.innerHTML = updated
+          tr.appendChild(td)
+          
+          td = document.createElement('td')
+          td.innerHTML = email
+          tr.appendChild(td)
+          */
+          
+          rows = [...rows, [+bal, tr]]
+          rows.sort((a,b)=>b[0]-a[0])
+          let grandTotal = 0
+          rows.map((v, i)=>{
+            grandTotal += v[0]
+            if(!(i%5))table.innerHTML += headers
+            table.appendChild(v[1])
+          })
+          document.querySelector('#total').innerHTML = " ($" + (Math.round(grandTotal*convert*100)/100)+")"
         })
       }
     </script>
@@ -62,28 +117,24 @@
       user data
     </div>
     <div id="main">
-      <table class="dataTable">
+      <table class="dataTable"></table>
+        <script>
         <?
-          $headers = "<tr><th>pkh</th><th>bal</th><th>originalName</th><th>name</th><th>originalName</th><th>email</th></tr>";
           $sql = "SELECT * FROM users";
           $res = mysqli_query($link, $sql);
           for($i=0; $i<mysqli_num_rows($res); ++$i){
-            $row = mysqli_fetch_assoc($res);
-            if(!($i%5)) echo $headers;
-            echo "<tr id=\"row_{$row['pkh']}\">";
-            echo "<td>{$row['pkh']}</td>";
-            echo "<td><div class=\"balance\" id=\"{$row['pkh']}\">~</div></td>";
-            //echo "<td>{$row['joined']}</td>";
-            echo "<td>{$row['originalName']}</td>";
-            echo "<td>{$row['email']}</td>";
-            //echo "<td>{$row['updated']}</td>";
-            echo "<td>{$row['name']}</td>";
-            echo "<td>{$row['originalName']}</td>";
-            echo "</tr>";
-            echo "<script>getBal(\"{$row['pkh']}\")</script>";
+            $row           = mysqli_fetch_assoc($res);
+            $pkh           = $row['pkh'];
+            $joined        = $row['joined'];
+            $name          = $row['name'];
+            $originalName  = $row['originalName'];
+            $updated       = $row['updated'];
+            $email         = $row['emaail'];
+            echo "getBal(\"$pkh\",\"$joined\",\"$name\",\"$originalName\",\"$updated\",\"$email\");";
           }
         ?>
-      </table>
+      </script>
     </div>
   </body>
 </html>
+
