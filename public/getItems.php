@@ -8,12 +8,12 @@
 
   $start = $maxResultsPerPage * $curPage;
   $sql = "SELECT hash FROM items WHERE listed = 1 and enabled = 1 AND private = 0 AND edition = 1";
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
-	$sql = 'SELECT * FROM items WHERE listed = 1 AND enabled = 1 AND private = 0 AND edition = 1 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-	$res = mysqli_query($link, $sql);
-	$items = [];
+  $sql = 'SELECT * FROM items WHERE listed = 1 AND enabled = 1 AND private = 0 AND edition = 1 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+  $res = mysqli_query($link, $sql);
+  $items = [];
 
   for($i = 0; $i < mysqli_num_rows($res); ++$i){
     $item = mysqli_fetch_assoc($res);
@@ -24,7 +24,7 @@
     }  
   }
   forEach($items as &$item){
-		$itemHash = $item['hash'];
+    $itemHash = $item['hash'];
     $sql2 = $sql = 'SELECT * FROM comments WHERE itemHash = "' . $itemHash . '" ORDER BY date DESC';
     $res2 = mysqli_query($link, $sql);
     $item['comments'] = [];
