@@ -165,7 +165,7 @@
       }
       @unlink('./temp/'.$filename);
     } else {
-      echo json_encode([false, '']);
+      echo json_encode([false, '', $sql]);
       die();
     }
   }

@@ -201,6 +201,7 @@ export default{
         })
         .then(res => res.json())
         .then(data => {
+          console.log(data)
           let res = (data[0] ? '<span style="color: #afa;font-size: 20px;">SUCCESS!</span><br><br><br>' : 'TRANSACTION FAILED<br><br><br>' + (data[1].indexOf('Balance of contract ' + this.state.walletData.address + ' too low') != -1 ? 'Insufficient balance.' : 'unknown error :('))
           data[1] = data[1].substring(0, data[1].indexOf('The operation has only been included'))
           res += data[1].indexOf('This sequence of operations was run:') != -1 ? data[1].substring(data[1].indexOf('This sequence of operations was run:')) : data[1]

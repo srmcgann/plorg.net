@@ -1,10 +1,11 @@
-<? require('../db.php'); ?>
+<?
+  require('../db.php');
+?>
 <!DOCTYPE html>
 <html>
   <head>
     <style>
       html,body{
-        overflow-x: hidden;
         background: #000;
         color: #fff;
         font-family: courier, arial;
@@ -16,6 +17,9 @@
       .section_title{
         margin-top:10px;
         text-align: center;
+        font-size: 24px;
+        border-bottom: 1px solid #0f88;
+        padding: 10px;
         background:#234;
       }
       .highlight{
@@ -23,13 +27,20 @@
         color: #f00;
       }
       .dataTable{
+        width: 100%;
         border-collapse: collapse;
+        font-size: 14px;
+      }
+      .headerRow{
+        background: #222;
+      }
+      th{
+        text-align: left;
       }
       td{
-        padding: 10px;
-      }
-      #main{
-
+        padding: 5px;
+        text-align: left;
+        border: 1px solid #234;
       }
       #total{
         display: inline-block;
@@ -45,7 +56,7 @@
           convert = +data[1]
         })
       }
-      headers = '<tr><th>pkh</th><th>bal</th><th>USD</th><th>originalName</th><th>name</th></tr>'
+      headers = '<tr class="headerRow"><th>pkh</th><th>bal</th><th>USD</th><th>originalName</th><th>name</th></tr>'
       getXTZ_exchangeVal()
       getBal = (pkh, joined, name, originalName, updated, email) =>{
         let sendData = {pkh}
@@ -70,14 +81,14 @@
           tr.appendChild(td)
 
           td = document.createElement('td')
-          td.innerHTML = bal
+          td.innerHTML = "ꜩ " + bal
           tr.appendChild(td)
           if(bal>1){
             tr.classList = 'highlight'
           }
           
           td = document.createElement('td')
-          USD = td.innerHTML = " ($" + (Math.round(total*convert*100)/100)+")"
+          USD = td.innerHTML = "$" + (Math.round(bal*convert*100)/100)
           tr.appendChild(td)
           
           td = document.createElement('td')
@@ -106,15 +117,12 @@
             if(!(i%5))table.innerHTML += headers
             table.appendChild(v[1])
           })
-          document.querySelector('#total').innerHTML = " ($" + (Math.round(grandTotal*convert*100)/100)+")"
+          document.querySelector('#total').innerHTML = "ꜩ " + (Math.round(grandTotal*100000)/100000) + " ( $" + (Math.round(grandTotal*convert*100)/100)+" )"
         })
       }
     </script>
     <div class="section_title">
       Total all wallets: <div id="total">~</div>
-    </div>
-    <div class="section_title">
-      user data
     </div>
     <div id="main">
       <table class="dataTable"></table>
