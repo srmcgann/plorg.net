@@ -15,7 +15,7 @@
     $temp = explode(' ', $string);
     $ids = [];
     forEach($temp as $token){
-      $sql = 'SELECT name, id FROM users WHERE enabled = 1 AND name LIKE "'.$token.'"';
+      $sql = 'SELECT name, id FROM users WHERE enabled = 1 AND LOWER(name) = LOWER("'.$token.'")';
       $res = mysqli_query($link, $sql);
       for($i=0; $i<mysqli_num_rows($res);++$i){
         $ids[] = mysqli_fetch_assoc($res)['id'];
@@ -27,7 +27,7 @@
     $temp = explode(' ', $string);
     $ids = [];
     forEach($temp as $token){
-      $sql = 'SELECT name, id FROM users WHERE enabled = 1 AND name LIKE "'.$token.'"';
+      $sql = 'SELECT name, id FROM users WHERE enabled = 1 AND LOWER(name) = LOWER("'.$token.'"))';
       $res = mysqli_query($link, $sql);
       for($i=0; $i<mysqli_num_rows($res);++$i){
         $ids[] = mysqli_fetch_assoc($res)['id'];
@@ -49,7 +49,7 @@
     
     $confirmed = false;
     if($loggedinUserName){
-      $sql = 'SELECT * FROM users WHERE name LIKE "' . $loggedinUserName . '" AND enabled = 1 AND passhash = "' .  $passhash . '"';
+      $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("' . $loggedinUserName . '") AND enabled = 1 AND passhash = "' .  $passhash . '"';
       if($res = mysqli_query($link, $sql)){
         $row = mysqli_fetch_assoc($res);
         $loggedinUserData = $row;

@@ -3,7 +3,7 @@
   $data = json_decode(file_get_contents('php://input'));
   $token = mysqli_real_escape_string($link, $data->{'token'});
   $password = mysqli_real_escape_string($link, $data->{'password'});
-  $sql='SELECT * FROM users WHERE name LIKE "' . $token . '" AND enabled = 1';
+  $sql='SELECT * FROM users WHERE LOWER(name) = LOWER("' . $token . '") AND enabled = 1';
   if(!$password || !$token) die();
   $res = mysqli_query($link, $sql);
   $hit = false;
@@ -24,7 +24,7 @@
       echo json_encode([false, $sql]);
     }
   } else {
-    $sql='SELECT * FROM users WHERE pkh LIKE "' . $token . '" AND enabled = 1';
+    $sql='SELECT * FROM users WHERE pkh = "' . $token . '" AND enabled = 1';
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
       for($i=0; $i<mysqli_num_rows($res) && !$hit;++$i){
@@ -43,7 +43,7 @@
         echo json_encode([false, $sql]);
       }
     } else {
-      $sql='SELECT * FROM users WHERE email LIKE "' . $token . '" AND enabled = 1';
+      $sql='SELECT * FROM users WHERE LOWER(email) = LOWER("' . $token . '") AND enabled = 1';
       $res = mysqli_query($link, $sql);
       if(mysqli_num_rows($res)){
         for($i=0; $i<mysqli_num_rows($res) && !$hit;++$i){

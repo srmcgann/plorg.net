@@ -11,13 +11,13 @@
     $passhash = password_hash($newpass, PASSWORD_DEFAULT);
     switch($mode){
       case 0:
-        $sql = 'UPDATE users SET passhash = "'.$passhash.'" WHERE name LIKE "'.$token.'" AND enabled = 1 AND pkh = "'.$pkh.'" AND email LIKE "'.$email.'" AND hash = "'.$hash.'"';
+        $sql = 'UPDATE users SET passhash = "'.$passhash.'" WHERE LOWER(name) = LOWER("'.$token.'") AND enabled = 1 AND pkh = "'.$pkh.'" AND LOWER(email) = LOWER("'.$email.'") AND hash = "'.$hash.'"';
       break;
       case 1:
-        $sql = 'UPDATE users SET passhash = "'.$passhash.'" WHERE pkh = "'.$token.'" AND enabled = 1 AND pkh = "'.$pkh.'" AND email LIKE "'.$email.'" AND hash = "'.$hash.'"';
+        $sql = 'UPDATE users SET passhash = "'.$passhash.'" WHERE pkh = "'.$token.'" AND enabled = 1 AND pkh = "'.$pkh.'" AND LOWER(email) = LOWER("'.$email.'") AND hash = "'.$hash.'"';
       break;
       case 2:
-        $sql = 'UPDATE users SET passhash = "'.$passhash.'" WHERE email LIKE "'.$token.'" AND enabled = 1 AND pkh = "'.$pkh.'" AND email LIKE "'.$email.'" AND hash = "'.$hash.'"';
+        $sql = 'UPDATE users SET passhash = "'.$passhash.'" WHERE LOWER(email) = LOWER("'.$token.'") AND enabled = 1 AND pkh = "'.$pkh.'" AND LOWER(email) = LOWER("'.$email.'") AND hash = "'.$hash.'"';
       break;
     }
     mysqli_query($link, $sql);

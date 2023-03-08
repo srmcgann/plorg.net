@@ -15,7 +15,7 @@
 
   if($name){
     if($loggedinUserName){
-      $sql = 'SELECT * FROM users WHERE name LIKE "' . $loggedinUserName . '" AND passhash = "' .  $passhash . '" AND enabled = 1';
+      $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("' . $loggedinUserName . '") AND passhash = "' .  $passhash . '" AND enabled = 1';
       if($res = mysqli_query($link, $sql)){
         $row = mysqli_fetch_assoc($res);
         $pkh = $row['pkh'];
@@ -24,7 +24,7 @@
         $loggedinPasshash = $row['passhash'];
       }
     }
-    $sql='SELECT * FROM users WHERE name LIKE "' . $name . '" AND enabled = 1';
+    $sql='SELECT * FROM users WHERE LOWER(name) = LOWER("' . $name . '") AND enabled = 1';
     $res = mysqli_query($link, $sql);
     $row=mysqli_fetch_assoc($res);
     //$userID = $row['id'];
@@ -44,6 +44,7 @@
     } else {
 
       $sql="SELECT id FROM items WHERE private = 0 AND userHash = \"" . $row['hash'] . '"';
+
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
       $morePages = false;

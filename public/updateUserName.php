@@ -8,12 +8,12 @@
   $success = false;
   if($available){
     $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
-    $sql = 'SELECT * FROM users WHERE (name LIKE "'.$userName.'" OR pkh LIKE "'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
+    $sql = 'SELECT * FROM users WHERE (LOWER(name) = LOWER("'.$userName.'") OR pkh = "'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
       $row = mysqli_fetch_assoc($res);
       $userHash = $row['hash'];
-      $sql = 'UPDATE users SET name = "'.$newUserName.'", updated = "'.date("Y-m-d H:i:s").'" WHERE (name LIKE "'.$userName.'" OR pkh LIKE "'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
+      $sql = 'UPDATE users SET name = "'.$newUserName.'", updated = "'.date("Y-m-d H:i:s").'" WHERE (LOWER(name) = LOWER("'.$userName.'") OR pkh = "'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
       mysqli_query($link, $sql);
       $sql = 'UPDATE items SET author = "'.$newUserName.'", updated = "'.date("Y-m-d H:i:s").'" WHERE creatorHash = "'.$userHash.'"';
       mysqli_query($link, $sql);

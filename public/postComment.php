@@ -7,7 +7,7 @@
   $comment = mysqli_real_escape_string($link, $data->{'comment'});
   $itemID = mysqli_real_escape_string($link, $data->{'itemID'});
   $itemHash = mysqli_real_escape_string($link, $data->{'itemHash'});
-  $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'" AND enabled = 1;';
+  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND passhash = "'.$passhash.'" AND enabled = 1;';
   $res = mysqli_query($link, $sql);
   $success = false;
   if(mysqli_num_rows($res)){

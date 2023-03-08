@@ -4,12 +4,12 @@
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
   $newAvatar = mysqli_real_escape_string($link, $data->{'newAvatar'});
-  $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND pkh = "'.$pkh.'" AND enabled = 1';
+  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
   $res = mysqli_query($link, $sql);
   $success = false;
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
-    $sql = 'UPDATE users SET avatar = "'.$newAvatar.'", updated = "'.date("Y-m-d H:i:s").'" WHERE name LIKE "'.$userName.'" AND pkh = "'.$pkh.'" AND enabled = 1';
+    $sql = 'UPDATE users SET avatar = "'.$newAvatar.'", updated = "'.date("Y-m-d H:i:s").'" WHERE LOWER(name) = LOWER("'.$userName.'") AND pkh = "'.$pkh.'" AND enabled = 1';
     mysqli_query($link, $sql);
     $success = true;
   }

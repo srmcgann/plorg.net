@@ -5,7 +5,7 @@
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $comment = mysqli_real_escape_string($link, $data->{'comment'});
   $commentHash = mysqli_real_escape_string($link, $data->{'commentHash'});
-  $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'" AND enabled = 1;';
+  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND passhash = "'.$passhash.'" AND enabled = 1;';
   $res = mysqli_query($link, $sql);
   $success = false;
   if(mysqli_num_rows($res)){
