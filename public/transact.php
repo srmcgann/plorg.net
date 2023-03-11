@@ -27,7 +27,7 @@
     }
   }
   
-  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND passhash = "'.$passhash.'" AND enabled = 1';
+  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND BINARY passhash = "'.$passhash.'" AND enabled = 1';
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){
     if($recipient && $amount && $mnemonic){

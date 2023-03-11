@@ -7,7 +7,7 @@
   $comment = mysqli_real_escape_string($link, $data->{'comment'});
   $itemID = mysqli_real_escape_string($link, $data->{'itemID'});
   $itemHash = mysqli_real_escape_string($link, $data->{'itemHash'});
-  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND passhash = "'.$passhash.'" AND enabled = 1;';
+  $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("'.$userName.'") AND BINARY passhash = "'.$passhash.'" AND enabled = 1;';
   $res = mysqli_query($link, $sql);
   $success = false;
   if(mysqli_num_rows($res)){
@@ -21,12 +21,12 @@
   }
 
   if($success){
-    $insertID = mysqli_insert_id($link);
-    $sql = 'SELECT date FROM comments WHERE id = ' . $insertID;
-    $res = mysqli_query($link, $sql);
-    $row = mysqli_fetch_assoc($res);
-    echo json_encode([$success, $insertID, $row['date'], $hash, $sql1]);
-  } else {
-    echo json_encode([$success]);
-  }
+		$insertID = mysqli_insert_id($link);
+		$sql = 'SELECT date FROM comments WHERE id = ' . $insertID;
+		$res = mysqli_query($link, $sql);
+		$row = mysqli_fetch_assoc($res);
+		echo json_encode([$success, $insertID, $row['date'], $hash, $sql1]);
+	} else {
+		echo json_encode([$success]);
+	}
 ?>

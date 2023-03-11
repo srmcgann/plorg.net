@@ -4,7 +4,7 @@
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $connected = mysqli_real_escape_string($link, $data->{'connected'});
   if($passhash){
-    $sql="SELECT * FROM users WHERE passhash = \"$passhash\" AND enabled = 1";
+    $sql="SELECT * FROM users WHERE BINARY passhash = \"$passhash\" AND enabled = 1";
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
       $row = mysqli_fetch_assoc($res);

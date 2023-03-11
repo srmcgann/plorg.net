@@ -4,13 +4,13 @@
   $token = mysqli_real_escape_string($link, $data->{'token'});
   $tokenMode = mysqli_real_escape_string($link, $data->{'tokenMode'});
   $loggedinUserName = mysqli_real_escape_string($link, $data->{'loggedinUserName'});
-  $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
+	$passhash = mysqli_real_escape_string($link, $data->{'passhash'});
 
   $admin = false;
   $includePrivate = false;
 
   if($loggedinUserName){
-    $sql = 'SELECT * FROM users WHERE LOWER(name)  LOWER("' . $loggedinUserName . '") AND passhash = "' .  $passhash . '" AND enabled = 1';
+    $sql = 'SELECT * FROM users WHERE LOWER(name)  LOWER("' . $loggedinUserName . '") AND BINARY passhash = "' .  $passhash . '" AND enabled = 1';
     if($res = mysqli_query($link, $sql)){
       $row = mysqli_fetch_assoc($res);
       $pkh = $row['pkh'];
