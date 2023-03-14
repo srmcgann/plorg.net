@@ -18,7 +18,7 @@
   }
 
 
-	$data = json_decode(file_get_contents('php://input'));
+  $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $userName = str_replace(';', '', $userName);
   $password = mysqli_real_escape_string($link, $data->{'password'});
@@ -44,7 +44,7 @@
     $userHash = md5($pkh . strtotime('now') . rand());
     $sql = 'INSERT INTO users (name, email, originalName, passhash, avatar, pkh, prefs, connected, walletAlias, hash) VALUES("'.$userName.'", "'.$email.'", "'.$userName.'", "'.$hash.'", "", "'.$pkh.'", "", 1, "'.$alias.'", "'.$userHash.'");';
     mysqli_query($link, $sql);
-		$id = mysqli_insert_id($link);
+    $id = mysqli_insert_id($link);
     echo json_encode([true, $userName, $id, "", $pkh, 0, true, $hash, $wallet, $userHash]);
   } else {
     echo json_encode([$available,'https://' . $baseURL . "/checkUserNameAvailability.php?userName=".$userName,'username unavailable or password not provided!']);

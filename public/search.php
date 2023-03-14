@@ -48,15 +48,15 @@
   if(sizeof($tokens)){
     
     $confirmed = false;
-		if($loggedinUserName){
-  		$sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("' . $loggedinUserName . '") AND enabled = 1 AND BINARY passhash = "' .  $passhash . '"';
-		  if($res = mysqli_query($link, $sql)){
-  		  $row = mysqli_fetch_assoc($res);
-	  	  $loggedinUserData = $row;
+    if($loggedinUserName){
+      $sql = 'SELECT * FROM users WHERE LOWER(name) = LOWER("' . $loggedinUserName . '") AND enabled = 1 AND BINARY passhash = "' .  $passhash . '"';
+      if($res = mysqli_query($link, $sql)){
+        $row = mysqli_fetch_assoc($res);
+        $loggedinUserData = $row;
         $confirmed = true;
-				if($row['isAdmin']) $admin = true;
-	  	}
-		}
+        if($row['isAdmin']) $admin = true;
+      }
+    }
 
     if($loggedinUserName && $confirmed){
       $sql = 'SELECT * FROM items WHERE (listed = 1 || userHash = "'.$loggedinUserData['userHash'].'") AND ((title LIKE "%' . $tokens[0] . '%"';
@@ -128,21 +128,21 @@
   }
   
   $sql;
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
 
 
   $sql1 = $sql .= ' ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   
-	$items = [];
-	for($i = 0; $i < mysqli_num_rows($res); ++$i){
-		$items[] = mysqli_fetch_assoc($res);
+  $items = [];
+  for($i = 0; $i < mysqli_num_rows($res); ++$i){
+    $items[] = mysqli_fetch_assoc($res);
   }
 
   forEach($items as &$item){
-		$itemID = $item['id'];
+    $itemID = $item['id'];
     $sql = 'SELECT * FROM comments WHERE itemID = ' . $itemID . ' ORDER BY date DESC';
     $res = mysqli_query($link, $sql);
     $item['comments'] = [];
@@ -151,6 +151,6 @@
     }
   }
   
-	echo json_encode([$items, $totalPages, $page, $totalRecords, $sql1]);
+  echo json_encode([$items, $totalPages, $page, $totalRecords, $sql1]);
 ?>
 

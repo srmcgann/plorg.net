@@ -1739,16 +1739,16 @@ select:focus{
   vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://jsbot.whitehot.ninja/uploads/XeGsK.png);
-	background-repeat: no-repeat;
-	background-size: 25px 25px;
-	background-position: center center;
-	width: 34px;
-	height: 34px!important;
-	vertical-align: top;
-	margin-top: -5px;
-	border-radius: 5px;
-	background-color: #f880;
+  background-image: url(https://jsbot.whitehot.ninja/uploads/XeGsK.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px!important;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
 }
 .commentEditButton{
   background-image: url(https://jsbot.whitehot.ninja/uploads/ct1hv.png);

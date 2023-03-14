@@ -148,6 +148,7 @@ export default{
     return{
       recipient: '',
       amount: '',
+      tempMnemonic: '',
       hideTimer: 0,
       agreeToFees: true,
       mnemonic: '',
@@ -188,7 +189,7 @@ export default{
           recipient: this.recipient,
           amount: this.amount,
           suffix: this.state.uploadedFileSuffix,
-          mnemonic: this.mnemonic.replace('  ', ' ').replace("\n",'').trimLeft().trimLeft(),
+          mnemonic: this.tempMnemonic.replace('  ', ' ').replace("\n",'').trimLeft().trimLeft(),
           agreeToFees: this.agreeToFees ? 'true' : 'false',
           mint: sendMint
         }
@@ -232,6 +233,9 @@ export default{
       }
       this.hideTimer = setTimeout(()=>{
         if(this.$refs.mnemonic.value.indexOf('●') == -1) this.mnemonic = this.$refs.mnemonic.value
+        this.tempMnemonic = this.$refs.mnemonic.value.split('').map((v,i)=>{
+          return v!='●' ? v : (v == ' ' ? v : this.tempMnemonic[i])
+        }).join('')
         this.$refs.mnemonic.value=this.$refs.mnemonic.value.split('').map(v=>{
           return v.charCodeAt(0) == 32 ? ' ' : '●'
         }).join('')
