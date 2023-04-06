@@ -1,6 +1,6 @@
 <?php
   require('db.php');
-  $data = json_decode(file_get_contents('php://input'));
+	$data = json_decode(file_get_contents('php://input'));
   $pkh = mysqli_real_escape_string($link, $data->{'pkh'});
   if($pkh){
     $sql = 'SELECT pkh FROM users WHERE pkh = "' . $pkh . '" AND enabled = 1';

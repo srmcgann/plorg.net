@@ -4,7 +4,7 @@
   $token = mysqli_real_escape_string($link, $data->{'token'});
   $tokenMode = mysqli_real_escape_string($link, $data->{'tokenMode'});
   $loggedinUserName = mysqli_real_escape_string($link, $data->{'loggedinUserName'});
-  $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
+	$passhash = mysqli_real_escape_string($link, $data->{'passhash'});
 
   $admin = false;
   $includePrivate = false;
